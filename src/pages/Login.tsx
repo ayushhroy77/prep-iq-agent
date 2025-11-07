@@ -1,43 +1,109 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Brain, Eye, EyeOff, LogIn } from "lucide-react";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import prepiqLogo from "@/assets/prepiq-logo.jpg";
+import studyBackground from "@/assets/study-background.jpg";
 
 const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberMe: false
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    toast({
-      title: "Login Successful!",
-      description: "Welcome back to PrepIQ",
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        navigate("/dashboard");
+      }
     });
 
-    setTimeout(() => navigate("/dashboard"), 1000);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        navigate("/dashboard");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (error) {
+        toast({
+          title: "Login Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Login Successful!",
+          description: "Welcome back to PrepIQ",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+
+      if (error) {
+        toast({
+          title: "Google Sign-In Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to initialize Google sign-in",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md p-8 sm:p-12 space-y-8 animate-fade-in glass-card">
+    <div className="min-h-screen bg-gradient-hero flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url(${studyBackground})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+      <Card className="w-full max-w-md p-8 sm:p-12 space-y-8 animate-fade-in glass-card relative z-10">
         {/* Header */}
         <div className="text-center">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
+            <img src={prepiqLogo} alt="PrepIQ Logo" className="w-12 h-12 rounded-lg" />
             <span className="text-2xl font-bold">PrepIQ</span>
           </Link>
           <h2 className="text-3xl font-bold mb-2">Welcome Back</h2>
@@ -105,9 +171,10 @@ const Login = () => {
           <Button 
             type="submit" 
             className="w-full h-12 text-lg bg-gradient-primary hover:opacity-90"
+            disabled={loading}
           >
             <LogIn className="w-5 h-5 mr-2" />
-            Sign In
+            {loading ? "Signing In..." : "Sign In"}
           </Button>
 
           {/* Divider */}
@@ -125,12 +192,7 @@ const Login = () => {
             type="button" 
             variant="outline" 
             className="w-full h-12"
-            onClick={() => {
-              toast({
-                title: "Google Sign-In",
-                description: "Google authentication will be available soon",
-              });
-            }}
+            onClick={handleGoogleLogin}
           >
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
               <path

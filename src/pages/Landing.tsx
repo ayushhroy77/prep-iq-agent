@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Brain, Calendar, Target, TrendingUp, Sparkles, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
+import prepiqLogo from "@/assets/prepiq-logo.jpg";
+import studyBackground from "@/assets/study-background.jpg";
 
 const Landing = () => {
   const features = [
@@ -44,9 +46,7 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
+              <img src={prepiqLogo} alt="PrepIQ Logo" className="w-10 h-10 rounded-lg" />
               <span className="text-xl font-bold">PrepIQ</span>
             </div>
             <div className="flex items-center gap-4">
@@ -62,7 +62,8 @@ const Landing = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-hero">
+      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-hero relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url(${studyBackground})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/50 border border-accent-foreground/20 mb-6 animate-fade-in">
             <Sparkles className="w-4 h-4 text-primary" />
@@ -85,9 +86,6 @@ const Landing = () => {
                 Start Learning Free
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="text-lg px-8 border-2">
-              Watch Demo
-            </Button>
           </div>
 
           <div className="mt-16 relative animate-fade-in" style={{ animationDelay: '0.4s' }}>
@@ -188,9 +186,7 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
+              <img src={prepiqLogo} alt="PrepIQ Logo" className="w-10 h-10 rounded-lg" />
               <span className="text-xl font-bold">PrepIQ</span>
             </div>
             <p className="text-muted-foreground text-sm">

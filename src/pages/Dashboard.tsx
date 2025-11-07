@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
-  Brain, 
   Calendar, 
   TrendingUp, 
   MessageSquare, 
@@ -15,10 +14,45 @@ import {
   Target,
   BarChart3
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import prepiqLogo from "@/assets/prepiq-logo.jpg";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("home");
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        navigate("/login");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        navigate("/login");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out",
+    });
+    navigate("/login");
+  };
 
   const stats = [
     { label: "Study Hours", value: "24.5", icon: BookOpen, color: "text-primary" },
@@ -32,16 +66,20 @@ const Dashboard = () => {
     { topic: "Physics - Mechanics", time: "2 days ago", score: "78%" },
   ];
 
+  const getUserInitials = () => {
+    if (!user) return "ST";
+    const name = user.user_metadata?.full_name || user.email || "Student";
+    return name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-hero flex">
       {/* Sidebar */}
       <aside className="w-64 bg-card border-r border-border p-6 hidden lg:block">
-        <Link to="/" className="flex items-center gap-2 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-            <Brain className="w-5 h-5 text-white" />
-          </div>
+        <div className="flex items-center gap-2 mb-8">
+          <img src={prepiqLogo} alt="PrepIQ Logo" className="w-10 h-10 rounded-lg" />
           <span className="text-xl font-bold">PrepIQ</span>
-        </Link>
+        </div>
 
         <nav className="space-y-2">
           {[
@@ -67,11 +105,11 @@ const Dashboard = () => {
         </nav>
 
         <div className="absolute bottom-6 left-6 right-6 space-y-2">
-          <Button variant="ghost" className="w-full justify-start" size="lg">
+          <Button variant="ghost" className="w-full justify-start" size="lg" onClick={() => setActiveTab("settings")}>
             <Settings className="w-5 h-5 mr-3" />
             Settings
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-destructive" size="lg">
+          <Button variant="ghost" className="w-full justify-start text-destructive" size="lg" onClick={handleLogout}>
             <LogOut className="w-5 h-5 mr-3" />
             Logout
           </Button>
@@ -83,13 +121,13 @@ const Dashboard = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-1">Welcome back, Student!</h1>
+            <h1 className="text-3xl font-bold mb-1">Welcome back, {user?.user_metadata?.full_name || 'Student'}!</h1>
             <p className="text-muted-foreground">Let's make today productive</p>
           </div>
           <Avatar className="h-12 w-12 border-2 border-primary">
             <AvatarImage src="" />
             <AvatarFallback className="bg-gradient-primary text-white font-semibold">
-              ST
+              {getUserInitials()}
             </AvatarFallback>
           </Avatar>
         </div>
@@ -115,9 +153,7 @@ const Dashboard = () => {
           {/* AI Chat Interface */}
           <Card className="p-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
+              <img src={prepiqLogo} alt="PrepIQ" className="w-12 h-12 rounded-full" />
               <div>
                 <h3 className="text-xl font-bold">AI Study Buddy</h3>
                 <p className="text-sm text-muted-foreground">Ask me anything!</p>
@@ -127,9 +163,7 @@ const Dashboard = () => {
             <div className="space-y-4 mb-4 h-64 overflow-y-auto">
               {/* Sample messages */}
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center flex-shrink-0">
-                  <Brain className="w-4 h-4 text-white" />
-                </div>
+                <img src={prepiqLogo} alt="AI" className="w-8 h-8 rounded-full flex-shrink-0" />
                 <div className="bg-accent rounded-lg p-3 flex-1">
                   <p className="text-sm">
                     Hi! I'm your AI study companion. I can help you understand complex topics, 
