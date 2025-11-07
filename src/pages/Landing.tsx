@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import prepiqLogo from "@/assets/prepiq-logo.jpg";
 import studyBackground from "@/assets/study-background.jpg";
 import studyElementsOverlay from "@/assets/study-elements-overlay.png";
+import examLogos from "@/assets/exam-logos.png";
 import dashboardPreview from "@/assets/dashboard-preview.jpg";
 import stepProfile from "@/assets/step-profile.jpg";
 import stepAnalyze from "@/assets/step-analyze.jpg";
@@ -141,6 +142,27 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Exam Logos Section */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-muted/50 border-y border-border">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-center text-sm text-muted-foreground mb-8">Trusted by students preparing for</p>
+          <div className="relative overflow-hidden">
+            <div className="flex animate-scroll-x">
+              <img 
+                src={examLogos} 
+                alt="Supported competitive exams including JEE, NEET, UPSC, CAT, GATE" 
+                className="h-16 object-contain opacity-60 hover:opacity-100 transition-opacity"
+              />
+              <img 
+                src={examLogos} 
+                alt="Supported competitive exams" 
+                className="h-16 object-contain opacity-60 hover:opacity-100 transition-opacity ml-12"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-7xl mx-auto">
@@ -157,14 +179,17 @@ const Landing = () => {
             {features.map((feature, index) => (
               <Card 
                 key={index} 
-                className="p-0 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-card border-border animate-slide-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="p-0 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-card border-border animate-fade-in opacity-0"
+                style={{ 
+                  animationDelay: `${index * 0.15}s`,
+                  animationFillMode: 'forwards'
+                }}
               >
                 <div className="aspect-square overflow-hidden">
                   <img 
                     src={feature.image} 
                     alt={feature.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
                 <div className="p-6">
@@ -200,8 +225,15 @@ const Landing = () => {
               { image: stepAnalyze, title: "AI Analyzes & Plans", desc: "Our autonomous agent creates your personalized study roadmap" },
               { image: stepSucceed, title: "Learn & Succeed", desc: "Chat with AI, take adaptive quizzes, and track your progress" }
             ].map((item, index) => (
-              <div key={index} className="text-center animate-fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
-                <div className="w-32 h-32 rounded-2xl overflow-hidden mx-auto mb-6 shadow-glow">
+              <div 
+                key={index} 
+                className="text-center animate-fade-in opacity-0" 
+                style={{ 
+                  animationDelay: `${index * 0.2}s`,
+                  animationFillMode: 'forwards'
+                }}
+              >
+                <div className="w-32 h-32 rounded-2xl overflow-hidden mx-auto mb-6 shadow-glow hover:scale-110 transition-transform duration-300">
                   <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
@@ -228,8 +260,11 @@ const Landing = () => {
             {testimonials.map((testimonial, index) => (
               <Card 
                 key={index} 
-                className="p-8 bg-card border-border animate-fade-in hover:shadow-lg transition-all duration-300"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="p-8 bg-card border-border animate-fade-in opacity-0 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                style={{ 
+                  animationDelay: `${index * 0.15}s`,
+                  animationFillMode: 'forwards'
+                }}
               >
                 <div className="flex items-center gap-4 mb-4">
                   <img 

@@ -301,21 +301,21 @@ const Register = () => {
             <Label>Target Exam(s) *</Label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {exams.map((exam) => (
-                <div
+                <label
                   key={exam}
-                  onClick={() => handleExamToggle(exam)}
                   className={`flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                     formData.targetExams.includes(exam)
                       ? "border-primary bg-accent"
-                      : "border-border hover:border-primary/50"
+                      : "border-border hover:border-primary/50 hover:bg-accent/50"
                   }`}
                 >
                   <Checkbox
                     checked={formData.targetExams.includes(exam)}
                     onCheckedChange={() => handleExamToggle(exam)}
+                    className="pointer-events-auto"
                   />
                   <span className="text-sm font-medium">{exam}</span>
-                </div>
+                </label>
               ))}
             </div>
           </div>

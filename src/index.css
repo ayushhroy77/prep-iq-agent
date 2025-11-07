@@ -180,6 +180,19 @@
       transform: translateY(0);
     }
   }
+
+  .animate-scroll-x {
+    animation: scrollX 30s linear infinite;
+  }
+
+  @keyframes scrollX {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 @layer base {
