@@ -4,6 +4,7 @@ import { Brain, Calendar, Target, TrendingUp, Sparkles, MessageSquare, Star } fr
 import { Link } from "react-router-dom";
 import prepiqLogo from "@/assets/prepiq-logo.jpg";
 import studyBackground from "@/assets/study-background.jpg";
+import studyElementsOverlay from "@/assets/study-elements-overlay.png";
 import dashboardPreview from "@/assets/dashboard-preview.jpg";
 import stepProfile from "@/assets/step-profile.jpg";
 import stepAnalyze from "@/assets/step-analyze.jpg";
@@ -107,11 +108,8 @@ const Landing = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-hero relative overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url(${studyBackground})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/50 border border-accent-foreground/20 mb-6 animate-fade-in">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-accent-foreground">AI-Powered Study Companion</span>
-          </div>
+        <div className="absolute inset-0 opacity-5" style={{ backgroundImage: `url(${studyElementsOverlay})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+        <div className="max-w-7xl mx-auto text-center relative z-10">
           
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
             Your Intelligent Path to
