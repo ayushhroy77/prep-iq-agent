@@ -9,7 +9,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import quizData from "@/data/quiz-data.json";
 import { QuizRecommendations } from "@/components/QuizRecommendations";
-import { QuizHistory } from "@/components/QuizHistory";
 
 interface Question {
   question: string;
@@ -223,11 +222,6 @@ const QuizGenerator = () => {
           {/* Quiz Recommendations */}
           <div className="mb-8">
             <QuizRecommendations />
-          </div>
-
-          {/* Quiz History */}
-          <div className="mb-8">
-            <QuizHistory />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
