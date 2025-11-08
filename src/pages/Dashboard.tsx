@@ -327,7 +327,7 @@ const Dashboard = () => {
             variant="ghost" 
             className="w-full justify-start text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-300 hover:translate-x-1 group" 
             size="lg" 
-            onClick={() => setActiveTab("settings")}
+            onClick={() => navigate("/settings")}
           >
             <Settings className="w-5 h-5 mr-3 transition-transform duration-300 group-hover:rotate-90" />
             Settings
