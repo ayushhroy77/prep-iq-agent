@@ -47,7 +47,8 @@ interface CalendarEvent {
   date: Date;
   title: string;
   description: string;
-  type: "mock_test" | "event";
+  type: "mock_test" | "study_session" | "assignment" | "event";
+  subject?: string;
 }
 
 const Dashboard = () => {
@@ -59,8 +60,11 @@ const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
-  const [newEvent, setNewEvent] = useState<{ title: string; description: string; type: "mock_test" | "event" }>({ title: "", description: "", type: "event" });
+  const [newEvent, setNewEvent] = useState<{ title: string; description: string; type: "mock_test" | "study_session" | "assignment" | "event"; subject?: string }>({ title: "", description: "", type: "event", subject: "" });
   const [recentActivityExpanded, setRecentActivityExpanded] = useState(false);
+  const [calendarView, setCalendarView] = useState<"month" | "list">("month");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState<string>("all");
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -118,10 +122,11 @@ const Dashboard = () => {
       title: newEvent.title,
       description: newEvent.description,
       type: newEvent.type,
+      subject: newEvent.subject,
     };
     
     setEvents([...events, event]);
-    setNewEvent({ title: "", description: "", type: "event" });
+    setNewEvent({ title: "", description: "", type: "event", subject: "" });
     setIsAddEventOpen(false);
     toast({
       title: "Event Added",
@@ -141,7 +146,53 @@ const Dashboard = () => {
     return events.filter(event => isSameDay(event.date, date));
   };
 
-  const selectedDateEvents = getEventsForDate(selectedDate);
+  const getEventColor = (type: string) => {
+    switch (type) {
+      case "mock_test":
+        return { bg: "bg-red-500/20", text: "text-red-500", border: "border-red-500" };
+      case "study_session":
+        return { bg: "bg-blue-500/20", text: "text-blue-500", border: "border-blue-500" };
+      case "assignment":
+        return { bg: "bg-yellow-500/20", text: "text-yellow-500", border: "border-yellow-500" };
+      default:
+        return { bg: "bg-primary/20", text: "text-primary", border: "border-primary" };
+    }
+  };
+
+  const getUpcomingEvents = () => {
+    const now = new Date();
+    return events
+      .filter(event => event.date >= now)
+      .sort((a, b) => a.date.getTime() - b.date.getTime())
+      .slice(0, 3);
+  };
+
+  const getTimeUntilEvent = (eventDate: Date) => {
+    const now = new Date();
+    const diff = eventDate.getTime() - now.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    
+    if (days > 0) return `${days}d ${hours}h`;
+    if (hours > 0) return `${hours}h`;
+    return "Soon";
+  };
+
+  const filteredEvents = events.filter(event => {
+    const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         (event.subject && event.subject.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesType = filterType === "all" || event.type === filterType;
+    return matchesSearch && matchesType;
+  });
+
+  const selectedDateEvents = getEventsForDate(selectedDate).filter(event => {
+    const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         (event.subject && event.subject.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesType = filterType === "all" || event.type === filterType;
+    return matchesSearch && matchesType;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-hero flex">
@@ -337,6 +388,36 @@ const Dashboard = () => {
           ))}
         </div>
 
+        {/* Upcoming Events Countdown */}
+        {getUpcomingEvents().length > 0 && (
+          <Card className="p-6 mb-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <Bell className="w-5 h-5 text-primary" />
+              Upcoming Events
+            </h3>
+            <div className="space-y-3">
+              {getUpcomingEvents().map((event) => {
+                const colors = getEventColor(event.type);
+                return (
+                  <div key={event.id} className={`p-3 rounded-lg border-l-4 ${colors.border} ${colors.bg}`}>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-sm">{event.title}</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {format(event.date, "PPP")}
+                        </p>
+                      </div>
+                      <span className={`text-xs font-bold ${colors.text} whitespace-nowrap ml-2`}>
+                        {getTimeUntilEvent(event.date)}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+        )}
+
         {/* Calendar and Recent Activity Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Calendar Section */}
@@ -346,14 +427,33 @@ const Dashboard = () => {
                 <Calendar className="w-5 h-5 text-primary" />
                 Study Calendar
               </h3>
-              <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
-                <DialogTrigger asChild>
-                  <Button size="sm" className="gap-2">
-                    <Plus className="w-4 h-4" />
-                    Add Event
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
+              <div className="flex gap-2">
+                <div className="flex border rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setCalendarView("month")}
+                    className={`px-3 py-1 text-sm transition-colors ${
+                      calendarView === "month" ? "bg-primary text-primary-foreground" : "bg-background hover:bg-accent"
+                    }`}
+                  >
+                    Month
+                  </button>
+                  <button
+                    onClick={() => setCalendarView("list")}
+                    className={`px-3 py-1 text-sm transition-colors ${
+                      calendarView === "list" ? "bg-primary text-primary-foreground" : "bg-background hover:bg-accent"
+                    }`}
+                  >
+                    List
+                  </button>
+                </div>
+                <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" className="gap-2">
+                      <Plus className="w-4 h-4" />
+                      Add Event
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Add Event for {format(selectedDate, "PPP")}</DialogTitle>
                   </DialogHeader>
@@ -382,75 +482,183 @@ const Dashboard = () => {
                         id="type"
                         value={newEvent.type}
                         onChange={(e) => {
-                          const value = e.target.value as "mock_test" | "event";
+                          const value = e.target.value as "mock_test" | "study_session" | "assignment" | "event";
                           setNewEvent({ ...newEvent, type: value });
                         }}
-                        className="w-full p-2 border rounded-md"
+                        className="w-full p-2 border rounded-md bg-background"
                       >
                         <option value="event">General Event</option>
                         <option value="mock_test">Mock Test</option>
+                        <option value="study_session">Study Session</option>
+                        <option value="assignment">Assignment</option>
                       </select>
+                    </div>
+                    <div>
+                      <Label htmlFor="subject">Subject (Optional)</Label>
+                      <Input
+                        id="subject"
+                        value={newEvent.subject}
+                        onChange={(e) => setNewEvent({ ...newEvent, subject: e.target.value })}
+                        placeholder="e.g., Mathematics, Physics"
+                      />
                     </div>
                     <Button onClick={handleAddEvent} className="w-full">Add Event</Button>
                   </div>
-                </DialogContent>
-              </Dialog>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+
+            {/* Search and Filter */}
+            <div className="grid md:grid-cols-3 gap-3 mb-4">
+              <Input
+                placeholder="Search events..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="md:col-span-2"
+              />
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="w-full p-2 border rounded-md bg-background"
+              >
+                <option value="all">All Types</option>
+                <option value="mock_test">Mock Tests</option>
+                <option value="study_session">Study Sessions</option>
+                <option value="assignment">Assignments</option>
+                <option value="event">General Events</option>
+              </select>
+            </div>
+
+            {/* Color Legend */}
+            <div className="flex flex-wrap gap-3 mb-4 text-xs">
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded bg-red-500"></div>
+                <span>Mock Test</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded bg-blue-500"></div>
+                <span>Study Session</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded bg-yellow-500"></div>
+                <span>Assignment</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded bg-primary"></div>
+                <span>General Event</span>
+              </div>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-6">
-              <div>
-                <CalendarComponent
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(date) => date && setSelectedDate(date)}
-                  className="rounded-md border"
-                  modifiers={{
-                    hasEvent: events.map(e => e.date)
-                  }}
-                  modifiersClassNames={{
-                    hasEvent: "bg-primary/20 font-bold"
-                  }}
-                />
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="font-semibold text-lg">
-                  Events on {format(selectedDate, "PPP")}
-                </h4>
-                {selectedDateEvents.length === 0 ? (
-                  <p className="text-muted-foreground text-sm">No events scheduled for this date</p>
-                ) : (
-                  <div className="space-y-3">
-                    {selectedDateEvents.map((event) => (
-                      <Card key={event.id} className="p-4">
-                        <div className="flex justify-between items-start mb-2">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                                event.type === 'mock_test' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'
-                              }`}>
-                                {event.type === 'mock_test' ? 'Mock Test' : 'Event'}
-                              </span>
-                            </div>
-                            <h5 className="font-semibold">{event.title}</h5>
-                            {event.description && (
-                              <p className="text-sm text-muted-foreground mt-1">{event.description}</p>
-                            )}
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDeleteEvent(event.id)}
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </Card>
-                    ))}
+              {calendarView === "month" ? (
+                <>
+                  <div>
+                    <CalendarComponent
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={(date) => date && setSelectedDate(date)}
+                      className="rounded-md border"
+                      modifiers={{
+                        hasEvent: filteredEvents.map(e => e.date)
+                      }}
+                      modifiersClassNames={{
+                        hasEvent: "bg-primary/20 font-bold"
+                      }}
+                    />
                   </div>
-                )}
-              </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg">
+                      Events on {format(selectedDate, "PPP")}
+                    </h4>
+                    {selectedDateEvents.length === 0 ? (
+                      <p className="text-muted-foreground text-sm">No events scheduled for this date</p>
+                    ) : (
+                      <div className="space-y-3 max-h-96 overflow-y-auto">
+                        {selectedDateEvents.map((event) => {
+                          const colors = getEventColor(event.type);
+                          return (
+                            <Card key={event.id} className={`p-4 border-l-4 ${colors.border}`}>
+                              <div className="flex justify-between items-start mb-2">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className={`px-2 py-1 rounded text-xs font-semibold ${colors.bg} ${colors.text}`}>
+                                      {event.type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                    </span>
+                                    {event.subject && (
+                                      <span className="px-2 py-1 rounded text-xs bg-muted">
+                                        {event.subject}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <h5 className="font-semibold">{event.title}</h5>
+                                  {event.description && (
+                                    <p className="text-sm text-muted-foreground mt-1">{event.description}</p>
+                                  )}
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleDeleteEvent(event.id)}
+                                  className="text-destructive hover:text-destructive"
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </Card>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="lg:col-span-2 space-y-3 max-h-96 overflow-y-auto">
+                  {filteredEvents.length === 0 ? (
+                    <p className="text-muted-foreground text-sm text-center py-8">No events found</p>
+                  ) : (
+                    filteredEvents
+                      .sort((a, b) => a.date.getTime() - b.date.getTime())
+                      .map((event) => {
+                        const colors = getEventColor(event.type);
+                        return (
+                          <Card key={event.id} className={`p-4 border-l-4 ${colors.border}`}>
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className={`px-2 py-1 rounded text-xs font-semibold ${colors.bg} ${colors.text}`}>
+                                    {event.type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                  </span>
+                                  {event.subject && (
+                                    <span className="px-2 py-1 rounded text-xs bg-muted">
+                                      {event.subject}
+                                    </span>
+                                  )}
+                                  <span className="text-xs text-muted-foreground ml-auto">
+                                    {format(event.date, "PPP")}
+                                  </span>
+                                </div>
+                                <h5 className="font-semibold">{event.title}</h5>
+                                {event.description && (
+                                  <p className="text-sm text-muted-foreground mt-1">{event.description}</p>
+                                )}
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDeleteEvent(event.id)}
+                                className="text-destructive hover:text-destructive ml-2"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </Card>
+                        );
+                      })
+                  )}
+                </div>
+              )}
             </div>
           </Card>
 
