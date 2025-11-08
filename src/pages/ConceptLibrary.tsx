@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { ExternalLink, BookOpen, Youtube, FileText } from "lucide-react";
+import { useState, useMemo } from "react";
+import { ExternalLink, BookOpen, Youtube, FileText, Search, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
 import modulesData from "@/data/modules.json";
 import notesData from "@/data/notes.json";
 
@@ -23,8 +24,26 @@ const ConceptLibrary = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("videos");
   const [selectedNote, setSelectedNote] = useState<NoteContent | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const subjects: Subject[] = ["Physics", "Chemistry", "Biology", "Mathematics"];
+
+  // Filter modules based on search query
+  const filteredModules = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return modulesData[activeSubject];
+    }
+
+    const query = searchQuery.toLowerCase();
+    const currentSubjectModules = modulesData[activeSubject];
+    
+    return Object.entries(currentSubjectModules).reduce((acc, [title, url]) => {
+      if (title.toLowerCase().includes(query)) {
+        acc[title] = url;
+      }
+      return acc;
+    }, {} as Record<string, string>);
+  }, [searchQuery, activeSubject]);
 
   const handleModuleClick = (videoUrl: string) => {
     window.open(videoUrl, "_blank", "noopener,noreferrer");
@@ -71,6 +90,35 @@ const ConceptLibrary = () => {
           </Button>
         </div>
 
+        {/* Search Bar */}
+        <div className="mb-6 animate-fade-in" style={{ animationDelay: "0.15s" }}>
+          <div className="relative max-w-2xl mx-auto">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search modules across all subjects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-10 h-12 text-base"
+            />
+            {searchQuery && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                onClick={() => setSearchQuery("")}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+          {searchQuery && (
+            <p className="text-center text-sm text-muted-foreground mt-2">
+              Found {Object.keys(filteredModules).length} module{Object.keys(filteredModules).length !== 1 ? 's' : ''} in {activeSubject}
+            </p>
+          )}
+        </div>
+
         <Tabs value={activeSubject} onValueChange={(value) => setActiveSubject(value as Subject)}>
           <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8 animate-fade-in" style={{ animationDelay: "0.2s" }}>
             {subjects.map((subject) => (
@@ -83,8 +131,9 @@ const ConceptLibrary = () => {
           {subjects.map((subject) => (
             <TabsContent key={subject} value={subject} className="mt-0">
               {viewMode === "videos" ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {Object.entries(modulesData[subject]).map(([title, url], index) => (
+                Object.keys(filteredModules).length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Object.entries(filteredModules).map(([title, url], index) => (
                     <Card
                       key={title}
                       className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-primary/50 animate-fade-in"
@@ -107,9 +156,22 @@ const ConceptLibrary = () => {
                     </Card>
                   ))}
                 </div>
+                ) : (
+                  <div className="text-center py-12 animate-fade-in">
+                    <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-foreground mb-2">No modules found</h3>
+                    <p className="text-muted-foreground mb-4">
+                      No modules match "{searchQuery}" in {activeSubject}
+                    </p>
+                    <Button onClick={() => setSearchQuery("")} variant="outline">
+                      Clear Search
+                    </Button>
+                  </div>
+                )
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {Object.entries(modulesData[subject]).map(([title], index) => {
+                Object.keys(filteredModules).length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Object.entries(filteredModules).map(([title], index) => {
                     const hasNotes = (notesData[subject] as Record<string, NoteContent>)[title];
                     return (
                       <Card
@@ -139,6 +201,18 @@ const ConceptLibrary = () => {
                     );
                   })}
                 </div>
+                ) : (
+                  <div className="text-center py-12 animate-fade-in">
+                    <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-foreground mb-2">No modules found</h3>
+                    <p className="text-muted-foreground mb-4">
+                      No modules match "{searchQuery}" in {activeSubject}
+                    </p>
+                    <Button onClick={() => setSearchQuery("")} variant="outline">
+                      Clear Search
+                    </Button>
+                  </div>
+                )
               )}
             </TabsContent>
           ))}
