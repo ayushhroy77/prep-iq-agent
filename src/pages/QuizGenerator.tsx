@@ -35,6 +35,8 @@ const QuizGenerator = () => {
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
+  const [questionCount, setQuestionCount] = useState<5 | 15>(15);
+  const [isMixedTopics, setIsMixedTopics] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
@@ -44,7 +46,7 @@ const QuizGenerator = () => {
 
   const subjects = quizData.subjects as Subject[];
 
-  const generateQuiz = async (topic: Topic, difficulty: 'easy' | 'medium' | 'hard') => {
+  const generateQuiz = async (topic: Topic, difficulty: 'easy' | 'medium' | 'hard', count: 5 | 15, mixed: boolean) => {
     setIsLoading(true);
     setShowExplanation(false);
     try {
@@ -55,18 +57,20 @@ const QuizGenerator = () => {
           topicName: topic.name,
           topicDescription: topic.description,
           difficulty: difficulty,
+          questionCount: count,
+          isMixed: mixed,
           timestamp: timestamp, // Cache buster
         },
       });
 
       if (error) throw error;
 
-      if (!data?.questions || !Array.isArray(data.questions) || data.questions.length !== 15) {
+      if (!data?.questions || !Array.isArray(data.questions) || data.questions.length !== count) {
         throw new Error('Invalid quiz data received');
       }
 
       setQuestions(data.questions);
-      setUserAnswers(new Array(15).fill(null));
+      setUserAnswers(new Array(count).fill(null));
       setCurrentQuestionIndex(0);
       setQuizSubmitted(false);
       toast.success('Quiz generated successfully!');
@@ -134,7 +138,7 @@ const QuizGenerator = () => {
 
   const handleRetakeQuiz = () => {
     if (selectedTopic) {
-      generateQuiz(selectedTopic, selectedDifficulty);
+      generateQuiz(selectedTopic, selectedDifficulty, questionCount, isMixedTopics);
     }
   };
 
@@ -142,19 +146,36 @@ const QuizGenerator = () => {
     setSelectedSubject(null);
     setSelectedTopic(null);
     setSelectedDifficulty('medium');
+    setQuestionCount(15);
+    setIsMixedTopics(false);
     setQuestions([]);
     setQuizSubmitted(false);
   };
 
   const handleStartQuiz = () => {
     if (selectedTopic) {
-      generateQuiz(selectedTopic, selectedDifficulty);
+      generateQuiz(selectedTopic, selectedDifficulty, questionCount, isMixedTopics);
     }
+  };
+
+  const handleMixedTopicsSelect = () => {
+    if (!selectedSubject) return;
+    
+    // Create a mixed topic combining all topics from the subject
+    const allTopicDescriptions = selectedSubject.topics.map(t => t.name).join(', ');
+    const mixedTopic: Topic = {
+      id: 'mixed',
+      name: `${selectedSubject.name} - Mixed Topics`,
+      description: `Comprehensive review covering: ${allTopicDescriptions}`,
+    };
+    
+    setSelectedTopic(mixedTopic);
+    setIsMixedTopics(true);
   };
 
   const currentQuestion = questions[currentQuestionIndex];
   const score = quizSubmitted ? calculateScore() : 0;
-  const percentage = quizSubmitted ? Math.round((score / 15) * 100) : 0;
+  const percentage = quizSubmitted ? Math.round((score / questions.length) * 100) : 0;
   const rating = getPerformanceRating(percentage);
 
   // Subject Selection View
@@ -219,24 +240,54 @@ const QuizGenerator = () => {
 
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-2">{selectedSubject.name}</h1>
-            <p className="text-muted-foreground">Choose a topic to begin your quiz</p>
+            <p className="text-muted-foreground">Choose a topic or try mixed topics for comprehensive review</p>
           </div>
 
+          {/* Mixed Topics Option */}
+          <Card
+            className={`mb-6 cursor-pointer hover:shadow-lg transition-all border-2 ${
+              isMixedTopics ? 'ring-2 ring-primary border-primary' : 'border-dashed'
+            }`}
+            onClick={() => !isLoading && handleMixedTopicsSelect()}
+          >
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="text-3xl">🎯</div>
+                <div className="flex-1">
+                  <CardTitle className="text-xl">Mixed Topics Challenge</CardTitle>
+                  <CardDescription>
+                    Test your knowledge across all {selectedSubject.topics.length} topics in {selectedSubject.name}
+                  </CardDescription>
+                </div>
+                <Badge variant="secondary" className="text-sm">Comprehensive</Badge>
+              </div>
+            </CardHeader>
+          </Card>
+
+          {/* Individual Topics */}
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold mb-3">Or select a specific topic:</h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {selectedSubject.topics.map((topic) => (
               <Card
                 key={topic.id}
                 className={`cursor-pointer hover:shadow-lg transition-all ${
-                  selectedTopic?.id === topic.id ? 'ring-2 ring-primary' : ''
+                  selectedTopic?.id === topic.id && !isMixedTopics ? 'ring-2 ring-primary' : ''
                 }`}
-                onClick={() => !isLoading && handleTopicSelect(topic)}
+                onClick={() => {
+                  if (!isLoading) {
+                    setIsMixedTopics(false);
+                    handleTopicSelect(topic);
+                  }
+                }}
               >
                 <CardHeader>
                   <CardTitle className="text-xl">{topic.name}</CardTitle>
                   <CardDescription>{topic.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground">15 AI-generated questions</p>
+                  <p className="text-sm text-muted-foreground">AI-generated questions</p>
                 </CardContent>
               </Card>
             ))}
@@ -245,13 +296,55 @@ const QuizGenerator = () => {
           {selectedTopic && !isLoading && (
             <Card className="max-w-2xl mx-auto">
               <CardHeader>
-                <CardTitle>Select Difficulty Level</CardTitle>
+                <CardTitle>Configure Your Quiz</CardTitle>
                 <CardDescription>
-                  Choose the difficulty level for your {selectedTopic.name} quiz
+                  Customize your {selectedTopic.name} quiz
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Quiz Length Selection */}
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Quiz Length</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Card
+                      className={`cursor-pointer transition-all hover:shadow-md ${
+                        questionCount === 5 ? 'ring-2 ring-primary bg-primary/5' : ''
+                      }`}
+                      onClick={() => setQuestionCount(5)}
+                    >
+                      <CardHeader>
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">⚡</span>
+                          <div>
+                            <CardTitle className="text-lg">Quick Practice</CardTitle>
+                            <CardDescription>5 questions - Perfect for quick review</CardDescription>
+                          </div>
+                        </div>
+                      </CardHeader>
+                    </Card>
+                    <Card
+                      className={`cursor-pointer transition-all hover:shadow-md ${
+                        questionCount === 15 ? 'ring-2 ring-primary bg-primary/5' : ''
+                      }`}
+                      onClick={() => setQuestionCount(15)}
+                    >
+                      <CardHeader>
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">📚</span>
+                          <div>
+                            <CardTitle className="text-lg">Full Quiz</CardTitle>
+                            <CardDescription>15 questions - Comprehensive test</CardDescription>
+                          </div>
+                        </div>
+                      </CardHeader>
+                    </Card>
+                  </div>
+                </div>
+
+                {/* Difficulty Selection */}
+                <div>
+                  <h3 className="text-sm font-medium mb-3">Difficulty Level</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Card
                     className={`cursor-pointer transition-all hover:shadow-md ${
                       selectedDifficulty === 'easy' ? 'ring-2 ring-green-500 bg-green-50 dark:bg-green-950' : ''
@@ -292,9 +385,11 @@ const QuizGenerator = () => {
                     </CardHeader>
                   </Card>
                 </div>
+
                 <Button onClick={handleStartQuiz} className="w-full" size="lg">
-                  Start Quiz ({selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)})
+                  Start {questionCount === 5 ? 'Quick Practice' : 'Full Quiz'} ({selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)})
                 </Button>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -333,14 +428,14 @@ const QuizGenerator = () => {
         </Button>
 
         {/* Progress Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-2xl font-bold">{selectedTopic.name}</h2>
-              <p className="text-muted-foreground">
-                Question {currentQuestionIndex + 1} of {questions.length}
-              </p>
-            </div>
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-2xl font-bold">{selectedTopic.name}</h2>
+                <p className="text-muted-foreground">
+                  Question {currentQuestionIndex + 1} of {questions.length} {questionCount === 5 ? '⚡' : '📚'}
+                </p>
+              </div>
             <Badge 
               variant="outline" 
               className={`text-lg px-4 py-2 ${
@@ -377,7 +472,7 @@ const QuizGenerator = () => {
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 rounded-lg bg-background/50">
-                    <div className="text-4xl font-bold text-primary mb-1">{score}</div>
+                    <div className="text-4xl font-bold text-primary mb-1">{score}/{questions.length}</div>
                     <div className="text-sm text-muted-foreground">Correct Answers</div>
                   </div>
                   <div className="text-center p-4 rounded-lg bg-background/50">

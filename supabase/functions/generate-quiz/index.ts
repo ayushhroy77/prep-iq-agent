@@ -12,16 +12,16 @@ serve(async (req) => {
   }
 
   try {
-    const { topicName, topicDescription, difficulty } = await req.json();
+    const { topicName, topicDescription, difficulty, questionCount = 15, isMixed = false } = await req.json();
     
-    console.log('Generating quiz for topic:', topicName, 'with difficulty:', difficulty);
+    console.log('Generating quiz for topic:', topicName, 'with difficulty:', difficulty, 'questions:', questionCount, 'mixed:', isMixed);
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const systemPrompt = `You are an expert educational content creator and teacher. Generate exactly 15 COMPLETELY NEW AND UNIQUE quiz questions about the given topic. 
+    const systemPrompt = `You are an expert educational content creator and teacher. Generate exactly ${questionCount} COMPLETELY NEW AND UNIQUE quiz questions about the given topic. 
 
 CRITICAL: Every time you generate questions, they MUST be entirely different from any previous generation. Use different angles, examples, scenarios, and aspects of the topic.
 
@@ -41,10 +41,11 @@ Each question should:
 Research the topic thoroughly before generating questions to ensure accuracy, relevance, and educational value. Make explanations engaging and informative.`;
 
     const timestamp = new Date().toISOString();
-    const userPrompt = `Generate 15 BRAND NEW quiz questions about: "${topicName}"
+    const mixedInfo = isMixed ? '\n\nIMPORTANT: This is a MIXED TOPICS quiz. Generate questions covering MULTIPLE different aspects and subtopics within this subject area to provide comprehensive coverage.' : '';
+    const userPrompt = `Generate ${questionCount} BRAND NEW quiz questions about: "${topicName}"
 Description: ${topicDescription}
 Difficulty level: ${difficulty}
-Generation timestamp: ${timestamp}
+Generation timestamp: ${timestamp}${mixedInfo}
 
 IMPORTANT: Generate completely fresh questions that are different from any previous quiz sessions on this topic. Explore different aspects, use varied examples, and create unique scenarios.
 
@@ -98,8 +99,8 @@ Ensure the JSON is valid and properly formatted. No additional text outside the 
 
     const questions = JSON.parse(jsonContent);
 
-    if (!Array.isArray(questions) || questions.length !== 15) {
-      throw new Error('Invalid question format or count');
+    if (!Array.isArray(questions) || questions.length !== questionCount) {
+      throw new Error(`Invalid question format or count. Expected ${questionCount}, got ${questions.length}`);
     }
 
     // Validate question structure
@@ -110,7 +111,7 @@ Ensure the JSON is valid and properly formatted. No additional text outside the 
       }
     });
 
-    console.log('Successfully generated 15 questions');
+    console.log(`Successfully generated ${questionCount} questions`);
 
     return new Response(
       JSON.stringify({ questions }),
