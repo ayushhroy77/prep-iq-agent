@@ -219,9 +219,9 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-hero flex">
+    <div className="min-h-screen bg-background flex transition-colors duration-300">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-0'} bg-slate-900 border-r border-slate-800 transition-all duration-300 overflow-hidden lg:block hidden relative`}>
+      <aside className={`${sidebarOpen ? 'w-64' : 'w-0'} bg-slate-900 dark:bg-slate-950 border-r border-slate-800 dark:border-slate-900 transition-all duration-300 overflow-hidden lg:block hidden relative`}>
         <div className={`${sidebarOpen ? 'p-6' : 'p-0'} transition-all duration-300`}>
         <div className="flex items-center gap-2 mb-6">
           <img src={prepiqLogo} alt="PrepIQ Logo" className="w-10 h-10 rounded-lg" />
