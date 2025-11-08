@@ -1683,17 +1683,18 @@ const Dashboard = () => {
                     onChange={(e) => setAlertSearchQuery(e.target.value)}
                     className="md:col-span-2"
                   />
-                  <select
-                    value={alertFilter}
-                    onChange={(e) => setAlertFilter(e.target.value)}
-                    className="w-full p-2 border rounded-md bg-background"
-                  >
-                    {alertCategories.map((category) => (
-                      <option key={category} value={category}>
-                        {category === "all" ? "All Categories" : category}
-                      </option>
-                    ))}
-                  </select>
+                  <Select value={alertFilter} onValueChange={setAlertFilter}>
+                    <SelectTrigger className="w-full bg-background">
+                      <SelectValue placeholder="All Categories" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-popover border-border z-50">
+                      {alertCategories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category === "all" ? "All Categories" : category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Category Pills */}
