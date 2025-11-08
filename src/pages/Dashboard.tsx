@@ -136,7 +136,7 @@ const Dashboard = () => {
             { id: "schedule", label: "Study Schedule", icon: Calendar },
             { id: "progress", label: "Progress", icon: BarChart3, route: "/performance" },
             { id: "concepts", label: "Concept Library", icon: BookOpen, route: "/concept-library" },
-            { id: "chat", label: "AI Tutor", icon: MessageSquare },
+            { id: "chat", label: "AI Tutor", icon: MessageSquare, route: "/ai-tutor" },
             { id: "quiz", label: "Quiz Generator", icon: Sparkles, route: "/quiz-generator" },
           ].map((item) => (
             <button
@@ -206,8 +206,6 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* AI Chat Interface moved to /ai-tutor */}
-
           {/* Recent Activity */}
           <Card className="p-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <div className="flex items-center justify-between mb-4">
