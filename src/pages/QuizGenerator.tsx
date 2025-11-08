@@ -48,11 +48,14 @@ const QuizGenerator = () => {
     setIsLoading(true);
     setShowExplanation(false);
     try {
+      // Add timestamp to ensure fresh generation each time
+      const timestamp = Date.now();
       const { data, error } = await supabase.functions.invoke('generate-quiz', {
         body: {
           topicName: topic.name,
           topicDescription: topic.description,
           difficulty: difficulty,
+          timestamp: timestamp, // Cache buster
         },
       });
 

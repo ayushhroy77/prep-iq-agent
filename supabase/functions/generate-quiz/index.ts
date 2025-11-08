@@ -21,9 +21,14 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const systemPrompt = `You are an expert educational content creator and teacher. Generate exactly 15 high-quality, diverse quiz questions about the given topic. Each question should:
-- Be unique and not repetitive - vary the question types and aspects covered
+    const systemPrompt = `You are an expert educational content creator and teacher. Generate exactly 15 COMPLETELY NEW AND UNIQUE quiz questions about the given topic. 
+
+CRITICAL: Every time you generate questions, they MUST be entirely different from any previous generation. Use different angles, examples, scenarios, and aspects of the topic.
+
+Each question should:
+- Be totally unique - NEVER repeat questions or use similar wording from previous generations
 - Test different concepts, applications, and depths of understanding of the topic
+- Vary question types (conceptual, application-based, analytical, scenario-based)
 - Include 4 answer options (A, B, C, D) with plausible distractors
 - Have exactly one correct answer
 - Include a comprehensive, educational explanation (3-5 sentences) that:
@@ -35,9 +40,13 @@ serve(async (req) => {
 
 Research the topic thoroughly before generating questions to ensure accuracy, relevance, and educational value. Make explanations engaging and informative.`;
 
-    const userPrompt = `Generate 15 quiz questions about: "${topicName}"
+    const timestamp = new Date().toISOString();
+    const userPrompt = `Generate 15 BRAND NEW quiz questions about: "${topicName}"
 Description: ${topicDescription}
 Difficulty level: ${difficulty}
+Generation timestamp: ${timestamp}
+
+IMPORTANT: Generate completely fresh questions that are different from any previous quiz sessions on this topic. Explore different aspects, use varied examples, and create unique scenarios.
 
 Return ONLY a valid JSON array with this exact structure:
 [
@@ -63,7 +72,8 @@ Ensure the JSON is valid and properly formatted. No additional text outside the 
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.8,
+        temperature: 0.9, // Higher temperature for more variation
+        top_p: 0.95, // Add top_p for additional randomness
       }),
     });
 
