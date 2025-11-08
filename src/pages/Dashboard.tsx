@@ -805,171 +805,352 @@ const Dashboard = () => {
         )}
 
         {activeTab === "progress" && (
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Progress Overview Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <Card className="p-6 hover:shadow-lg transition-all animate-fade-in">
-                <div className="flex items-center justify-between mb-3">
-                  <BookOpen className="w-8 h-8 text-primary" />
-                  <div className="text-3xl font-bold">120</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-fade-in bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 group overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 rounded-xl bg-primary/20 group-hover:scale-110 transition-transform duration-500">
+                      <BookOpen className="w-6 h-6 text-primary" />
+                    </div>
+                    <div className="text-4xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">120</div>
+                  </div>
+                  <p className="text-sm text-muted-foreground font-semibold">Topics Covered</p>
+                  <div className="mt-2 flex items-center gap-1 text-xs text-primary">
+                    <TrendingUp className="w-3 h-3" />
+                    <span>+12 this month</span>
+                  </div>
                 </div>
-                <p className="text-sm text-muted-foreground font-medium">Topics Covered</p>
               </Card>
-              <Card className="p-6 hover:shadow-lg transition-all animate-fade-in">
-                <div className="flex items-center justify-between mb-3">
-                  <Flame className="w-8 h-8 text-orange-500" />
-                  <div className="text-3xl font-bold">7</div>
+
+              <Card className="p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-fade-in bg-gradient-to-br from-orange-500/10 to-orange-500/5 border-orange-500/20 group overflow-hidden relative" style={{ animationDelay: '0.1s' }}>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 rounded-xl bg-orange-500/20 group-hover:scale-110 transition-transform duration-500 group-hover:rotate-12">
+                      <Flame className="w-6 h-6 text-orange-500" />
+                    </div>
+                    <div className="text-4xl font-bold bg-gradient-to-br from-orange-500 to-orange-400 bg-clip-text text-transparent">7</div>
+                  </div>
+                  <p className="text-sm text-muted-foreground font-semibold">Day Streak</p>
+                  <div className="mt-2 flex items-center gap-1 text-xs text-orange-500">
+                    <Flame className="w-3 h-3" />
+                    <span>Keep it going!</span>
+                  </div>
                 </div>
-                <p className="text-sm text-muted-foreground font-medium">Day Streak</p>
               </Card>
-              <Card className="p-6 hover:shadow-lg transition-all animate-fade-in">
-                <div className="flex items-center justify-between mb-3">
-                  <Target className="w-8 h-8 text-secondary" />
-                  <div className="text-3xl font-bold">85%</div>
+
+              <Card className="p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-fade-in bg-gradient-to-br from-secondary/10 to-secondary/5 border-secondary/20 group overflow-hidden relative" style={{ animationDelay: '0.2s' }}>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 rounded-xl bg-secondary/20 group-hover:scale-110 transition-transform duration-500">
+                      <Target className="w-6 h-6 text-secondary" />
+                    </div>
+                    <div className="text-4xl font-bold bg-gradient-to-br from-secondary to-secondary/60 bg-clip-text text-transparent">85%</div>
+                  </div>
+                  <p className="text-sm text-muted-foreground font-semibold">Avg Score</p>
+                  <div className="mt-2 flex items-center gap-1 text-xs text-secondary">
+                    <TrendingUp className="w-3 h-3" />
+                    <span>+5% improvement</span>
+                  </div>
                 </div>
-                <p className="text-sm text-muted-foreground font-medium">Avg Score</p>
               </Card>
-              <Card className="p-6 hover:shadow-lg transition-all animate-fade-in">
-                <div className="flex items-center justify-between mb-3">
-                  <Award className="w-8 h-8 text-yellow-500" />
-                  <div className="text-3xl font-bold">24</div>
+
+              <Card className="p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-fade-in bg-gradient-to-br from-yellow-500/10 to-yellow-500/5 border-yellow-500/20 group overflow-hidden relative" style={{ animationDelay: '0.3s' }}>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 rounded-xl bg-yellow-500/20 group-hover:scale-110 transition-transform duration-500 group-hover:rotate-12">
+                      <Award className="w-6 h-6 text-yellow-500" />
+                    </div>
+                    <div className="text-4xl font-bold bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent">24</div>
+                  </div>
+                  <p className="text-sm text-muted-foreground font-semibold">Achievements</p>
+                  <div className="mt-2 flex items-center gap-1 text-xs text-yellow-500">
+                    <Award className="w-3 h-3" />
+                    <span>3 new this week</span>
+                  </div>
                 </div>
-                <p className="text-sm text-muted-foreground font-medium">Achievements</p>
               </Card>
             </div>
 
             {/* Charts Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Topics Covered Over Time */}
-              <Card className="p-6 animate-fade-in">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-primary" />
-                  Topics Covered Over Time
-                </h3>
+              <Card className="p-6 animate-fade-in hover:shadow-xl transition-all duration-500 group bg-gradient-to-br from-background to-primary/5 border-primary/10" style={{ animationDelay: '0.4s' }}>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold flex items-center gap-2 group-hover:text-primary transition-colors duration-300">
+                    <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all duration-300">
+                      <TrendingUp className="w-5 h-5 text-primary" />
+                    </div>
+                    Topics Covered Over Time
+                  </h3>
+                </div>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={topicsCoveredData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <defs>
+                      <linearGradient id="colorTopics" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                    <XAxis 
+                      dataKey="month" 
+                      stroke="hsl(var(--muted-foreground))"
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
+                    <YAxis 
+                      stroke="hsl(var(--muted-foreground))"
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'hsl(var(--card))', 
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
+                        border: '1px solid hsl(var(--primary))',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 30px -10px hsl(var(--primary) / 0.3)'
                       }}
+                      labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
                     />
-                    <Legend />
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
                     <Line 
                       type="monotone" 
                       dataKey="topics" 
                       stroke="hsl(var(--primary))" 
-                      strokeWidth={3}
-                      dot={{ fill: 'hsl(var(--primary))', r: 5 }}
+                      strokeWidth={4}
+                      dot={{ fill: 'hsl(var(--primary))', r: 6, strokeWidth: 2, stroke: 'hsl(var(--background))' }}
+                      activeDot={{ r: 8, strokeWidth: 2 }}
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
                     />
                   </LineChart>
                 </ResponsiveContainer>
               </Card>
 
               {/* Weekly Study Hours */}
-              <Card className="p-6 animate-fade-in">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-secondary" />
-                  Weekly Study Hours
-                </h3>
+              <Card className="p-6 animate-fade-in hover:shadow-xl transition-all duration-500 group bg-gradient-to-br from-background to-secondary/5 border-secondary/10" style={{ animationDelay: '0.5s' }}>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold flex items-center gap-2 group-hover:text-secondary transition-colors duration-300">
+                    <div className="p-2 rounded-lg bg-secondary/10 group-hover:bg-secondary/20 transition-all duration-300">
+                      <BarChart3 className="w-5 h-5 text-secondary" />
+                    </div>
+                    Weekly Study Hours
+                  </h3>
+                </div>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={weeklyStudyHours}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <defs>
+                      <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="hsl(var(--secondary))" stopOpacity={1}/>
+                        <stop offset="100%" stopColor="hsl(var(--secondary))" stopOpacity={0.6}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                    <XAxis 
+                      dataKey="day" 
+                      stroke="hsl(var(--muted-foreground))"
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
+                    <YAxis 
+                      stroke="hsl(var(--muted-foreground))"
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'hsl(var(--card))', 
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
+                        border: '1px solid hsl(var(--secondary))',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 30px -10px hsl(var(--secondary) / 0.3)'
                       }}
+                      labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
+                      cursor={{ fill: 'hsl(var(--secondary) / 0.1)' }}
                     />
-                    <Legend />
-                    <Bar dataKey="hours" fill="hsl(var(--secondary))" radius={[8, 8, 0, 0]} />
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                    <Bar 
+                      dataKey="hours" 
+                      fill="url(#colorHours)" 
+                      radius={[12, 12, 0, 0]}
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </Card>
 
               {/* Study Consistency */}
-              <Card className="p-6 animate-fade-in">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <Flame className="w-5 h-5 text-orange-500" />
-                  Study Consistency (Days per Week)
-                </h3>
+              <Card className="p-6 animate-fade-in hover:shadow-xl transition-all duration-500 group bg-gradient-to-br from-background to-orange-500/5 border-orange-500/10" style={{ animationDelay: '0.6s' }}>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold flex items-center gap-2 group-hover:text-orange-500 transition-colors duration-300">
+                    <div className="p-2 rounded-lg bg-orange-500/10 group-hover:bg-orange-500/20 transition-all duration-300 group-hover:rotate-12">
+                      <Flame className="w-5 h-5 text-orange-500" />
+                    </div>
+                    Study Consistency
+                  </h3>
+                </div>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={consistencyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" domain={[0, 7]} />
+                    <defs>
+                      <linearGradient id="colorConsistency" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#f97316" stopOpacity={1}/>
+                        <stop offset="100%" stopColor="#fb923c" stopOpacity={0.7}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                    <XAxis 
+                      dataKey="week" 
+                      stroke="hsl(var(--muted-foreground))"
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
+                    <YAxis 
+                      stroke="hsl(var(--muted-foreground))" 
+                      domain={[0, 7]}
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'hsl(var(--card))', 
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
+                        border: '1px solid #f97316',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 30px -10px rgba(249, 115, 22, 0.3)'
                       }}
+                      labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
+                      cursor={{ fill: 'rgba(249, 115, 22, 0.1)' }}
                     />
-                    <Legend />
-                    <Bar dataKey="days" fill="#f97316" radius={[8, 8, 0, 0]} />
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                    <Bar 
+                      dataKey="days" 
+                      fill="url(#colorConsistency)" 
+                      radius={[12, 12, 0, 0]}
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </Card>
 
               {/* Quiz Scores Trend */}
-              <Card className="p-6 animate-fade-in">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <Target className="w-5 h-5 text-accent" />
-                  Quiz Performance Trend
-                </h3>
+              <Card className="p-6 animate-fade-in hover:shadow-xl transition-all duration-500 group bg-gradient-to-br from-background to-accent/5 border-accent/10" style={{ animationDelay: '0.7s' }}>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold flex items-center gap-2 group-hover:text-accent transition-colors duration-300">
+                    <div className="p-2 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-all duration-300">
+                      <Target className="w-5 h-5 text-accent" />
+                    </div>
+                    Quiz Performance Trend
+                  </h3>
+                </div>
                 <ResponsiveContainer width="100%" height={300}>
                   <AreaChart data={quizScoresTrend}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" domain={[0, 100]} />
+                    <defs>
+                      <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--accent))" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="hsl(var(--accent))" stopOpacity={0.1}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                    <XAxis 
+                      dataKey="week" 
+                      stroke="hsl(var(--muted-foreground))"
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
+                    <YAxis 
+                      stroke="hsl(var(--muted-foreground))" 
+                      domain={[0, 100]}
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'hsl(var(--card))', 
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
+                        border: '1px solid hsl(var(--accent))',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 30px -10px hsl(var(--accent) / 0.3)'
                       }}
+                      labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
+                      cursor={{ stroke: 'hsl(var(--accent))', strokeWidth: 2 }}
                     />
-                    <Legend />
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
                     <Area 
                       type="monotone" 
                       dataKey="score" 
                       stroke="hsl(var(--accent))" 
-                      fill="hsl(var(--accent))"
-                      fillOpacity={0.6}
+                      strokeWidth={3}
+                      fill="url(#colorScore)"
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
                     />
                   </AreaChart>
                 </ResponsiveContainer>
               </Card>
 
               {/* Performance by Subject - Full Width */}
-              <Card className="p-6 lg:col-span-2 animate-fade-in">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <Award className="w-5 h-5 text-primary" />
-                  Performance by Subject
-                </h3>
+              <Card className="p-6 lg:col-span-2 animate-fade-in hover:shadow-xl transition-all duration-500 group bg-gradient-to-br from-background via-primary/5 to-secondary/5 border-primary/10" style={{ animationDelay: '0.8s' }}>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold flex items-center gap-2 group-hover:text-primary transition-colors duration-300">
+                    <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all duration-300 group-hover:rotate-12">
+                      <Award className="w-5 h-5 text-primary" />
+                    </div>
+                    Performance by Subject
+                  </h3>
+                  <div className="text-sm text-muted-foreground bg-muted px-4 py-2 rounded-lg">
+                    Overall Average: <span className="font-bold text-primary">84.8%</span>
+                  </div>
+                </div>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={performanceBySubject} layout="vertical">
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis type="number" domain={[0, 100]} stroke="hsl(var(--muted-foreground))" />
-                    <YAxis dataKey="subject" type="category" stroke="hsl(var(--muted-foreground))" width={100} />
+                    <defs>
+                      {COLORS.map((color, index) => (
+                        <linearGradient key={`gradient-${index}`} id={`colorGradient${index}`} x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stopColor={color} stopOpacity={0.8}/>
+                          <stop offset="100%" stopColor={color} stopOpacity={1}/>
+                        </linearGradient>
+                      ))}
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} horizontal={true} vertical={false} />
+                    <XAxis 
+                      type="number" 
+                      domain={[0, 100]} 
+                      stroke="hsl(var(--muted-foreground))"
+                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
+                    <YAxis 
+                      dataKey="subject" 
+                      type="category" 
+                      stroke="hsl(var(--muted-foreground))" 
+                      width={100}
+                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 13 }}
+                      tickLine={{ stroke: 'hsl(var(--border))' }}
+                    />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'hsl(var(--card))', 
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px'
+                        border: '1px solid hsl(var(--primary))',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 30px -10px hsl(var(--primary) / 0.3)'
                       }}
+                      labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
+                      cursor={{ fill: 'hsl(var(--primary) / 0.1)' }}
                     />
-                    <Legend />
-                    <Bar dataKey="score" radius={[0, 8, 8, 0]}>
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                    <Bar 
+                      dataKey="score" 
+                      radius={[0, 12, 12, 0]}
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
+                    >
                       {performanceBySubject.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell key={`cell-${index}`} fill={`url(#colorGradient${index % COLORS.length})`} />
                       ))}
                     </Bar>
                   </BarChart>
