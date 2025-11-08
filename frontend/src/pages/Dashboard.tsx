@@ -136,7 +136,7 @@ const Dashboard = () => {
             { id: "schedule", label: "Study Schedule", icon: Calendar },
             { id: "progress", label: "Progress", icon: BarChart3, route: "/performance" },
             { id: "concepts", label: "Concept Library", icon: BookOpen, route: "/concept-library" },
-            { id: "chat", label: "AI Tutor", icon: MessageSquare },
+            { id: "chat", label: "AI Tutor", icon: MessageSquare, route: "/ai-tutor" },
             { id: "quiz", label: "Quiz Generator", icon: Sparkles, route: "/quiz-generator" },
           ].map((item) => (
             <button
@@ -206,46 +206,6 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* AI Chat Interface */}
-          <Card className="p-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <img src={prepiqLogo} alt="PrepIQ" className="w-12 h-12 rounded-full" />
-              <div>
-                <h3 className="text-xl font-bold">AI Study Buddy</h3>
-                <p className="text-sm text-muted-foreground">Ask me anything!</p>
-              </div>
-            </div>
-
-            <div className="space-y-4 mb-4 h-64 overflow-y-auto">
-              {/* Sample messages */}
-              <div className="flex gap-3">
-                <img src={prepiqLogo} alt="AI" className="w-8 h-8 rounded-full flex-shrink-0" />
-                <div className="bg-accent rounded-lg p-3 flex-1">
-                  <p className="text-sm">
-                    Hi! I'm your AI study companion. I can help you understand complex topics, 
-                    create quizzes, or plan your study schedule. What would you like to work on today?
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Type your question..."
-                className="flex-1 h-10 px-4 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-              />
-              <Button className="bg-gradient-primary hover:opacity-90">
-                <MessageSquare className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 mt-4">
-              <Button variant="outline" size="sm">Explain a topic</Button>
-              <Button variant="outline" size="sm">Generate quiz</Button>
-            </div>
-          </Card>
-
           {/* Recent Activity */}
           <Card className="p-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <div className="flex items-center justify-between mb-4">
