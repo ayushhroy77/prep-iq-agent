@@ -66,7 +66,11 @@ import {
   ClipboardList,
   Play,
   Check,
-  AlertCircle
+  AlertCircle,
+  Megaphone,
+  Calendar as CalendarIcon,
+  Tag,
+  ExternalLink
 } from "lucide-react";
 import {
   Select,
@@ -110,6 +114,10 @@ const Dashboard = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const [markedForReview, setMarkedForReview] = useState<Set<number>>(new Set());
+
+  // Alerts State
+  const [alertFilter, setAlertFilter] = useState("all");
+  const [alertSearchQuery, setAlertSearchQuery] = useState("");
 
   const subjects = ["Physics", "Chemistry", "Biology", "Mathematics"];
   
@@ -341,6 +349,121 @@ const Dashboard = () => {
 
   const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', '#8884d8', '#82ca9d'];
 
+  // NTA Alerts Data
+  const ntaAlerts = [
+    {
+      id: 1,
+      title: "JEE Main 2025 Session 1 Registration Extended",
+      description: "The registration deadline for JEE Main 2025 Session 1 has been extended till 15th January 2025. Candidates can now register on the official NTA website.",
+      category: "Exam Updates",
+      date: "2025-01-05",
+      priority: "high",
+      link: "https://jeemain.nta.nic.in/"
+    },
+    {
+      id: 2,
+      title: "NEET UG 2025 Information Bulletin Released",
+      description: "National Testing Agency has released the information bulletin for NEET UG 2025. Download the bulletin and check important dates and exam pattern.",
+      category: "Important Notice",
+      date: "2025-01-03",
+      priority: "high",
+      link: "https://neet.nta.nic.in/"
+    },
+    {
+      id: 3,
+      title: "JEE Main 2024 Session 2 Results Declared",
+      description: "NTA has announced the results for JEE Main 2024 Session 2. Candidates can check their results on the official website using their application number.",
+      category: "Results",
+      date: "2024-12-28",
+      priority: "medium",
+      link: "https://jeemain.nta.nic.in/"
+    },
+    {
+      id: 4,
+      title: "CUET UG 2025 Registration Begins",
+      description: "Common University Entrance Test (CUET) UG 2025 registration has commenced. Last date to apply is 31st January 2025.",
+      category: "Exam Updates",
+      date: "2024-12-20",
+      priority: "high",
+      link: "https://cuet.nta.nic.in/"
+    },
+    {
+      id: 5,
+      title: "Important: Change in JEE Advanced 2025 Pattern",
+      description: "IIT has announced changes in the JEE Advanced 2025 examination pattern. Candidates are advised to check the revised pattern on the official website.",
+      category: "Important Notice",
+      date: "2024-12-15",
+      priority: "high",
+      link: "https://jeeadv.ac.in/"
+    },
+    {
+      id: 6,
+      title: "NEET PG 2025 Exam Dates Announced",
+      description: "National Testing Agency has announced the exam dates for NEET PG 2025. The examination will be conducted on 15th March 2025.",
+      category: "Important Dates",
+      date: "2024-12-10",
+      priority: "medium",
+      link: "https://nbe.edu.in/"
+    },
+    {
+      id: 7,
+      title: "JEE Main Mock Test Available",
+      description: "Practice mock tests for JEE Main 2025 are now available on the NTA website. Candidates can take unlimited mock tests to familiarize themselves with the exam pattern.",
+      category: "Resources",
+      date: "2024-12-05",
+      priority: "low",
+      link: "https://jeemain.nta.nic.in/"
+    },
+    {
+      id: 8,
+      title: "Correction Window Open for NEET UG 2025",
+      description: "Candidates who have already registered for NEET UG 2025 can now make corrections in their application forms till 20th January 2025.",
+      category: "Exam Updates",
+      date: "2024-12-01",
+      priority: "medium",
+      link: "https://neet.nta.nic.in/"
+    }
+  ];
+
+  const alertCategories = ["all", "Exam Updates", "Results", "Important Notice", "Important Dates", "Resources"];
+
+  const filteredAlerts = ntaAlerts.filter(alert => {
+    const matchesCategory = alertFilter === "all" || alert.category === alertFilter;
+    const matchesSearch = alert.title.toLowerCase().includes(alertSearchQuery.toLowerCase()) || 
+                         alert.description.toLowerCase().includes(alertSearchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case "high":
+        return "bg-red-500/10 text-red-600 border-red-500/20";
+      case "medium":
+        return "bg-yellow-500/10 text-yellow-600 border-yellow-500/20";
+      case "low":
+        return "bg-blue-500/10 text-blue-600 border-blue-500/20";
+      default:
+        return "bg-muted text-muted-foreground";
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case "Exam Updates":
+        return "bg-primary/10 text-primary border-primary/20";
+      case "Results":
+        return "bg-green-500/10 text-green-600 border-green-500/20";
+      case "Important Notice":
+        return "bg-red-500/10 text-red-600 border-red-500/20";
+      case "Important Dates":
+        return "bg-purple-500/10 text-purple-600 border-purple-500/20";
+      case "Resources":
+        return "bg-blue-500/10 text-blue-600 border-blue-500/20";
+      default:
+        return "bg-muted text-muted-foreground";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex transition-colors duration-300">
       {/* Sidebar */}
@@ -473,6 +596,17 @@ const Dashboard = () => {
           >
             <ClipboardList className={`w-5 h-5 transition-transform duration-300 ${activeTab === "quizGenerator" ? "" : "group-hover:scale-110"}`} />
             <span className="font-medium">Quiz Generator</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("alerts")}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group ${
+              activeTab === "alerts"
+                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                : "text-slate-300 hover:bg-slate-800 hover:text-white hover:translate-x-1"
+            }`}
+          >
+            <Megaphone className={`w-5 h-5 transition-transform duration-300 ${activeTab === "alerts" ? "" : "group-hover:scale-110"}`} />
+            <span className="font-medium">Alerts</span>
           </button>
         </nav>
 
@@ -1518,6 +1652,190 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Alerts Tab */}
+        {activeTab === "alerts" && (
+          <div className="space-y-6 animate-fade-in">
+            {/* Header */}
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-4">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 backdrop-blur-xl border border-primary/20 shadow-xl shadow-primary/10">
+                  <Megaphone className="w-8 h-8 text-primary animate-pulse" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                    NTA Alerts & Updates
+                  </h2>
+                  <p className="text-muted-foreground mt-1">
+                    Stay updated with latest notifications from National Testing Agency
+                  </p>
+                </div>
+              </div>
+
+              {/* Search and Filter */}
+              <Card className="p-4 bg-gradient-to-br from-background via-background to-primary/5 border-primary/10">
+                <div className="grid md:grid-cols-3 gap-3">
+                  <Input
+                    placeholder="Search alerts..."
+                    value={alertSearchQuery}
+                    onChange={(e) => setAlertSearchQuery(e.target.value)}
+                    className="md:col-span-2"
+                  />
+                  <select
+                    value={alertFilter}
+                    onChange={(e) => setAlertFilter(e.target.value)}
+                    className="w-full p-2 border rounded-md bg-background"
+                  >
+                    {alertCategories.map((category) => (
+                      <option key={category} value={category}>
+                        {category === "all" ? "All Categories" : category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Category Pills */}
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {alertCategories.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => setAlertFilter(category)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
+                        alertFilter === category
+                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105"
+                          : "bg-muted hover:bg-primary/10 hover:text-primary"
+                      }`}
+                    >
+                      {category === "all" ? "All" : category}
+                    </button>
+                  ))}
+                </div>
+              </Card>
+            </div>
+
+            {/* Stats Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card className="p-4 bg-gradient-to-br from-red-500/10 to-red-500/5 border-red-500/20 hover:shadow-xl hover:shadow-red-500/10 transition-all duration-300 group">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">High Priority</p>
+                    <p className="text-2xl font-bold text-red-600 group-hover:scale-110 transition-transform duration-300">
+                      {ntaAlerts.filter(a => a.priority === "high").length}
+                    </p>
+                  </div>
+                  <AlertCircle className="w-8 h-8 text-red-500/50 group-hover:text-red-500 transition-colors duration-300" />
+                </div>
+              </Card>
+              
+              <Card className="p-4 bg-gradient-to-br from-yellow-500/10 to-yellow-500/5 border-yellow-500/20 hover:shadow-xl hover:shadow-yellow-500/10 transition-all duration-300 group">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Medium Priority</p>
+                    <p className="text-2xl font-bold text-yellow-600 group-hover:scale-110 transition-transform duration-300">
+                      {ntaAlerts.filter(a => a.priority === "medium").length}
+                    </p>
+                  </div>
+                  <AlertCircle className="w-8 h-8 text-yellow-500/50 group-hover:text-yellow-500 transition-colors duration-300" />
+                </div>
+              </Card>
+              
+              <Card className="p-4 bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 group">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Total Alerts</p>
+                    <p className="text-2xl font-bold text-green-600 group-hover:scale-110 transition-transform duration-300">
+                      {ntaAlerts.length}
+                    </p>
+                  </div>
+                  <Megaphone className="w-8 h-8 text-green-500/50 group-hover:text-green-500 transition-colors duration-300" />
+                </div>
+              </Card>
+              
+              <Card className="p-4 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 group">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">This Week</p>
+                    <p className="text-2xl font-bold text-primary group-hover:scale-110 transition-transform duration-300">
+                      {ntaAlerts.filter(a => {
+                        const alertDate = new Date(a.date);
+                        const weekAgo = new Date();
+                        weekAgo.setDate(weekAgo.getDate() - 7);
+                        return alertDate >= weekAgo;
+                      }).length}
+                    </p>
+                  </div>
+                  <CalendarIcon className="w-8 h-8 text-primary/50 group-hover:text-primary transition-colors duration-300" />
+                </div>
+              </Card>
+            </div>
+
+            {/* Alerts Grid */}
+            <div className="space-y-4">
+              {filteredAlerts.length === 0 ? (
+                <Card className="p-12 text-center">
+                  <Megaphone className="w-16 h-16 mx-auto text-muted-foreground/30 mb-4" />
+                  <p className="text-lg text-muted-foreground">No alerts found matching your criteria</p>
+                </Card>
+              ) : (
+                filteredAlerts.map((alert, index) => (
+                  <Card 
+                    key={alert.id}
+                    className="p-6 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border-l-4 hover:border-primary hover:translate-x-1 group animate-fade-in"
+                    style={{
+                      animationDelay: `${index * 100}ms`,
+                      borderLeftColor: alert.priority === 'high' ? 'hsl(var(--destructive))' : 
+                                      alert.priority === 'medium' ? 'hsl(var(--warning))' : 
+                                      'hsl(var(--primary))'
+                    }}
+                  >
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                      <div className="flex-1 space-y-3">
+                        {/* Header */}
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold border-2 transition-all duration-300 ${getCategoryColor(alert.category)}`}>
+                            <Tag className="w-3 h-3 inline mr-1" />
+                            {alert.category}
+                          </span>
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold border-2 transition-all duration-300 ${getPriorityColor(alert.priority)}`}>
+                            {alert.priority.toUpperCase()}
+                          </span>
+                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <CalendarIcon className="w-3 h-3" />
+                            {new Date(alert.date).toLocaleDateString('en-US', { 
+                              year: 'numeric', 
+                              month: 'short', 
+                              day: 'numeric' 
+                            })}
+                          </span>
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="text-xl font-bold group-hover:text-primary transition-colors duration-300">
+                          {alert.title}
+                        </h3>
+
+                        {/* Description */}
+                        <p className="text-muted-foreground leading-relaxed">
+                          {alert.description}
+                        </p>
+                      </div>
+
+                      {/* Action Button */}
+                      <Button 
+                        variant="outline"
+                        className="gap-2 hover:bg-primary hover:text-primary-foreground transition-all duration-300 group-hover:scale-105"
+                        onClick={() => window.open(alert.link, '_blank')}
+                      >
+                        View Details
+                        <ExternalLink className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </Card>
+                ))
+              )}
+            </div>
           </div>
         )}
       </main>
