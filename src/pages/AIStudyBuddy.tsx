@@ -116,19 +116,99 @@ const AIStudyBuddy = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Gradient orbs */}
-        <div className="absolute top-20 left-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/3 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+      {/* Immersive Educational Background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Base gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5" />
+        <div className="absolute inset-0 bg-gradient-to-tl from-blue-500/5 via-transparent to-primary/5" />
         
-        {/* Study-themed icons scattered in background */}
-        <div className="absolute top-32 left-1/4 text-primary/5 text-6xl">📚</div>
-        <div className="absolute top-1/3 right-1/4 text-primary/5 text-5xl">🎓</div>
-        <div className="absolute bottom-1/4 left-1/3 text-primary/5 text-4xl">✏️</div>
-        <div className="absolute top-2/3 right-1/3 text-primary/5 text-5xl">💡</div>
-        <div className="absolute bottom-32 left-1/2 text-primary/5 text-4xl">📝</div>
+        {/* Large gradient orbs for depth */}
+        <div className="absolute top-20 left-10 w-96 h-96 bg-primary/8 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/8 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+        
+        {/* Educational Elements Layer 1 - Far Background */}
+        <div className="absolute top-20 left-[15%] opacity-20">
+          <div className="text-6xl font-bold text-primary/40 rotate-12 animate-float" style={{ animationDelay: '0.5s' }}>∑</div>
+        </div>
+        <div className="absolute top-[40%] right-[10%] opacity-15">
+          <div className="text-5xl font-bold text-primary/40 -rotate-6 animate-float" style={{ animationDelay: '1.5s' }}>∫</div>
+        </div>
+        <div className="absolute bottom-[30%] left-[20%] opacity-20">
+          <div className="text-4xl font-bold text-purple-500/40 rotate-45 animate-float" style={{ animationDelay: '2s' }}>π</div>
+        </div>
+        <div className="absolute top-[60%] right-[25%] opacity-15">
+          <div className="text-5xl font-bold text-blue-500/40 -rotate-12 animate-float" style={{ animationDelay: '0.8s' }}>∞</div>
+        </div>
+        
+        {/* Educational Elements Layer 2 - Mid Background */}
+        <div className="absolute top-[15%] right-[20%] opacity-25">
+          <svg className="w-24 h-24 text-primary/30 animate-float" style={{ animationDelay: '1.2s' }} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+          </svg>
+        </div>
+        <div className="absolute bottom-[40%] right-[15%] opacity-20">
+          <svg className="w-20 h-20 text-purple-500/30 animate-float" style={{ animationDelay: '2.5s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v6m0 6v6M1 12h6m6 0h6"/>
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+        </div>
+        <div className="absolute top-[70%] left-[10%] opacity-25">
+          <svg className="w-28 h-28 text-blue-500/30 animate-float" style={{ animationDelay: '1.8s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        
+        {/* Abstract geometric shapes */}
+        <div className="absolute top-[25%] left-[8%] w-32 h-32 border-2 border-primary/10 rounded-lg rotate-12 animate-float" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-[25%] right-[8%] w-24 h-24 border-2 border-purple-500/10 rounded-full animate-float" style={{ animationDelay: '2.2s' }} />
+        <div className="absolute top-[50%] right-[5%] w-20 h-20 border-2 border-blue-500/10 rotate-45 animate-float" style={{ animationDelay: '0.7s' }} />
+        
+        {/* DNA/Circuit pattern elements */}
+        <div className="absolute top-[35%] left-[5%] opacity-15">
+          <svg className="w-16 h-32 text-primary/40 animate-float" style={{ animationDelay: '1.3s' }} viewBox="0 0 24 48" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M4 4c4 4 16 8 16 16s-12 12-16 16M20 4c-4 4-16 8-16 16s12 12 16 16" strokeLinecap="round"/>
+            <circle cx="4" cy="4" r="2" fill="currentColor"/>
+            <circle cx="20" cy="4" r="2" fill="currentColor"/>
+            <circle cx="12" cy="24" r="2" fill="currentColor"/>
+            <circle cx="4" cy="44" r="2" fill="currentColor"/>
+            <circle cx="20" cy="44" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+        
+        {/* Brain/Neural network element */}
+        <div className="absolute bottom-[15%] left-[25%] opacity-20">
+          <svg className="w-20 h-20 text-purple-500/40 animate-float" style={{ animationDelay: '2.8s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <circle cx="6" cy="6" r="2"/>
+            <circle cx="18" cy="6" r="2"/>
+            <circle cx="12" cy="12" r="2"/>
+            <circle cx="6" cy="18" r="2"/>
+            <circle cx="18" cy="18" r="2"/>
+            <path d="M6 6l6 6m0 0l6-6M12 12l-6 6m6-6l6 6" strokeLinecap="round"/>
+          </svg>
+        </div>
+        
+        {/* Study icons in refined style */}
+        <div className="absolute top-[45%] left-[12%] opacity-25">
+          <svg className="w-16 h-16 text-primary/40 animate-float" style={{ animationDelay: '0.9s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <div className="absolute top-[80%] right-[30%] opacity-20">
+          <svg className="w-14 h-14 text-blue-500/40 animate-float" style={{ animationDelay: '1.6s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.02]" style={{
+          backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }} />
       </div>
 
       <div className="container max-w-5xl mx-auto p-4 md:p-6 relative z-10">
