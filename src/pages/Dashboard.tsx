@@ -36,13 +36,32 @@ import {
   ChevronLeft,
   ChevronRight,
   Moon,
-  Sun
+  Sun,
+  Award,
+  Flame
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import prepiqLogo from "@/assets/prepiq-logo.jpg";
 import { format, isSameDay } from "date-fns";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Cell
+} from "recharts";
 
 interface CalendarEvent {
   id: string;
@@ -217,6 +236,54 @@ const Dashboard = () => {
     const matchesType = filterType === "all" || event.type === filterType;
     return matchesSearch && matchesType;
   });
+
+  // Progress data for charts
+  const topicsCoveredData = [
+    { month: "Jan", topics: 12 },
+    { month: "Feb", topics: 18 },
+    { month: "Mar", topics: 15 },
+    { month: "Apr", topics: 22 },
+    { month: "May", topics: 28 },
+    { month: "Jun", topics: 25 },
+  ];
+
+  const weeklyStudyHours = [
+    { day: "Mon", hours: 3.5 },
+    { day: "Tue", hours: 4.2 },
+    { day: "Wed", hours: 2.8 },
+    { day: "Thu", hours: 5.1 },
+    { day: "Fri", hours: 4.5 },
+    { day: "Sat", hours: 6.2 },
+    { day: "Sun", hours: 3.8 },
+  ];
+
+  const performanceBySubject = [
+    { subject: "Mathematics", score: 85 },
+    { subject: "Physics", score: 78 },
+    { subject: "Chemistry", score: 92 },
+    { subject: "Biology", score: 88 },
+    { subject: "English", score: 81 },
+  ];
+
+  const quizScoresTrend = [
+    { week: "Week 1", score: 65 },
+    { week: "Week 2", score: 72 },
+    { week: "Week 3", score: 78 },
+    { week: "Week 4", score: 75 },
+    { week: "Week 5", score: 82 },
+    { week: "Week 6", score: 88 },
+  ];
+
+  const consistencyData = [
+    { week: "W1", days: 5 },
+    { week: "W2", days: 6 },
+    { week: "W3", days: 4 },
+    { week: "W4", days: 7 },
+    { week: "W5", days: 6 },
+    { week: "W6", days: 7 },
+  ];
+
+  const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', '#8884d8', '#82ca9d'];
 
   return (
     <div className="min-h-screen bg-background flex transition-colors duration-300">
@@ -406,25 +473,27 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {stats.map((stat, index) => (
-            <Card 
-              key={index} 
-              className="p-6 hover:shadow-lg transition-all hover:-translate-y-1 animate-fade-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <stat.icon className={`w-8 h-8 ${stat.color}`} />
-                <div className="text-3xl font-bold">{stat.value}</div>
-              </div>
-              <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
-            </Card>
-          ))}
-        </div>
+        {activeTab === "home" && (
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {stats.map((stat, index) => (
+                <Card 
+                  key={index} 
+                  className="p-6 hover:shadow-lg transition-all hover:-translate-y-1 animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <stat.icon className={`w-8 h-8 ${stat.color}`} />
+                    <div className="text-3xl font-bold">{stat.value}</div>
+                  </div>
+                  <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
+                </Card>
+              ))}
+            </div>
 
-        {/* Upcoming Events Countdown */}
-        {getUpcomingEvents().length > 0 && (
+            {/* Upcoming Events Countdown */}
+            {getUpcomingEvents().length > 0 && (
           <Card className="p-6 mb-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
               <Bell className="w-5 h-5 text-primary" />
@@ -732,6 +801,183 @@ const Dashboard = () => {
             )}
           </Card>
         </div>
+          </>
+        )}
+
+        {activeTab === "progress" && (
+          <div className="space-y-6">
+            {/* Progress Overview Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <Card className="p-6 hover:shadow-lg transition-all animate-fade-in">
+                <div className="flex items-center justify-between mb-3">
+                  <BookOpen className="w-8 h-8 text-primary" />
+                  <div className="text-3xl font-bold">120</div>
+                </div>
+                <p className="text-sm text-muted-foreground font-medium">Topics Covered</p>
+              </Card>
+              <Card className="p-6 hover:shadow-lg transition-all animate-fade-in">
+                <div className="flex items-center justify-between mb-3">
+                  <Flame className="w-8 h-8 text-orange-500" />
+                  <div className="text-3xl font-bold">7</div>
+                </div>
+                <p className="text-sm text-muted-foreground font-medium">Day Streak</p>
+              </Card>
+              <Card className="p-6 hover:shadow-lg transition-all animate-fade-in">
+                <div className="flex items-center justify-between mb-3">
+                  <Target className="w-8 h-8 text-secondary" />
+                  <div className="text-3xl font-bold">85%</div>
+                </div>
+                <p className="text-sm text-muted-foreground font-medium">Avg Score</p>
+              </Card>
+              <Card className="p-6 hover:shadow-lg transition-all animate-fade-in">
+                <div className="flex items-center justify-between mb-3">
+                  <Award className="w-8 h-8 text-yellow-500" />
+                  <div className="text-3xl font-bold">24</div>
+                </div>
+                <p className="text-sm text-muted-foreground font-medium">Achievements</p>
+              </Card>
+            </div>
+
+            {/* Charts Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Topics Covered Over Time */}
+              <Card className="p-6 animate-fade-in">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-primary" />
+                  Topics Covered Over Time
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={topicsCoveredData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="topics" 
+                      stroke="hsl(var(--primary))" 
+                      strokeWidth={3}
+                      dot={{ fill: 'hsl(var(--primary))', r: 5 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </Card>
+
+              {/* Weekly Study Hours */}
+              <Card className="p-6 animate-fade-in">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-secondary" />
+                  Weekly Study Hours
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={weeklyStudyHours}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Bar dataKey="hours" fill="hsl(var(--secondary))" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Card>
+
+              {/* Study Consistency */}
+              <Card className="p-6 animate-fade-in">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                  <Flame className="w-5 h-5 text-orange-500" />
+                  Study Consistency (Days per Week)
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={consistencyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" domain={[0, 7]} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Bar dataKey="days" fill="#f97316" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Card>
+
+              {/* Quiz Scores Trend */}
+              <Card className="p-6 animate-fade-in">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                  <Target className="w-5 h-5 text-accent" />
+                  Quiz Performance Trend
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={quizScoresTrend}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" domain={[0, 100]} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Area 
+                      type="monotone" 
+                      dataKey="score" 
+                      stroke="hsl(var(--accent))" 
+                      fill="hsl(var(--accent))"
+                      fillOpacity={0.6}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </Card>
+
+              {/* Performance by Subject - Full Width */}
+              <Card className="p-6 lg:col-span-2 animate-fade-in">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                  <Award className="w-5 h-5 text-primary" />
+                  Performance by Subject
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={performanceBySubject} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis type="number" domain={[0, 100]} stroke="hsl(var(--muted-foreground))" />
+                    <YAxis dataKey="subject" type="category" stroke="hsl(var(--muted-foreground))" width={100} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Bar dataKey="score" radius={[0, 8, 8, 0]}>
+                      {performanceBySubject.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </Card>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
