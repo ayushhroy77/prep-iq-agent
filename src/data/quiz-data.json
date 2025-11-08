@@ -9,26 +9,47 @@
         {
           "id": "algebra",
           "name": "Algebra Fundamentals",
-          "description": "Linear equations, polynomials, and factoring",
-          "difficulty": "easy"
+          "description": "Linear equations, polynomials, and factoring"
+        },
+        {
+          "id": "advanced-algebra",
+          "name": "Advanced Algebra",
+          "description": "Quadratic equations, exponential functions, and logarithms"
         },
         {
           "id": "geometry",
           "name": "Geometry Basics",
-          "description": "Angles, triangles, circles, and spatial reasoning",
-          "difficulty": "medium"
+          "description": "Angles, triangles, circles, and spatial reasoning"
+        },
+        {
+          "id": "geometry-advanced",
+          "name": "Advanced Geometry",
+          "description": "Proofs, transformations, and coordinate geometry"
         },
         {
           "id": "calculus",
           "name": "Calculus Introduction",
-          "description": "Limits, derivatives, and basic integration",
-          "difficulty": "hard"
+          "description": "Limits, derivatives, and basic integration"
+        },
+        {
+          "id": "calculus-advanced",
+          "name": "Advanced Calculus",
+          "description": "Multivariable calculus, differential equations, and applications"
         },
         {
           "id": "trigonometry",
           "name": "Trigonometry",
-          "description": "Sine, cosine, tangent, and trigonometric identities",
-          "difficulty": "medium"
+          "description": "Sine, cosine, tangent, and trigonometric identities"
+        },
+        {
+          "id": "statistics",
+          "name": "Statistics & Probability",
+          "description": "Data analysis, probability theory, and distributions"
+        },
+        {
+          "id": "linear-algebra",
+          "name": "Linear Algebra",
+          "description": "Matrices, vectors, eigenvalues, and linear transformations"
         }
       ]
     },
@@ -41,26 +62,42 @@
         {
           "id": "chemistry-basics",
           "name": "Chemistry Basics",
-          "description": "Elements, compounds, chemical reactions",
-          "difficulty": "easy"
+          "description": "Elements, compounds, chemical reactions"
         },
         {
           "id": "organic-chemistry",
           "name": "Organic Chemistry",
-          "description": "Carbon compounds, functional groups, reactions",
-          "difficulty": "hard"
+          "description": "Carbon compounds, functional groups, reactions"
         },
         {
           "id": "periodic-table",
           "name": "Periodic Table",
-          "description": "Element properties, groups, and trends",
-          "difficulty": "medium"
+          "description": "Element properties, groups, and trends"
         },
         {
           "id": "chemical-bonding",
           "name": "Chemical Bonding",
-          "description": "Ionic, covalent, and metallic bonds",
-          "difficulty": "medium"
+          "description": "Ionic, covalent, and metallic bonds"
+        },
+        {
+          "id": "stoichiometry",
+          "name": "Stoichiometry",
+          "description": "Chemical equations, molar calculations, and reaction yields"
+        },
+        {
+          "id": "acids-bases",
+          "name": "Acids and Bases",
+          "description": "pH scale, acid-base reactions, and buffer solutions"
+        },
+        {
+          "id": "thermochemistry",
+          "name": "Thermochemistry",
+          "description": "Energy changes, enthalpy, and calorimetry"
+        },
+        {
+          "id": "electrochemistry",
+          "name": "Electrochemistry",
+          "description": "Oxidation-reduction reactions and electrochemical cells"
         }
       ]
     },
@@ -73,26 +110,47 @@
         {
           "id": "cell-biology",
           "name": "Cell Biology",
-          "description": "Cell structure, organelles, and cellular processes",
-          "difficulty": "medium"
+          "description": "Cell structure, organelles, and cellular processes"
         },
         {
           "id": "genetics",
           "name": "Genetics",
-          "description": "DNA, heredity, and genetic variation",
-          "difficulty": "hard"
+          "description": "DNA, heredity, and genetic variation"
         },
         {
           "id": "ecology",
           "name": "Ecology",
-          "description": "Ecosystems, food chains, and environmental interactions",
-          "difficulty": "easy"
+          "description": "Ecosystems, food chains, and environmental interactions"
         },
         {
           "id": "human-anatomy",
           "name": "Human Anatomy",
-          "description": "Body systems, organs, and physiological processes",
-          "difficulty": "medium"
+          "description": "Body systems, organs, and physiological processes"
+        },
+        {
+          "id": "evolution",
+          "name": "Evolution",
+          "description": "Natural selection, adaptation, and speciation"
+        },
+        {
+          "id": "molecular-biology",
+          "name": "Molecular Biology",
+          "description": "Protein synthesis, gene expression, and molecular mechanisms"
+        },
+        {
+          "id": "microbiology",
+          "name": "Microbiology",
+          "description": "Bacteria, viruses, fungi, and microorganisms"
+        },
+        {
+          "id": "botany",
+          "name": "Botany",
+          "description": "Plant structure, photosynthesis, and plant life cycles"
+        },
+        {
+          "id": "zoology",
+          "name": "Zoology",
+          "description": "Animal classification, behavior, and physiology"
         }
       ]
     },
@@ -105,26 +163,47 @@
         {
           "id": "mechanics",
           "name": "Mechanics",
-          "description": "Newton's laws, velocity, acceleration, and forces",
-          "difficulty": "medium"
+          "description": "Newton's laws, velocity, acceleration, and forces"
+        },
+        {
+          "id": "kinematics",
+          "name": "Kinematics",
+          "description": "Motion, displacement, velocity, and acceleration"
         },
         {
           "id": "electricity",
           "name": "Electricity & Magnetism",
-          "description": "Electric fields, circuits, and magnetic forces",
-          "difficulty": "hard"
+          "description": "Electric fields, circuits, and magnetic forces"
         },
         {
           "id": "thermodynamics",
           "name": "Thermodynamics",
-          "description": "Heat, temperature, and energy transfer",
-          "difficulty": "medium"
+          "description": "Heat, temperature, and energy transfer"
         },
         {
           "id": "waves",
           "name": "Waves & Optics",
-          "description": "Wave properties, sound, and light",
-          "difficulty": "easy"
+          "description": "Wave properties, sound, and light"
+        },
+        {
+          "id": "quantum-physics",
+          "name": "Quantum Physics",
+          "description": "Quantum mechanics, particle-wave duality, and uncertainty"
+        },
+        {
+          "id": "relativity",
+          "name": "Relativity",
+          "description": "Special and general relativity, spacetime"
+        },
+        {
+          "id": "nuclear-physics",
+          "name": "Nuclear Physics",
+          "description": "Radioactivity, nuclear reactions, and particle physics"
+        },
+        {
+          "id": "fluid-mechanics",
+          "name": "Fluid Mechanics",
+          "description": "Fluid dynamics, pressure, and buoyancy"
         }
       ]
     }

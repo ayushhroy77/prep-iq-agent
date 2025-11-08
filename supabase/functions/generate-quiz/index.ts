@@ -14,22 +14,26 @@ serve(async (req) => {
   try {
     const { topicName, topicDescription, difficulty } = await req.json();
     
-    console.log('Generating quiz for topic:', topicName);
+    console.log('Generating quiz for topic:', topicName, 'with difficulty:', difficulty);
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const systemPrompt = `You are an expert educational content creator. Generate exactly 15 high-quality, diverse quiz questions about the given topic. Each question should:
-- Be unique and not repetitive
-- Test different aspects of the topic
-- Include 4 answer options (A, B, C, D)
+    const systemPrompt = `You are an expert educational content creator and teacher. Generate exactly 15 high-quality, diverse quiz questions about the given topic. Each question should:
+- Be unique and not repetitive - vary the question types and aspects covered
+- Test different concepts, applications, and depths of understanding of the topic
+- Include 4 answer options (A, B, C, D) with plausible distractors
 - Have exactly one correct answer
-- Include a detailed explanation (2-3 sentences) that teaches the concept
-- Vary in difficulty and question format
+- Include a comprehensive, educational explanation (3-5 sentences) that:
+  * Clearly explains WHY the correct answer is right
+  * Provides context and additional learning points
+  * Mentions why common wrong answers are incorrect (when relevant)
+  * Uses real-world examples or applications when possible
+  * Cites key concepts, principles, or facts to reinforce learning
 
-Research the topic thoroughly before generating questions to ensure accuracy and relevance.`;
+Research the topic thoroughly before generating questions to ensure accuracy, relevance, and educational value. Make explanations engaging and informative.`;
 
     const userPrompt = `Generate 15 quiz questions about: "${topicName}"
 Description: ${topicDescription}

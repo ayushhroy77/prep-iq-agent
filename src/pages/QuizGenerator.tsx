@@ -20,7 +20,6 @@ interface Topic {
   id: string;
   name: string;
   description: string;
-  difficulty: string;
 }
 
 interface Subject {
@@ -35,6 +34,7 @@ const QuizGenerator = () => {
   const navigate = useNavigate();
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
@@ -44,7 +44,7 @@ const QuizGenerator = () => {
 
   const subjects = quizData.subjects as Subject[];
 
-  const generateQuiz = async (topic: Topic) => {
+  const generateQuiz = async (topic: Topic, difficulty: 'easy' | 'medium' | 'hard') => {
     setIsLoading(true);
     setShowExplanation(false);
     try {
@@ -52,7 +52,7 @@ const QuizGenerator = () => {
         body: {
           topicName: topic.name,
           topicDescription: topic.description,
-          difficulty: topic.difficulty,
+          difficulty: difficulty,
         },
       });
 
@@ -77,7 +77,6 @@ const QuizGenerator = () => {
 
   const handleTopicSelect = (topic: Topic) => {
     setSelectedTopic(topic);
-    generateQuiz(topic);
   };
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -132,15 +131,22 @@ const QuizGenerator = () => {
 
   const handleRetakeQuiz = () => {
     if (selectedTopic) {
-      generateQuiz(selectedTopic);
+      generateQuiz(selectedTopic, selectedDifficulty);
     }
   };
 
   const handleBackToSubjects = () => {
     setSelectedSubject(null);
     setSelectedTopic(null);
+    setSelectedDifficulty('medium');
     setQuestions([]);
     setQuizSubmitted(false);
+  };
+
+  const handleStartQuiz = () => {
+    if (selectedTopic) {
+      generateQuiz(selectedTopic, selectedDifficulty);
+    }
   };
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -194,7 +200,7 @@ const QuizGenerator = () => {
     );
   }
 
-  // Topic Selection View
+  // Topic Selection and Difficulty View
   if (!selectedTopic || questions.length === 0) {
     return (
       <div className="min-h-screen bg-background">
@@ -213,24 +219,17 @@ const QuizGenerator = () => {
             <p className="text-muted-foreground">Choose a topic to begin your quiz</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {selectedSubject.topics.map((topic) => (
               <Card
                 key={topic.id}
-                className="cursor-pointer hover:shadow-lg transition-shadow"
+                className={`cursor-pointer hover:shadow-lg transition-all ${
+                  selectedTopic?.id === topic.id ? 'ring-2 ring-primary' : ''
+                }`}
                 onClick={() => !isLoading && handleTopicSelect(topic)}
               >
                 <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-xl">{topic.name}</CardTitle>
-                    <Badge variant={
-                      topic.difficulty === 'easy' ? 'default' :
-                      topic.difficulty === 'medium' ? 'secondary' :
-                      'destructive'
-                    }>
-                      {topic.difficulty}
-                    </Badge>
-                  </div>
+                  <CardTitle className="text-xl">{topic.name}</CardTitle>
                   <CardDescription>{topic.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -239,6 +238,63 @@ const QuizGenerator = () => {
               </Card>
             ))}
           </div>
+
+          {selectedTopic && !isLoading && (
+            <Card className="max-w-2xl mx-auto">
+              <CardHeader>
+                <CardTitle>Select Difficulty Level</CardTitle>
+                <CardDescription>
+                  Choose the difficulty level for your {selectedTopic.name} quiz
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card
+                    className={`cursor-pointer transition-all hover:shadow-md ${
+                      selectedDifficulty === 'easy' ? 'ring-2 ring-green-500 bg-green-50 dark:bg-green-950' : ''
+                    }`}
+                    onClick={() => setSelectedDifficulty('easy')}
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-lg text-green-600 dark:text-green-400">Easy</CardTitle>
+                      <CardDescription>
+                        Basic concepts and fundamental understanding
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                  <Card
+                    className={`cursor-pointer transition-all hover:shadow-md ${
+                      selectedDifficulty === 'medium' ? 'ring-2 ring-yellow-500 bg-yellow-50 dark:bg-yellow-950' : ''
+                    }`}
+                    onClick={() => setSelectedDifficulty('medium')}
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-lg text-yellow-600 dark:text-yellow-400">Medium</CardTitle>
+                      <CardDescription>
+                        Intermediate concepts and applications
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                  <Card
+                    className={`cursor-pointer transition-all hover:shadow-md ${
+                      selectedDifficulty === 'hard' ? 'ring-2 ring-red-500 bg-red-50 dark:bg-red-950' : ''
+                    }`}
+                    onClick={() => setSelectedDifficulty('hard')}
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-lg text-red-600 dark:text-red-400">Hard</CardTitle>
+                      <CardDescription>
+                        Advanced concepts and complex problems
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </div>
+                <Button onClick={handleStartQuiz} className="w-full" size="lg">
+                  Start Quiz ({selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)})
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
           {isLoading && (
             <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50">
@@ -282,8 +338,15 @@ const QuizGenerator = () => {
                 Question {currentQuestionIndex + 1} of {questions.length}
               </p>
             </div>
-            <Badge variant="outline" className="text-lg px-4 py-2">
-              {selectedTopic.difficulty}
+            <Badge 
+              variant="outline" 
+              className={`text-lg px-4 py-2 ${
+                selectedDifficulty === 'easy' ? 'border-green-500 text-green-600 dark:text-green-400' :
+                selectedDifficulty === 'medium' ? 'border-yellow-500 text-yellow-600 dark:text-yellow-400' :
+                'border-red-500 text-red-600 dark:text-red-400'
+              }`}
+            >
+              {selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)}
             </Badge>
           </div>
           <Progress value={((currentQuestionIndex + 1) / questions.length) * 100} className="h-2" />
@@ -291,30 +354,55 @@ const QuizGenerator = () => {
 
         {/* Results Summary (shown after submission) */}
         {quizSubmitted && (
-          <Card className="mb-8 border-2">
-            <CardHeader>
-              <CardTitle className="text-2xl">Quiz Complete!</CardTitle>
+          <Card className="mb-8 border-2 bg-gradient-to-br from-primary/5 to-secondary/5">
+            <CardHeader className="text-center pb-4">
+              <div className="mx-auto mb-4 w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+                {percentage >= 80 ? (
+                  <span className="text-5xl">🎉</span>
+                ) : percentage >= 60 ? (
+                  <span className="text-5xl">👍</span>
+                ) : (
+                  <span className="text-5xl">💪</span>
+                )}
+              </div>
+              <CardTitle className="text-3xl mb-2">Quiz Complete!</CardTitle>
+              <CardDescription className="text-lg">
+                {selectedTopic.name} - {selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)} Level
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg">Your Score:</span>
-                  <span className="text-3xl font-bold">{score} / 15</span>
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-4 rounded-lg bg-background/50">
+                    <div className="text-4xl font-bold text-primary mb-1">{score}</div>
+                    <div className="text-sm text-muted-foreground">Correct Answers</div>
+                  </div>
+                  <div className="text-center p-4 rounded-lg bg-background/50">
+                    <div className="text-4xl font-bold text-primary mb-1">{percentage}%</div>
+                    <div className="text-sm text-muted-foreground">Accuracy</div>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg">Percentage:</span>
-                  <span className="text-2xl font-semibold">{percentage}%</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg">Performance:</span>
-                  <span className={`text-2xl font-semibold ${rating.color}`}>
+                
+                <div className="text-center p-6 rounded-lg bg-background/50 border-2 border-primary/20">
+                  <div className="text-sm text-muted-foreground mb-2">Performance Rating</div>
+                  <div className={`text-3xl font-bold ${rating.color}`}>
                     {rating.text}
-                  </span>
+                  </div>
                 </div>
-                <Button onClick={handleRetakeQuiz} className="w-full" size="lg">
-                  <RotateCcw className="mr-2 h-4 w-4" />
-                  Retake Quiz with New Questions
-                </Button>
+
+                <div className="flex flex-col gap-3">
+                  <Button onClick={handleRetakeQuiz} className="w-full" size="lg">
+                    <RotateCcw className="mr-2 h-5 w-5" />
+                    Generate New Questions
+                  </Button>
+                  <Button onClick={handleBackToSubjects} variant="outline" className="w-full" size="lg">
+                    Back to Topics
+                  </Button>
+                </div>
+
+                <div className="text-center text-sm text-muted-foreground pt-4 border-t">
+                  Review all questions and explanations below to enhance your learning
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -367,17 +455,23 @@ const QuizGenerator = () => {
 
         {/* Explanation (shown after submission) */}
         {quizSubmitted && (
-          <Card className="mb-6 border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
+          <Card className="mb-6 border-2 border-primary/20 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
             <CardHeader>
               <CardTitle className="flex items-center text-blue-900 dark:text-blue-100">
                 <BookOpen className="mr-2 h-5 w-5" />
-                Explanation
+                Detailed Explanation
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-blue-900 dark:text-blue-100 leading-relaxed">
-                {currentQuestion.explanation}
-              </p>
+              <div className={`p-4 rounded-lg border-l-4 ${
+                userAnswers[currentQuestionIndex] === currentQuestion.correctAnswer
+                  ? 'bg-green-50 dark:bg-green-950/50 border-green-500'
+                  : 'bg-amber-50 dark:bg-amber-950/50 border-amber-500'
+              }`}>
+                <p className="text-foreground leading-relaxed text-base">
+                  {currentQuestion.explanation}
+                </p>
+              </div>
             </CardContent>
           </Card>
         )}
