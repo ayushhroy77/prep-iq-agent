@@ -119,12 +119,8 @@ const Dashboard = () => {
             <span className="font-medium">My Profile</span>
           </button>
           <button
-            onClick={() => setActiveTab("schedule")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-              activeTab === "schedule"
-                ? "bg-accent text-accent-foreground"
-                : "text-muted-foreground hover:bg-muted"
-            }`}
+            onClick={() => navigate("/study-schedule")}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-muted-foreground hover:bg-muted"
           >
             <Calendar className="w-5 h-5" />
             <span className="font-medium">Study Schedule</span>
