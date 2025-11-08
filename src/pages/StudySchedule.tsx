@@ -418,8 +418,8 @@ export default function StudySchedule() {
 
   if (step === "setup") {
     return (
-      <div className="min-h-screen bg-background">
-        <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+      <div className="min-h-screen bg-background animate-fade-in">
+        <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10 animate-slide-up">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Button variant="ghost" onClick={() => navigate("/dashboard")}>
@@ -431,9 +431,9 @@ export default function StudySchedule() {
         </header>
 
         <main className="container mx-auto px-4 py-8 max-w-5xl">
-          <Card className="mb-6">
+          <Card className="mb-6 animate-scale-in hover-lift transition-smooth" style={{ animationDelay: '0.1s' }}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 transition-smooth">
                 <Target className="h-5 w-5" />
                 Study Goals
               </CardTitle>
@@ -480,10 +480,10 @@ export default function StudySchedule() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="animate-scale-in hover-lift transition-smooth" style={{ animationDelay: '0.2s' }}>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 transition-smooth">
                   <BookOpen className="h-5 w-5" />
                   Subjects & Priorities
                 </CardTitle>
@@ -495,8 +495,8 @@ export default function StudySchedule() {
             </CardHeader>
             <CardContent className="space-y-4">
               {showSubjectForm && (
-                <Card className="border-2 border-primary">
-                  <CardContent className="pt-6 space-y-4">
+                <Card className="border-2 border-primary animate-bounce-in">
+                  <CardContent className="pt-6 space-y-4 transition-smooth">
                     <div>
                       <Label htmlFor="subjectName">Subject Name</Label>
                       <Input
@@ -594,8 +594,8 @@ export default function StudySchedule() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+    <div className="min-h-screen bg-background animate-fade-in">
+      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10 animate-slide-up">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" onClick={() => setStep("setup")}>
@@ -609,8 +609,8 @@ export default function StudySchedule() {
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="pt-6">
+          <Card className="animate-fade-in hover-lift transition-smooth" style={{ animationDelay: '0.1s' }}>
+            <CardContent className="pt-6 transition-smooth">
               <div className="flex items-center gap-3">
                 <Clock className="h-8 w-8 text-primary" />
                 <div>
@@ -622,8 +622,8 @@ export default function StudySchedule() {
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="pt-6">
+          <Card className="animate-fade-in hover-lift transition-smooth" style={{ animationDelay: '0.2s' }}>
+            <CardContent className="pt-6 transition-smooth">
               <div className="flex items-center gap-3">
                 <BookOpen className="h-8 w-8 text-primary" />
                 <div>
@@ -633,8 +633,8 @@ export default function StudySchedule() {
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="pt-6">
+          <Card className="animate-fade-in hover-lift transition-smooth" style={{ animationDelay: '0.3s' }}>
+            <CardContent className="pt-6 transition-smooth">
               <div className="flex items-center gap-3">
                 <Brain className="h-8 w-8 text-primary" />
                 <div>
@@ -649,20 +649,21 @@ export default function StudySchedule() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-7 gap-4">
-          {DAYS.map((day) => (
-            <Card key={day} className="flex flex-col">
-              <CardHeader className="pb-3">
+          {DAYS.map((day, idx) => (
+            <Card key={day} className="flex flex-col animate-fade-in hover-lift transition-smooth" style={{ animationDelay: `${idx * 0.1}s` }}>
+              <CardHeader className="pb-3 transition-smooth">
                 <CardTitle className="text-lg">{day}</CardTitle>
               </CardHeader>
               <CardContent className="flex-1 space-y-2">
-                {getScheduleForDay(day).map((slot) => {
+                {getScheduleForDay(day).map((slot, slotIdx) => {
                   const subject = getSubjectById(slot.subjectId);
                   return (
                     <div
                       key={slot.id}
-                      className={`p-3 rounded-lg border relative group ${
+                      className={`p-3 rounded-lg border relative group hover-scale transition-smooth animate-slide-in-left ${
                         slot.type === "break" ? "bg-muted/50" : subject ? subject.color + " text-white" : "bg-card"
                       }`}
+                      style={{ animationDelay: `${(idx * 0.1) + (slotIdx * 0.05)}s` }}
                     >
                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
                         <Button
@@ -701,7 +702,7 @@ export default function StudySchedule() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full"
+                  className="w-full hover-scale transition-smooth"
                   onClick={() => addCustomSlot(day)}
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -714,9 +715,9 @@ export default function StudySchedule() {
       </main>
 
       <Dialog open={showSlotDialog} onOpenChange={setShowSlotDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md animate-scale-in">
           <DialogHeader>
-            <DialogTitle>{editingSlot ? "Edit Time Slot" : "Add Time Slot"}</DialogTitle>
+            <DialogTitle className="transition-smooth">{editingSlot ? "Edit Time Slot" : "Add Time Slot"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>

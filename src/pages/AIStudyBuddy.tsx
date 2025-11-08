@@ -125,9 +125,9 @@ const AIStudyBuddy = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden animate-fade-in">
       {/* Immersive Educational Background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden animate-fade-in">
         {/* Base gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5" />
         <div className="absolute inset-0 bg-gradient-to-tl from-blue-500/5 via-transparent to-primary/5" />
@@ -223,13 +223,13 @@ const AIStudyBuddy = () => {
 
       <div className="container max-w-5xl mx-auto p-4 md:p-6 relative z-10">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 animate-slide-up">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigate("/dashboard")}
-              className="hover:bg-primary/10 transition-all duration-300"
+              className="hover:bg-primary/10 transition-all duration-300 hover-scale"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -248,14 +248,15 @@ const AIStudyBuddy = () => {
 
         {/* Main Chat Container */}
         <div className="max-w-4xl mx-auto">
-          <Card className="backdrop-blur-xl bg-card/50 border-border/50 shadow-2xl">
+          <Card className="backdrop-blur-xl bg-card/50 border-border/50 shadow-2xl animate-scale-in hover-lift transition-smooth" style={{ animationDelay: '0.2s' }}>
             <div className="p-6 h-[calc(100vh-220px)] flex flex-col">
               {/* Messages */}
               <div className="flex-1 overflow-y-auto mb-6 space-y-6 pr-2 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
                 {messages.map((message, index) => (
                   <div
                     key={index}
-                    className={`flex gap-3 animate-fade-in ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                    className={`flex gap-3 animate-slide-in-${message.role === "user" ? "right" : "left"} ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                    style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     {message.role === "assistant" && (
                       <div className="flex-shrink-0">
@@ -271,10 +272,10 @@ const AIStudyBuddy = () => {
                         />
                       )}
                       <div
-                        className={`rounded-2xl p-4 transition-all duration-300 ${
+                        className={`rounded-2xl p-4 transition-all duration-300 hover-scale ${
                           message.role === "user"
-                            ? "bg-gradient-primary text-white shadow-lg"
-                            : "bg-muted/50 text-foreground backdrop-blur-sm"
+                            ? "bg-gradient-primary text-white shadow-lg hover-glow"
+                            : "bg-muted/50 text-foreground backdrop-blur-sm hover-lift"
                         }`}
                       >
                         <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
@@ -283,11 +284,11 @@ const AIStudyBuddy = () => {
                   </div>
                 ))}
                 {isLoading && (
-                  <div className="flex gap-3 animate-fade-in">
+                  <div className="flex gap-3 animate-bounce-in">
                     <div className="flex-shrink-0">
-                      <img src={prepiqLogo} alt="AI" className="w-10 h-10 rounded-full ring-2 ring-primary/20" />
+                      <img src={prepiqLogo} alt="AI" className="w-10 h-10 rounded-full ring-2 ring-primary/20 animate-pulse" />
                     </div>
-                    <div className="bg-muted/50 backdrop-blur-sm rounded-2xl p-4">
+                    <div className="bg-muted/50 backdrop-blur-sm rounded-2xl p-4 hover-scale">
                       <Loader2 className="w-5 h-5 animate-spin text-primary" />
                     </div>
                   </div>
@@ -363,7 +364,7 @@ const AIStudyBuddy = () => {
                     size="sm"
                     onClick={() => setInput("Explain this step by step with detailed reasoning")}
                     disabled={isLoading}
-                    className="rounded-full text-xs hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+                    className="rounded-full text-xs hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 hover-scale"
                   >
                     📖 Step-by-step
                   </Button>

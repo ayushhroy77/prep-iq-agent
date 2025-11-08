@@ -58,24 +58,24 @@ const ConceptLibrary = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background animate-fade-in">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="mb-8 animate-fade-in">
-          <h1 className="text-4xl font-bold text-foreground mb-2 flex items-center gap-3">
-            <BookOpen className="h-8 w-8 text-primary" />
+        <div className="mb-8 animate-slide-up">
+          <h1 className="text-4xl font-bold text-foreground mb-2 flex items-center gap-3 transition-smooth">
+            <BookOpen className="h-8 w-8 text-primary animate-bounce-in" />
             Concept Library
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground transition-smooth">
             Master every NCERT concept through videos and detailed notes
           </p>
         </div>
 
         {/* View Mode Selector */}
-        <div className="flex gap-4 mb-8 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+        <div className="flex gap-4 mb-8 animate-scale-in" style={{ animationDelay: "0.1s" }}>
           <Button
             onClick={() => setViewMode("videos")}
             variant={viewMode === "videos" ? "default" : "outline"}
-            className="flex-1 h-24 text-lg transition-all duration-300 hover:scale-105"
+            className="flex-1 h-24 text-lg transition-all duration-300 hover-scale hover-glow"
           >
             <Youtube className="mr-2 h-6 w-6" />
             Watch on YouTube
@@ -83,7 +83,7 @@ const ConceptLibrary = () => {
           <Button
             onClick={() => setViewMode("notes")}
             variant={viewMode === "notes" ? "default" : "outline"}
-            className="flex-1 h-24 text-lg transition-all duration-300 hover:scale-105"
+            className="flex-1 h-24 text-lg transition-all duration-300 hover-scale hover-glow"
           >
             <FileText className="mr-2 h-6 w-6" />
             Study Notes
@@ -91,8 +91,8 @@ const ConceptLibrary = () => {
         </div>
 
         {/* Search Bar */}
-        <div className="mb-6 animate-fade-in" style={{ animationDelay: "0.15s" }}>
-          <div className="relative max-w-2xl mx-auto">
+        <div className="mb-6 animate-slide-up" style={{ animationDelay: "0.15s" }}>
+          <div className="relative max-w-2xl mx-auto transition-smooth">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="text"
@@ -120,9 +120,9 @@ const ConceptLibrary = () => {
         </div>
 
         <Tabs value={activeSubject} onValueChange={(value) => setActiveSubject(value as Subject)}>
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8 animate-scale-in" style={{ animationDelay: "0.2s" }}>
             {subjects.map((subject) => (
-              <TabsTrigger key={subject} value={subject} className="transition-all duration-200">
+              <TabsTrigger key={subject} value={subject} className="transition-all duration-300 hover-scale">
                 {subject}
               </TabsTrigger>
             ))}
@@ -136,7 +136,7 @@ const ConceptLibrary = () => {
                     {Object.entries(filteredModules).map(([title, url], index) => (
                     <Card
                       key={title}
-                      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-primary/50 animate-fade-in"
+                      className="cursor-pointer hover-lift hover-glow animate-fade-in transition-smooth"
                       style={{ animationDelay: `${0.3 + index * 0.05}s` }}
                       onClick={() => handleModuleClick(url)}
                     >
@@ -156,9 +156,9 @@ const ConceptLibrary = () => {
                     </Card>
                   ))}
                 </div>
-                ) : (
-                  <div className="text-center py-12 animate-fade-in">
-                    <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                  ) : (
+                   <div className="text-center py-12 animate-bounce-in">
+                     <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4 animate-pulse" />
                     <h3 className="text-xl font-semibold text-foreground mb-2">No modules found</h3>
                     <p className="text-muted-foreground mb-4">
                       No modules match "{searchQuery}" in {activeSubject}
@@ -176,7 +176,7 @@ const ConceptLibrary = () => {
                     return (
                       <Card
                         key={title}
-                        className={`transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-primary/50 animate-fade-in ${
+                        className={`hover-lift hover-glow animate-fade-in transition-smooth ${
                           hasNotes ? "cursor-pointer" : "opacity-50"
                         }`}
                         style={{ animationDelay: `${0.3 + index * 0.05}s` }}

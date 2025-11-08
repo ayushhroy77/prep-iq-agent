@@ -465,9 +465,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex transition-colors duration-300">
+    <div className="min-h-screen bg-background flex transition-colors duration-300 animate-fade-in">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-0'} bg-slate-900 dark:bg-slate-950 border-r border-slate-800 dark:border-slate-900 transition-all duration-300 overflow-hidden lg:block hidden relative`}>
+      <aside className={`${sidebarOpen ? 'w-64' : 'w-0'} bg-slate-900 dark:bg-slate-950 border-r border-slate-800 dark:border-slate-900 transition-all duration-500 overflow-hidden lg:block hidden relative animate-slide-in-left`}>
         <div className={`${sidebarOpen ? 'p-6' : 'p-0'} transition-all duration-300`}>
         <div className="flex items-center gap-2 mb-6">
           <img src={prepiqLogo} alt="PrepIQ Logo" className="w-10 h-10 rounded-lg" />
@@ -681,7 +681,7 @@ const Dashboard = () => {
               {stats.map((stat, index) => (
                 <Card 
                   key={index} 
-                  className="p-6 hover:shadow-lg transition-all hover:-translate-y-1 animate-fade-in"
+                  className="p-6 hover-lift hover-glow transition-smooth animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="flex items-center justify-between mb-3">
@@ -695,16 +695,16 @@ const Dashboard = () => {
 
             {/* Upcoming Events Countdown */}
             {getUpcomingEvents().length > 0 && (
-          <Card className="p-6 mb-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+          <Card className="p-6 mb-6 animate-scale-in hover-lift transition-smooth" style={{ animationDelay: '0.3s' }}>
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2 transition-smooth">
               <Bell className="w-5 h-5 text-primary" />
               Upcoming Events
             </h3>
             <div className="space-y-3">
-              {getUpcomingEvents().map((event) => {
+              {getUpcomingEvents().map((event, idx) => {
                 const colors = getEventColor(event.type);
                 return (
-                  <div key={event.id} className={`p-3 rounded-lg border-l-4 ${colors.border} ${colors.bg}`}>
+                  <div key={event.id} className={`p-3 rounded-lg border-l-4 ${colors.border} ${colors.bg} animate-slide-in-right hover-scale transition-smooth`} style={{ animationDelay: `${0.4 + idx * 0.1}s` }}>
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <h4 className="font-semibold text-sm">{event.title}</h4>
@@ -726,7 +726,7 @@ const Dashboard = () => {
         {/* Calendar and Recent Activity Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Calendar Section */}
-          <Card className="p-6 animate-fade-in lg:col-span-2" style={{ animationDelay: '0.4s' }}>
+          <Card className="p-6 animate-scale-in hover-lift transition-smooth lg:col-span-2" style={{ animationDelay: '0.4s' }}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-primary" />

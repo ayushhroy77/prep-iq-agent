@@ -120,12 +120,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url(${studyBackground})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
-      <Card className="w-full max-w-md p-8 sm:p-12 space-y-8 animate-fade-in glass-card relative z-10">
+    <div className="min-h-screen bg-gradient-hero flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden animate-fade-in">
+      <div className="absolute inset-0 opacity-10 animate-float" style={{ backgroundImage: `url(${studyBackground})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+      <Card className="w-full max-w-md p-8 sm:p-12 space-y-8 animate-scale-in glass-card relative z-10 hover-lift transition-smooth">
         {/* Header */}
-        <div className="text-center">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
+        <div className="text-center animate-slide-up">
+          <Link to="/" className="inline-flex items-center gap-2 mb-6 hover-scale transition-smooth">
             <img src={prepiqLogo} alt="PrepIQ Logo" className="w-12 h-12 rounded-lg" />
             <span className="text-2xl font-bold">PrepIQ</span>
           </Link>
@@ -135,7 +135,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email */}
-          <div className="space-y-2">
+          <div className="space-y-2 animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
             <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
@@ -149,7 +149,7 @@ const Login = () => {
           </div>
 
           {/* Password */}
-          <div className="space-y-2">
+          <div className="space-y-2 animate-slide-in-right" style={{ animationDelay: '0.2s' }}>
             <div className="flex justify-between items-center">
               <Label htmlFor="password">Password</Label>
               <Link to="/forgot-password" className="text-sm text-primary hover:underline">
@@ -193,7 +193,8 @@ const Login = () => {
           {/* Submit Button */}
           <Button 
             type="submit" 
-            className="w-full h-12 text-lg bg-gradient-primary hover:opacity-90"
+            className="w-full h-12 text-lg bg-gradient-primary hover:opacity-90 hover-glow transition-smooth animate-bounce-in" 
+            style={{ animationDelay: '0.3s' }}
             disabled={loading}
           >
             <LogIn className="w-5 h-5 mr-2" />
