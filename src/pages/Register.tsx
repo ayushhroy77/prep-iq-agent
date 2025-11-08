@@ -374,9 +374,9 @@ const Register = () => {
             />
             <Label htmlFor="terms" className="text-sm leading-relaxed cursor-pointer">
               I agree to PrepIQ's{" "}
-              <a href="#" className="text-primary hover:underline">Terms & Conditions</a>
+              <Link to="/terms" className="text-primary hover:underline">Terms & Conditions</Link>
               {" "}and{" "}
-              <a href="#" className="text-primary hover:underline">Privacy Policy</a>
+              <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
             </Label>
           </div>
 
