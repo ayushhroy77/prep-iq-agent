@@ -26,37 +26,49 @@ const Landing = () => {
       icon: Brain,
       image: featureExplanations,
       title: "Intelligent Explanations",
-      description: "Complex concepts explained in simple terms, adapted to your learning level"
+      description: "Complex concepts explained in simple terms, adapted to your learning level",
+      details: "Get instant, context-aware explanations for any topic. Our AI adapts to your understanding level and learning style.",
+      cta: "Try Explanations"
     },
     {
       icon: Target,
       image: featureQuizzes,
       title: "Adaptive Quizzes",
-      description: "AI-generated quizzes that adjust difficulty based on your performance"
+      description: "AI-generated quizzes that adjust difficulty based on your performance",
+      details: "Practice with unlimited AI-generated questions that adapt to your skill level in real-time.",
+      cta: "Start Quiz"
     },
     {
       icon: Calendar,
       image: featureScheduling,
       title: "Smart Scheduling",
-      description: "Personalized study schedules that optimize your learning efficiency"
+      description: "Personalized study schedules that optimize your learning efficiency",
+      details: "Let AI create your optimal study plan based on your goals, availability, and learning patterns.",
+      cta: "Create Schedule"
     },
     {
       icon: TrendingUp,
       image: featureTracking,
       title: "Progress Tracking",
-      description: "Real-time analytics to monitor improvement and identify weak areas"
+      description: "Real-time analytics to monitor improvement and identify weak areas",
+      details: "Visualize your learning journey with detailed analytics and personalized insights.",
+      cta: "View Analytics"
     },
     {
       icon: Sparkles,
       image: featureExams,
       title: "Multi-Exam Support",
-      description: "Comprehensive preparation for JEE, NEET, UPSC, CAT, GATE, and more"
+      description: "Comprehensive preparation for JEE, NEET, UPSC, CAT, GATE, and more",
+      details: "Access exam-specific content, practice tests, and strategies for all major competitive exams.",
+      cta: "Explore Exams"
     },
     {
       icon: MessageSquare,
       image: featureBuddy,
       title: "AI Study Buddy",
-      description: "24/7 intelligent companion that remembers your journey and guides you"
+      description: "24/7 intelligent companion that remembers your journey and guides you",
+      details: "Chat with an AI that understands your progress, answers doubts, and motivates you every step.",
+      cta: "Meet Your Buddy"
     }
   ];
 
@@ -204,25 +216,39 @@ const Landing = () => {
             {features.map((feature, index) => (
               <Card 
                 key={index} 
-                className="p-0 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-card border-border animate-fade-in opacity-0"
+                className="group p-0 overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-card border-border animate-fade-in opacity-0 relative"
                 style={{ 
                   animationDelay: `${index * 0.15}s`,
                   animationFillMode: 'forwards'
                 }}
               >
-                <div className="aspect-square overflow-hidden">
+                <div className="aspect-square overflow-hidden relative">
                   <img 
                     src={feature.image} 
                     alt={feature.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/95 to-background/80 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-center items-center p-6 text-center">
+                    <feature.icon className="w-12 h-12 text-primary mb-4 transform scale-0 group-hover:scale-100 transition-transform duration-500 delay-100" />
+                    <p className="text-sm text-foreground mb-6 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-150">
+                      {feature.details}
+                    </p>
+                    <Link to="/register">
+                      <Button 
+                        className="bg-gradient-primary hover:opacity-90 shadow-glow transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-200"
+                      >
+                        {feature.cta}
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
                 <div className="p-6">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center flex-shrink-0 group-hover:shadow-glow transition-all duration-300">
                       <feature.icon className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold">{feature.title}</h3>
+                    <h3 className="text-xl font-bold group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
                   </div>
                   <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
                 </div>
