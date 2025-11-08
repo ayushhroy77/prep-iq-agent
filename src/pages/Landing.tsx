@@ -34,7 +34,7 @@ const Landing = () => {
       image: featureExplanations,
       title: "Intelligent Explanations",
       description: "Complex concepts explained in simple terms, adapted to your learning level",
-      details: "PrepIQ breaks down the most challenging topics into digestible explanations tailored to your comprehension level. Whether you're struggling with organic chemistry reactions or thermodynamics problems, our AI analyzes your current understanding and explains concepts using analogies, examples, and step-by-step reasoning that makes sense to you. No more confusion—just clarity that builds your confidence and deepens your mastery.",
+      details: "PrepIQ breaks down challenging topics into clear, digestible explanations tailored to your level. Get instant clarity on difficult concepts with step-by-step reasoning and relatable examples.",
       cta: "Try Explanations"
     },
     {
@@ -42,7 +42,7 @@ const Landing = () => {
       image: featureQuizzes,
       title: "Adaptive Quizzes",
       description: "AI-generated quizzes that adjust difficulty based on your performance",
-      details: "PrepIQ's adaptive quiz engine intelligently identifies your weak areas and generates unlimited practice questions that evolve with your progress. As you improve in one topic, the AI seamlessly increases difficulty while providing extra support in areas where you need it most. This targeted approach maximizes your study efficiency, ensuring you spend time where it matters most—turning your weaknesses into strengths and accelerating your exam readiness.",
+      details: "Unlimited practice questions that evolve with your progress. The AI identifies weak areas and adjusts difficulty in real-time, maximizing study efficiency and turning weaknesses into strengths.",
       cta: "Start Quiz"
     },
     {
@@ -50,7 +50,7 @@ const Landing = () => {
       image: featureScheduling,
       title: "Smart Scheduling",
       description: "Personalized study schedules that optimize your learning efficiency",
-      details: "PrepIQ analyzes your exam date, current knowledge level, and available study time to create a personalized schedule that maximizes retention and minimizes burnout. Our AI factors in spaced repetition principles, your peak performance hours, and upcoming exams to dynamically adjust your plan. No more overwhelming study routines—just an intelligent roadmap that guides you toward success while maintaining balance in your life.",
+      details: "AI-powered schedules based on your exam date, knowledge level, and availability. Uses spaced repetition and adapts dynamically to keep you on track without burnout.",
       cta: "Create Schedule"
     },
     {
@@ -58,7 +58,7 @@ const Landing = () => {
       image: featureTracking,
       title: "Progress Tracking",
       description: "Real-time analytics to monitor improvement and identify weak areas",
-      details: "PrepIQ provides comprehensive insights into your learning journey with detailed analytics that track your improvement across topics, question types, and difficulty levels. Visualize your strengths and weaknesses through intuitive dashboards, identify patterns in your mistakes, and receive AI-powered recommendations on what to study next. With real-time feedback and predictive scoring, you'll always know exactly where you stand and what steps to take to reach your target score.",
+      details: "Comprehensive insights with detailed analytics across topics and difficulty levels. Visualize strengths, identify patterns, and get AI recommendations on what to study next.",
       cta: "View Analytics"
     },
     {
@@ -66,7 +66,7 @@ const Landing = () => {
       image: featureExams,
       title: "Multi-Exam Support",
       description: "Comprehensive preparation for JEE, NEET, UPSC, CAT, GATE, and more",
-      details: "PrepIQ offers specialized preparation modules for all major competitive exams in India. From JEE and NEET's rigorous problem-solving to UPSC's vast syllabus coverage, our AI understands the unique requirements and question patterns of each exam. Access exam-specific practice papers, previous year questions, expert strategies, and time management techniques—all in one platform. PrepIQ adapts to the exact format and difficulty level of your target exam, giving you the edge you need.",
+      details: "Specialized modules for all major competitive exams. Access exam-specific practice papers, previous year questions, and strategies tailored to your target exam's format.",
       cta: "Explore Exams"
     },
     {
@@ -74,7 +74,7 @@ const Landing = () => {
       image: featureBuddy,
       title: "AI Study Buddy",
       description: "24/7 intelligent companion that remembers your journey and guides you",
-      details: "Your personal AI companion that's always available to help—day or night. PrepIQ's Study Buddy remembers your entire learning history, understands your doubts contextually, and provides personalized motivation when you need it most. Ask questions in natural language, get instant clarifications, discuss problem-solving strategies, or simply chat about your study concerns. It's like having an expert tutor and supportive friend combined, one who never gets tired and is always invested in your success.",
+      details: "Your personal AI companion available 24/7. Remembers your learning history, answers doubts contextually, and provides motivation—like having an expert tutor and friend combined.",
       cta: "Meet Your Buddy"
     }
   ];
@@ -258,16 +258,9 @@ const Landing = () => {
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/95 to-background/80 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-center items-center p-6 text-center">
                     <feature.icon className="w-12 h-12 text-primary mb-4 transform scale-0 group-hover:scale-100 transition-transform duration-500 delay-100" />
-                    <p className="text-sm text-foreground mb-6 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-150">
+                    <p className="text-sm text-foreground transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-150">
                       {feature.details}
                     </p>
-                    <Link to="/register">
-                      <Button 
-                        className="bg-gradient-primary hover:opacity-90 shadow-glow transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-200"
-                      >
-                        {feature.cta}
-                      </Button>
-                    </Link>
                   </div>
                 </div>
                 <div className="p-6">
