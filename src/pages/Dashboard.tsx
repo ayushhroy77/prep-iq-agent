@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { QuizRecommendations } from "@/components/QuizRecommendations";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -646,11 +645,6 @@ const Dashboard = () => {
                   <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
                 </Card>
               ))}
-            </div>
-
-            {/* Quiz Recommendations */}
-            <div className="mb-8">
-              <QuizRecommendations />
             </div>
 
             {/* Upcoming Events Countdown */}

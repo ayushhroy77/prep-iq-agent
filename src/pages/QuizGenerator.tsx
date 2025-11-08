@@ -8,6 +8,7 @@ import { ArrowLeft, CheckCircle2, XCircle, RotateCcw, BookOpen } from "lucide-re
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import quizData from "@/data/quiz-data.json";
+import { QuizRecommendations } from "@/components/QuizRecommendations";
 
 interface Question {
   question: string;
@@ -216,6 +217,11 @@ const QuizGenerator = () => {
             <p className="text-muted-foreground">
               Select a subject to start your personalized quiz journey
             </p>
+          </div>
+
+          {/* Quiz Recommendations */}
+          <div className="mb-8">
+            <QuizRecommendations />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
