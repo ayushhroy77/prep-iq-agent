@@ -75,6 +75,27 @@ export default function Settings() {
   const [pushNotifications, setPushNotifications] = useState(true);
   const [studyReminders, setStudyReminders] = useState(true);
   
+  // Alert notification preferences
+  const [ntaUpdatesEmail, setNtaUpdatesEmail] = useState(true);
+  const [ntaUpdatesPush, setNtaUpdatesPush] = useState(true);
+  const [ntaUpdatesInApp, setNtaUpdatesInApp] = useState(true);
+  
+  const [examNotifEmail, setExamNotifEmail] = useState(true);
+  const [examNotifPush, setExamNotifPush] = useState(true);
+  const [examNotifInApp, setExamNotifInApp] = useState(true);
+  
+  const [scheduleRemindersEmail, setScheduleRemindersEmail] = useState(true);
+  const [scheduleRemindersPush, setScheduleRemindersPush] = useState(false);
+  const [scheduleRemindersInApp, setScheduleRemindersInApp] = useState(true);
+  
+  const [quizResultsEmail, setQuizResultsEmail] = useState(false);
+  const [quizResultsPush, setQuizResultsPush] = useState(true);
+  const [quizResultsInApp, setQuizResultsInApp] = useState(true);
+  
+  const [studyTipsEmail, setStudyTipsEmail] = useState(true);
+  const [studyTipsPush, setStudyTipsPush] = useState(false);
+  const [studyTipsInApp, setStudyTipsInApp] = useState(false);
+  
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/login");
@@ -181,7 +202,9 @@ export default function Settings() {
               <p className="text-muted-foreground mt-2">Manage how you receive notifications</p>
             </div>
             
+            {/* General Notification Settings */}
             <Card className="p-6 space-y-6">
+              <h3 className="text-lg font-semibold">General Settings</h3>
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium">Email Notifications</h4>
@@ -205,6 +228,192 @@ export default function Settings() {
                 </div>
                 <Switch checked={studyReminders} onCheckedChange={setStudyReminders} />
               </div>
+            </Card>
+
+            {/* Alert Type Preferences */}
+            <Card className="p-6 space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Alert Notification Preferences</h3>
+                <p className="text-sm text-muted-foreground">Choose how you want to be notified for different alert types</p>
+              </div>
+
+              {/* NTA Updates */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm">NTA Updates & Announcements</h4>
+                <div className="grid grid-cols-3 gap-4 ml-4">
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="nta-email" 
+                      checked={ntaUpdatesEmail} 
+                      onCheckedChange={setNtaUpdatesEmail}
+                      disabled={!emailNotifications}
+                    />
+                    <Label htmlFor="nta-email" className="text-sm font-normal">Email</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="nta-push" 
+                      checked={ntaUpdatesPush} 
+                      onCheckedChange={setNtaUpdatesPush}
+                      disabled={!pushNotifications}
+                    />
+                    <Label htmlFor="nta-push" className="text-sm font-normal">Push</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="nta-inapp" 
+                      checked={ntaUpdatesInApp} 
+                      onCheckedChange={setNtaUpdatesInApp}
+                    />
+                    <Label htmlFor="nta-inapp" className="text-sm font-normal">In-App</Label>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Exam Notifications */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm">Exam Registration & Deadlines</h4>
+                <div className="grid grid-cols-3 gap-4 ml-4">
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="exam-email" 
+                      checked={examNotifEmail} 
+                      onCheckedChange={setExamNotifEmail}
+                      disabled={!emailNotifications}
+                    />
+                    <Label htmlFor="exam-email" className="text-sm font-normal">Email</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="exam-push" 
+                      checked={examNotifPush} 
+                      onCheckedChange={setExamNotifPush}
+                      disabled={!pushNotifications}
+                    />
+                    <Label htmlFor="exam-push" className="text-sm font-normal">Push</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="exam-inapp" 
+                      checked={examNotifInApp} 
+                      onCheckedChange={setExamNotifInApp}
+                    />
+                    <Label htmlFor="exam-inapp" className="text-sm font-normal">In-App</Label>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Schedule Reminders */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm">Study Schedule Reminders</h4>
+                <div className="grid grid-cols-3 gap-4 ml-4">
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="schedule-email" 
+                      checked={scheduleRemindersEmail} 
+                      onCheckedChange={setScheduleRemindersEmail}
+                      disabled={!emailNotifications}
+                    />
+                    <Label htmlFor="schedule-email" className="text-sm font-normal">Email</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="schedule-push" 
+                      checked={scheduleRemindersPush} 
+                      onCheckedChange={setScheduleRemindersPush}
+                      disabled={!pushNotifications}
+                    />
+                    <Label htmlFor="schedule-push" className="text-sm font-normal">Push</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="schedule-inapp" 
+                      checked={scheduleRemindersInApp} 
+                      onCheckedChange={setScheduleRemindersInApp}
+                    />
+                    <Label htmlFor="schedule-inapp" className="text-sm font-normal">In-App</Label>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Quiz Results */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm">Quiz Results & Performance</h4>
+                <div className="grid grid-cols-3 gap-4 ml-4">
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="quiz-email" 
+                      checked={quizResultsEmail} 
+                      onCheckedChange={setQuizResultsEmail}
+                      disabled={!emailNotifications}
+                    />
+                    <Label htmlFor="quiz-email" className="text-sm font-normal">Email</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="quiz-push" 
+                      checked={quizResultsPush} 
+                      onCheckedChange={setQuizResultsPush}
+                      disabled={!pushNotifications}
+                    />
+                    <Label htmlFor="quiz-push" className="text-sm font-normal">Push</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="quiz-inapp" 
+                      checked={quizResultsInApp} 
+                      onCheckedChange={setQuizResultsInApp}
+                    />
+                    <Label htmlFor="quiz-inapp" className="text-sm font-normal">In-App</Label>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Study Tips */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm">Study Tips & Resources</h4>
+                <div className="grid grid-cols-3 gap-4 ml-4">
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="tips-email" 
+                      checked={studyTipsEmail} 
+                      onCheckedChange={setStudyTipsEmail}
+                      disabled={!emailNotifications}
+                    />
+                    <Label htmlFor="tips-email" className="text-sm font-normal">Email</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="tips-push" 
+                      checked={studyTipsPush} 
+                      onCheckedChange={setStudyTipsPush}
+                      disabled={!pushNotifications}
+                    />
+                    <Label htmlFor="tips-push" className="text-sm font-normal">Push</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="tips-inapp" 
+                      checked={studyTipsInApp} 
+                      onCheckedChange={setStudyTipsInApp}
+                    />
+                    <Label htmlFor="tips-inapp" className="text-sm font-normal">In-App</Label>
+                  </div>
+                </div>
+              </div>
+
+              <Button className="w-full mt-4">
+                <Save className="mr-2 h-4 w-4" />
+                Save Notification Preferences
+              </Button>
             </Card>
           </div>
         );
