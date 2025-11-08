@@ -12,8 +12,7 @@ import {
   Home,
   BookOpen,
   Target,
-  BarChart3,
-  Sparkles
+  BarChart3
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -25,8 +24,6 @@ const Dashboard = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("home");
   const [user, setUser] = useState<any>(null);
-  const [quizStats, setQuizStats] = useState({ totalQuizzes: 0, avgScore: 0 });
-  const [recentQuizzes, setRecentQuizzes] = useState<any[]>([]);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -34,7 +31,6 @@ const Dashboard = () => {
         navigate("/login");
       } else {
         setUser(session.user);
-        loadQuizData(session.user.email || session.user.id);
       }
     });
 
@@ -43,37 +39,11 @@ const Dashboard = () => {
         navigate("/login");
       } else {
         setUser(session.user);
-        loadQuizData(session.user.email || session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
-
-  const loadQuizData = async (userId: string) => {
-    try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || process.env.REACT_APP_BACKEND_URL || '';
-      
-      // Load analytics
-      const analyticsRes = await fetch(`${backendUrl}/api/quiz/analytics/${userId}`);
-      if (analyticsRes.ok) {
-        const analyticsData = await analyticsRes.json();
-        setQuizStats({
-          totalQuizzes: analyticsData.total_quizzes || 0,
-          avgScore: analyticsData.average_score || 0,
-        });
-      }
-
-      // Load recent history
-      const historyRes = await fetch(`${backendUrl}/api/quiz/history/${userId}`);
-      if (historyRes.ok) {
-        const historyData = await historyRes.json();
-        setRecentQuizzes(historyData.slice(0, 3));
-      }
-    } catch (error) {
-      console.error("Error loading quiz data:", error);
-    }
-  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -86,33 +56,15 @@ const Dashboard = () => {
 
   const stats = [
     { label: "Study Hours", value: "24.5", icon: BookOpen, color: "text-primary" },
-    { label: "Quizzes Done", value: quizStats.totalQuizzes.toString(), icon: Target, color: "text-secondary" },
-    { label: "Average Score", value: quizStats.avgScore > 0 ? `${quizStats.avgScore.toFixed(0)}%` : "N/A", icon: TrendingUp, color: "text-success" },
+    { label: "Quizzes Done", value: "12", icon: Target, color: "text-secondary" },
+    { label: "Current Streak", value: "7 Days", icon: TrendingUp, color: "text-success" },
   ];
 
-  const formatTimeAgo = (timestamp: string) => {
-    const now = new Date();
-    const then = new Date(timestamp);
-    const diffMs = now.getTime() - then.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-    if (diffHours > 0) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    if (diffMins > 0) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-    return 'Just now';
-  };
-
-  const recentActivity = recentQuizzes.length > 0 
-    ? recentQuizzes.map(quiz => ({
-        topic: `${quiz.subject} - ${quiz.module}`,
-        time: formatTimeAgo(quiz.timestamp),
-        score: `${quiz.score_percentage.toFixed(0)}%`,
-      }))
-    : [
-        { topic: "No quizzes yet", time: "Start learning", score: "-" },
-      ];
+  const recentActivity = [
+    { topic: "Organic Chemistry - Reactions", time: "2 hours ago", score: "85%" },
+    { topic: "Calculus - Derivatives", time: "1 day ago", score: "92%" },
+    { topic: "Physics - Mechanics", time: "2 days ago", score: "78%" },
+  ];
 
   const getUserInitials = () => {
     if (!user) return "ST";
@@ -134,20 +86,12 @@ const Dashboard = () => {
             { id: "home", label: "Dashboard", icon: Home },
             { id: "profile", label: "My Profile", icon: User },
             { id: "schedule", label: "Study Schedule", icon: Calendar },
-            { id: "progress", label: "Progress", icon: BarChart3, route: "/performance" },
-            { id: "concepts", label: "Concept Library", icon: BookOpen, route: "/concept-library" },
+            { id: "progress", label: "Progress", icon: BarChart3 },
             { id: "chat", label: "AI Tutor", icon: MessageSquare },
-            { id: "quiz", label: "Quiz Generator", icon: Sparkles, route: "/quiz-generator" },
           ].map((item) => (
             <button
               key={item.id}
-              onClick={() => {
-                if (item.route) {
-                  navigate(item.route);
-                } else {
-                  setActiveTab(item.id);
-                }
-              }}
+              onClick={() => setActiveTab(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                 activeTab === item.id
                   ? "bg-accent text-accent-foreground"
@@ -248,21 +192,10 @@ const Dashboard = () => {
 
           {/* Recent Activity */}
           <Card className="p-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-success" />
-                Recent Activity
-              </h3>
-              {quizStats.totalQuizzes > 0 && (
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => navigate("/quiz-history")}
-                >
-                  View All
-                </Button>
-              )}
-            </div>
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-success" />
+              Recent Activity
+            </h3>
             <div className="space-y-4">
               {recentActivity.map((activity, index) => (
                 <div 
@@ -280,16 +213,6 @@ const Dashboard = () => {
                 </div>
               ))}
             </div>
-            {quizStats.totalQuizzes === 0 && (
-              <div className="text-center py-4">
-                <Button 
-                  onClick={() => navigate("/quiz-generator")}
-                  className="bg-gradient-primary"
-                >
-                  Take Your First Quiz
-                </Button>
-              </div>
-            )}
           </Card>
 
           {/* Study Schedule */}
