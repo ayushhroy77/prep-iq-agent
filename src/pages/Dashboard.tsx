@@ -2,6 +2,14 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { 
   Calendar, 
   TrendingUp, 
@@ -12,7 +20,11 @@ import {
   Home,
   BookOpen,
   Target,
-  BarChart3
+  BarChart3,
+  ChevronDown,
+  UserCircle,
+  Bell,
+  Palette
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -76,74 +88,145 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-hero flex">
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 border-r border-slate-800 p-6 hidden lg:block relative">
-        <div className="flex items-center gap-2 mb-8">
+        <div className="flex items-center gap-2 mb-6">
           <img src={prepiqLogo} alt="PrepIQ Logo" className="w-10 h-10 rounded-lg" />
           <span className="text-xl font-bold text-white">PrepIQ</span>
         </div>
 
-        <nav className="space-y-2">
+        {/* User Profile Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="w-full flex items-center gap-3 p-3 mb-6 rounded-lg bg-slate-800/50 hover:bg-slate-800 transition-all duration-300 border border-slate-700 hover:border-primary/50 group">
+              <Avatar className="h-10 w-10 border-2 border-primary ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all duration-300">
+                <AvatarImage src="" />
+                <AvatarFallback className="bg-gradient-primary text-white font-semibold text-sm">
+                  {getUserInitials()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 text-left">
+                <p className="text-sm font-semibold text-white group-hover:text-primary transition-colors duration-300">
+                  {user?.user_metadata?.full_name || 'Student'}
+                </p>
+                <p className="text-xs text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
+                  {user?.email}
+                </p>
+              </div>
+              <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-primary transition-all duration-300 group-hover:rotate-180" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56 bg-slate-800 border-slate-700 text-white z-50" align="start" sideOffset={5}>
+            <DropdownMenuLabel className="text-slate-300">My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-slate-700" />
+            <DropdownMenuItem 
+              onClick={() => setActiveTab("profile")}
+              className="text-slate-200 focus:bg-slate-700 focus:text-white cursor-pointer"
+            >
+              <UserCircle className="w-4 h-4 mr-2" />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setActiveTab("settings")}
+              className="text-slate-200 focus:bg-slate-700 focus:text-white cursor-pointer"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="text-slate-200 focus:bg-slate-700 focus:text-white cursor-pointer"
+            >
+              <Bell className="w-4 h-4 mr-2" />
+              Notifications
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="text-slate-200 focus:bg-slate-700 focus:text-white cursor-pointer"
+            >
+              <Palette className="w-4 h-4 mr-2" />
+              Preferences
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-slate-700" />
+            <DropdownMenuItem 
+              onClick={handleLogout}
+              className="text-red-400 focus:bg-slate-700 focus:text-red-300 cursor-pointer"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <nav className="space-y-1">
           <button
             onClick={() => setActiveTab("home")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group ${
               activeTab === "home"
-                ? "bg-primary text-primary-foreground"
-                : "text-slate-300 hover:bg-slate-800"
+                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                : "text-slate-300 hover:bg-slate-800 hover:text-white hover:translate-x-1"
             }`}
           >
-            <Home className="w-5 h-5" />
+            <Home className={`w-5 h-5 transition-transform duration-300 ${activeTab === "home" ? "" : "group-hover:scale-110"}`} />
             <span className="font-medium">Dashboard</span>
           </button>
           <button
             onClick={() => navigate("/ai-study-buddy")}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-800"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 text-slate-300 hover:bg-slate-800 hover:text-white hover:translate-x-1 group"
           >
-            <MessageSquare className="w-5 h-5" />
+            <MessageSquare className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
             <span className="font-medium">AI Study Buddy</span>
           </button>
           <button
             onClick={() => navigate("/concept-library")}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-800"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 text-slate-300 hover:bg-slate-800 hover:text-white hover:translate-x-1 group"
           >
-            <BookOpen className="w-5 h-5" />
+            <BookOpen className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
             <span className="font-medium">Concept Library</span>
           </button>
           <button
             onClick={() => setActiveTab("profile")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group ${
               activeTab === "profile"
-                ? "bg-primary text-primary-foreground"
-                : "text-slate-300 hover:bg-slate-800"
+                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                : "text-slate-300 hover:bg-slate-800 hover:text-white hover:translate-x-1"
             }`}
           >
-            <User className="w-5 h-5" />
+            <User className={`w-5 h-5 transition-transform duration-300 ${activeTab === "profile" ? "" : "group-hover:scale-110"}`} />
             <span className="font-medium">My Profile</span>
           </button>
           <button
             onClick={() => navigate("/study-schedule")}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-800"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 text-slate-300 hover:bg-slate-800 hover:text-white hover:translate-x-1 group"
           >
-            <Calendar className="w-5 h-5" />
+            <Calendar className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
             <span className="font-medium">Study Schedule</span>
           </button>
           <button
             onClick={() => setActiveTab("progress")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group ${
               activeTab === "progress"
-                ? "bg-primary text-primary-foreground"
-                : "text-slate-300 hover:bg-slate-800"
+                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                : "text-slate-300 hover:bg-slate-800 hover:text-white hover:translate-x-1"
             }`}
           >
-            <BarChart3 className="w-5 h-5" />
+            <BarChart3 className={`w-5 h-5 transition-transform duration-300 ${activeTab === "progress" ? "" : "group-hover:scale-110"}`} />
             <span className="font-medium">Progress</span>
           </button>
         </nav>
 
         <div className="absolute bottom-6 left-6 right-6 space-y-2">
-          <Button variant="ghost" className="w-full justify-start text-slate-300 hover:bg-slate-800 hover:text-white" size="lg" onClick={() => setActiveTab("settings")}>
-            <Settings className="w-5 h-5 mr-3" />
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-300 hover:translate-x-1 group" 
+            size="lg" 
+            onClick={() => setActiveTab("settings")}
+          >
+            <Settings className="w-5 h-5 mr-3 transition-transform duration-300 group-hover:rotate-90" />
             Settings
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-red-400 hover:bg-slate-800 hover:text-red-300" size="lg" onClick={handleLogout}>
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start text-red-400 hover:bg-slate-800 hover:text-red-300 transition-all duration-300 hover:translate-x-1" 
+            size="lg" 
+            onClick={handleLogout}
+          >
             <LogOut className="w-5 h-5 mr-3" />
             Logout
           </Button>
