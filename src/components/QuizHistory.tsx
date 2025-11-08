@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
-import { History, Award, Clock, TrendingUp, ChevronRight } from "lucide-react";
+import { History, Award, Clock, TrendingUp, ChevronRight, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import {
@@ -230,53 +230,108 @@ export const QuizHistory = () => {
                   const isCorrect = userAnswer === question.correctAnswer;
                   
                   return (
-                    <div key={index} className="border rounded-lg p-4">
-                      <div className="flex items-start gap-3 mb-3">
-                        <div className={`p-2 rounded-full ${isCorrect ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
+                    <div key={index} className="border-2 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                      {/* Question Header */}
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className={`p-3 rounded-full flex-shrink-0 ${isCorrect ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
                           {isCorrect ? (
-                            <CheckCircle2 className="w-5 h-5 text-green-600" />
+                            <CheckCircle2 className="w-6 h-6 text-green-600" />
                           ) : (
-                            <XCircle className="w-5 h-5 text-red-600" />
+                            <XCircle className="w-6 h-6 text-red-600" />
                           )}
                         </div>
                         <div className="flex-1">
-                          <div className="font-medium mb-2">
-                            Question {index + 1}: {question.question}
+                          <div className="flex items-center gap-2 mb-2">
+                            <Badge variant={isCorrect ? "default" : "destructive"} className="text-xs">
+                              Question {index + 1}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {isCorrect ? "Correct" : "Incorrect"}
+                            </Badge>
                           </div>
-                          <div className="space-y-2">
-                            {question.options.map((option: string, optIndex: number) => {
-                              const isUserAnswer = userAnswer === optIndex;
-                              const isCorrectAnswer = question.correctAnswer === optIndex;
-                              
-                              return (
-                                <div
-                                  key={optIndex}
-                                  className={`p-3 rounded-lg text-sm ${
-                                    isCorrectAnswer
-                                      ? 'bg-green-500/10 border border-green-500/30'
-                                      : isUserAnswer
-                                      ? 'bg-red-500/10 border border-red-500/30'
-                                      : 'bg-muted'
-                                  }`}
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-medium">{String.fromCharCode(65 + optIndex)}.</span>
-                                    <span>{option}</span>
-                                    {isCorrectAnswer && (
-                                      <Badge variant="default" className="ml-auto">Correct</Badge>
-                                    )}
-                                    {isUserAnswer && !isCorrectAnswer && (
-                                      <Badge variant="destructive" className="ml-auto">Your Answer</Badge>
-                                    )}
-                                  </div>
+                          <div className="text-lg font-semibold text-foreground leading-relaxed">
+                            {question.question}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Answer Options */}
+                      <div className="space-y-3 mb-4">
+                        {question.options.map((option: string, optIndex: number) => {
+                          const isUserAnswer = userAnswer === optIndex;
+                          const isCorrectAnswer = question.correctAnswer === optIndex;
+                          
+                          return (
+                            <div
+                              key={optIndex}
+                              className={`p-4 rounded-lg border-2 transition-all ${
+                                isCorrectAnswer
+                                  ? 'bg-green-50 dark:bg-green-950/20 border-green-500'
+                                  : isUserAnswer
+                                  ? 'bg-red-50 dark:bg-red-950/20 border-red-500'
+                                  : 'bg-muted border-border'
+                              }`}
+                            >
+                              <div className="flex items-start gap-3">
+                                <span className="font-bold text-base mt-0.5">
+                                  {String.fromCharCode(65 + optIndex)}.
+                                </span>
+                                <span className="flex-1 text-base">{option}</span>
+                                <div className="flex gap-2">
+                                  {isCorrectAnswer && (
+                                    <Badge className="bg-green-600">
+                                      <CheckCircle2 className="w-3 h-3 mr-1" />
+                                      Correct Answer
+                                    </Badge>
+                                  )}
+                                  {isUserAnswer && !isCorrectAnswer && (
+                                    <Badge variant="destructive">
+                                      <XCircle className="w-3 h-3 mr-1" />
+                                      Your Answer
+                                    </Badge>
+                                  )}
                                 </div>
-                              );
-                            })}
-                          </div>
-                          <div className="mt-3 p-3 bg-primary/5 rounded-lg">
-                            <div className="text-sm font-medium text-primary mb-1">Explanation:</div>
-                            <div className="text-sm text-muted-foreground">{question.explanation}</div>
-                          </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Detailed Explanation */}
+                      <div className="mt-4 p-5 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+                        <div className="flex items-center gap-2 mb-3">
+                          <BookOpen className="w-5 h-5 text-primary" />
+                          <h4 className="text-base font-bold text-primary">Detailed Explanation</h4>
+                        </div>
+                        <div className="text-base text-foreground leading-relaxed space-y-2">
+                          {question.explanation}
+                        </div>
+                        
+                        {/* Why answer is correct/incorrect */}
+                        <div className="mt-4 pt-4 border-t border-primary/20">
+                          {isCorrect ? (
+                            <div className="flex items-start gap-2 text-green-700 dark:text-green-400">
+                              <TrendingUp className="w-4 h-4 mt-1 flex-shrink-0" />
+                              <p className="text-sm">
+                                <strong>Great job!</strong> You correctly identified option <strong>{String.fromCharCode(65 + question.correctAnswer)}</strong> as the right answer.
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="space-y-2">
+                              <div className="flex items-start gap-2 text-red-700 dark:text-red-400">
+                                <XCircle className="w-4 h-4 mt-1 flex-shrink-0" />
+                                <p className="text-sm">
+                                  You selected option <strong>{String.fromCharCode(65 + userAnswer)}</strong>, but the correct answer is option <strong>{String.fromCharCode(65 + question.correctAnswer)}</strong>.
+                                </p>
+                              </div>
+                              <div className="flex items-start gap-2 text-primary">
+                                <CheckCircle2 className="w-4 h-4 mt-1 flex-shrink-0" />
+                                <p className="text-sm">
+                                  <strong>Remember:</strong> Review the explanation above to understand why option <strong>{String.fromCharCode(65 + question.correctAnswer)}</strong> is correct.
+                                </p>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
