@@ -34,7 +34,9 @@ import {
   X,
   Plus,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Moon,
+  Sun
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -65,6 +67,9 @@ const Dashboard = () => {
   const [calendarView, setCalendarView] = useState<"month" | "list">("month");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
+  const [theme, setTheme] = useState<"light" | "dark">(
+    () => (localStorage.getItem("theme") as "light" | "dark") || "light"
+  );
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -85,6 +90,25 @@ const Dashboard = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  useEffect(() => {
+    // Apply theme to document
+    const root = document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    toast({
+      title: "Theme Changed",
+      description: `Switched to ${theme === "light" ? "dark" : "light"} mode`,
+    });
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -359,12 +383,27 @@ const Dashboard = () => {
               <p className="text-muted-foreground">Let's make today productive</p>
             </div>
           </div>
-          <Avatar className="h-12 w-12 border-2 border-primary">
-            <AvatarImage src="" />
-            <AvatarFallback className="bg-gradient-primary text-white font-semibold">
-              {getUserInitials()}
-            </AvatarFallback>
-          </Avatar>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={toggleTheme}
+              className="relative overflow-hidden transition-all duration-300 hover:scale-110"
+              title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+            >
+              {theme === "light" ? (
+                <Moon className="w-5 h-5 transition-transform duration-300 hover:rotate-12" />
+              ) : (
+                <Sun className="w-5 h-5 transition-transform duration-300 hover:rotate-180" />
+              )}
+            </Button>
+            <Avatar className="h-12 w-12 border-2 border-primary">
+              <AvatarImage src="" />
+              <AvatarFallback className="bg-gradient-primary text-white font-semibold">
+                {getUserInitials()}
+              </AvatarFallback>
+            </Avatar>
+          </div>
         </div>
 
         {/* Stats Cards */}
