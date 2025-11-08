@@ -292,14 +292,10 @@ const Dashboard = () => {
             <span className="font-medium">Concept Library</span>
           </button>
           <button
-            onClick={() => setActiveTab("profile")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group ${
-              activeTab === "profile"
-                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                : "text-slate-300 hover:bg-slate-800 hover:text-white hover:translate-x-1"
-            }`}
+            onClick={() => navigate("/settings")}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 text-slate-300 hover:bg-slate-800 hover:text-white hover:translate-x-1 group"
           >
-            <User className={`w-5 h-5 transition-transform duration-300 ${activeTab === "profile" ? "" : "group-hover:scale-110"}`} />
+            <User className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
             <span className="font-medium">My Profile</span>
           </button>
           <button
