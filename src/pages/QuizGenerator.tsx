@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -32,6 +32,7 @@ interface Subject {
 
 const QuizGenerator = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
@@ -45,6 +46,24 @@ const QuizGenerator = () => {
   const [showExplanation, setShowExplanation] = useState(false);
 
   const subjects = quizData.subjects as Subject[];
+
+  // Handle auto-navigation from recommendations
+  useEffect(() => {
+    const state = location.state as { selectedTopicId?: string; autoStart?: boolean } | null;
+    if (state?.selectedTopicId && state?.autoStart) {
+      // Find the topic and subject
+      for (const subject of subjects) {
+        const topic = subject.topics.find((t: Topic) => t.id === state.selectedTopicId);
+        if (topic) {
+          setSelectedSubject(subject);
+          setSelectedTopic(topic);
+          break;
+        }
+      }
+      // Clear the state
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, subjects, navigate, location.pathname]);
 
   const generateQuiz = async (topic: Topic, difficulty: 'easy' | 'medium' | 'hard', count: 5 | 15, mixed: boolean) => {
     setIsLoading(true);
