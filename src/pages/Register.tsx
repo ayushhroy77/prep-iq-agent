@@ -11,6 +11,31 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import prepiqLogo from "@/assets/prepiq-logo.jpg";
 import studyBackground from "@/assets/study-background.jpg";
+import { z } from "zod";
+
+// Validation schema
+const registerSchema = z.object({
+  fullName: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+  phone: z.string().trim().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format").optional().or(z.literal("")),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters")
+    .max(128, "Password must be less than 128 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number"),
+  confirmPassword: z.string(),
+  targetExams: z.array(z.string()).min(1, "Select at least one target exam").max(10, "Maximum 10 exams allowed"),
+  educationLevel: z.enum(["High School", "Undergraduate", "Graduate", "Working Professional"], {
+    errorMap: () => ({ message: "Please select an education level" })
+  }),
+  language: z.enum(["English", "Hindi", "Tamil", "Telugu", "Bengali"], {
+    errorMap: () => ({ message: "Please select a preferred language" })
+  }),
+  agreeTerms: z.boolean().refine(val => val === true, "You must accept the terms and conditions")
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"]
+});
 
 const Register = () => {
   const navigate = useNavigate();
@@ -82,43 +107,31 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Passwords don't match",
-        description: "Please ensure both passwords are identical",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!formData.agreeTerms) {
-      toast({
-        title: "Terms & Conditions",
-        description: "Please accept the terms and conditions to continue",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (formData.targetExams.length === 0) {
-      toast({
-        title: "Select Target Exam",
-        description: "Please select at least one target exam",
-        variant: "destructive"
-      });
-      return;
+    // Validate form data with zod
+    try {
+      registerSchema.parse(formData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const firstError = error.errors[0];
+        toast({
+          title: "Validation Error",
+          description: firstError.message,
+          variant: "destructive"
+        });
+        return;
+      }
     }
 
     setLoading(true);
 
     try {
       const { error } = await supabase.auth.signUp({
-        email: formData.email,
+        email: formData.email.trim(),
         password: formData.password,
         options: {
           data: {
-            full_name: formData.fullName,
-            phone_number: formData.phone,
+            full_name: formData.fullName.trim(),
+            phone_number: formData.phone.trim() || null,
             target_exams: formData.targetExams,
             education_level: formData.educationLevel,
             preferred_language: formData.language,
