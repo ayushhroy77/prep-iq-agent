@@ -151,12 +151,37 @@ const Landing = () => {
               <img 
                 src={examLogos} 
                 alt="Supported competitive exams including JEE, NEET, UPSC, CAT, GATE" 
-                className="h-24 object-contain opacity-60 hover:opacity-100 transition-opacity"
+                className="h-32 object-contain opacity-60 hover:opacity-100 transition-opacity"
               />
               <img 
                 src={examLogos} 
                 alt="Supported competitive exams" 
-                className="h-24 object-contain opacity-60 hover:opacity-100 transition-opacity ml-12"
+                className="h-32 object-contain opacity-60 hover:opacity-100 transition-opacity ml-12"
+              />
+              <img 
+                src={examLogos} 
+                alt="Supported competitive exams" 
+                className="h-32 object-contain opacity-60 hover:opacity-100 transition-opacity ml-12"
+              />
+              <img 
+                src={examLogos} 
+                alt="Supported competitive exams" 
+                className="h-32 object-contain opacity-60 hover:opacity-100 transition-opacity ml-12"
+              />
+              <img 
+                src={examLogos} 
+                alt="Supported competitive exams" 
+                className="h-32 object-contain opacity-60 hover:opacity-100 transition-opacity ml-12"
+              />
+              <img 
+                src={examLogos} 
+                alt="Supported competitive exams" 
+                className="h-32 object-contain opacity-60 hover:opacity-100 transition-opacity ml-12"
+              />
+              <img 
+                src={examLogos} 
+                alt="Supported competitive exams" 
+                className="h-32 object-contain opacity-60 hover:opacity-100 transition-opacity ml-12"
               />
             </div>
           </div>
