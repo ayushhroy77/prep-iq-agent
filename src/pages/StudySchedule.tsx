@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { DndContext, DragEndEvent, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, arrayMove, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
@@ -92,6 +93,16 @@ export default function StudySchedule() {
     name: "",
     priority: "medium" as "high" | "medium" | "low",
     hoursPerWeek: 5,
+  });
+
+  const [editingSlot, setEditingSlot] = useState<TimeSlot | null>(null);
+  const [showSlotDialog, setShowSlotDialog] = useState(false);
+  const [slotForm, setSlotForm] = useState({
+    day: "Monday",
+    startTime: "09:00",
+    endTime: "10:00",
+    subjectId: "",
+    type: "study" as "study" | "break" | "extracurricular" | "exam-prep",
   });
 
   const sensors = useSensors(useSensor(PointerSensor));
@@ -299,26 +310,80 @@ export default function StudySchedule() {
     return slots;
   };
 
-  const addCustomSlot = async (day: string) => {
+  const addCustomSlot = (day: string) => {
+    if (!subjects[0]) {
+      toast.error("Please add subjects first");
+      return;
+    }
+    setSlotForm({
+      day,
+      startTime: "09:00",
+      endTime: "10:00",
+      subjectId: subjects[0].id,
+      type: "study",
+    });
+    setEditingSlot(null);
+    setShowSlotDialog(true);
+  };
+
+  const editSlot = (slot: TimeSlot) => {
+    setSlotForm({
+      day: slot.day,
+      startTime: slot.startTime,
+      endTime: slot.endTime,
+      subjectId: slot.subjectId,
+      type: slot.type,
+    });
+    setEditingSlot(slot);
+    setShowSlotDialog(true);
+  };
+
+  const saveSlot = async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user || !subjects[0]) return;
+    if (!user) return;
 
-    const { error } = await (supabase.from("study_schedules" as any).insert({
-      user_id: user.id,
-      subject_id: subjects[0].id,
-      day_of_week: DAYS.indexOf(day),
-      start_time: "09:00",
-      end_time: "10:00",
-      session_type: "study",
-      notes: ""
-    }));
-
-    if (error) {
-      toast.error("Failed to add slot");
+    // Validate times
+    if (slotForm.startTime >= slotForm.endTime) {
+      toast.error("End time must be after start time");
       return;
     }
 
+    if (editingSlot) {
+      // Update existing slot
+      const { error } = await (supabase.from("study_schedules" as any).update({
+        subject_id: slotForm.subjectId,
+        day_of_week: DAYS.indexOf(slotForm.day),
+        start_time: slotForm.startTime,
+        end_time: slotForm.endTime,
+        session_type: slotForm.type,
+      }).eq("id", editingSlot.id));
+
+      if (error) {
+        toast.error("Failed to update slot");
+        return;
+      }
+      toast.success("Slot updated");
+    } else {
+      // Add new slot
+      const { error } = await (supabase.from("study_schedules" as any).insert({
+        user_id: user.id,
+        subject_id: slotForm.subjectId,
+        day_of_week: DAYS.indexOf(slotForm.day),
+        start_time: slotForm.startTime,
+        end_time: slotForm.endTime,
+        session_type: slotForm.type,
+        notes: ""
+      }));
+
+      if (error) {
+        toast.error("Failed to add slot");
+        return;
+      }
+      toast.success("Slot added");
+    }
+
     await loadFromDatabase();
+    setShowSlotDialog(false);
   };
 
   const updateSlot = async (id: string, updates: Partial<TimeSlot>) => {
@@ -599,7 +664,15 @@ export default function StudySchedule() {
                         slot.type === "break" ? "bg-muted/50" : subject ? subject.color + " text-white" : "bg-card"
                       }`}
                     >
-                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 bg-background/20 hover:bg-background/40"
+                          onClick={() => editSlot(slot)}
+                        >
+                          <Edit2 className="h-3 w-3" />
+                        </Button>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -615,24 +688,12 @@ export default function StudySchedule() {
                       {slot.type === "break" ? (
                         <p className="text-sm font-semibold">Break</p>
                       ) : (
-                        <>
-                          <p className="text-sm font-semibold">{subject?.name || "Study"}</p>
-                          <Select
-                            value={slot.subjectId}
-                            onValueChange={(value) => updateSlot(slot.id, { subjectId: value })}
-                          >
-                            <SelectTrigger className="mt-2 h-8 bg-background/20 border-background/40">
-                              <SelectValue placeholder="Change subject" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {subjects.map((s) => (
-                                <SelectItem key={s.id} value={s.id}>
-                                  {s.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </>
+                        <p className="text-sm font-semibold">{subject?.name || "Study"}</p>
+                      )}
+                      {slot.type !== "study" && slot.type !== "break" && (
+                        <Badge variant="secondary" className="mt-1 text-xs">
+                          {slot.type === "extracurricular" ? "Extracurricular" : "Exam Prep"}
+                        </Badge>
                       )}
                     </div>
                   );
@@ -651,6 +712,94 @@ export default function StudySchedule() {
           ))}
         </div>
       </main>
+
+      <Dialog open={showSlotDialog} onOpenChange={setShowSlotDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{editingSlot ? "Edit Time Slot" : "Add Time Slot"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="slot-day">Day</Label>
+              <Select value={slotForm.day} onValueChange={(value) => setSlotForm({ ...slotForm, day: value })}>
+                <SelectTrigger id="slot-day">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {DAYS.map((day) => (
+                    <SelectItem key={day} value={day}>
+                      {day}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="start-time">Start Time</Label>
+                <Input
+                  id="start-time"
+                  type="time"
+                  value={slotForm.startTime}
+                  onChange={(e) => setSlotForm({ ...slotForm, startTime: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="end-time">End Time</Label>
+                <Input
+                  id="end-time"
+                  type="time"
+                  value={slotForm.endTime}
+                  onChange={(e) => setSlotForm({ ...slotForm, endTime: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="slot-type">Type</Label>
+              <Select value={slotForm.type} onValueChange={(value: any) => setSlotForm({ ...slotForm, type: value })}>
+                <SelectTrigger id="slot-type">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="study">Study</SelectItem>
+                  <SelectItem value="break">Break</SelectItem>
+                  <SelectItem value="extracurricular">Extracurricular</SelectItem>
+                  <SelectItem value="exam-prep">Exam Prep</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {slotForm.type !== "break" && (
+              <div>
+                <Label htmlFor="slot-subject">Subject</Label>
+                <Select value={slotForm.subjectId} onValueChange={(value) => setSlotForm({ ...slotForm, subjectId: value })}>
+                  <SelectTrigger id="slot-subject">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {subjects.map((subject) => (
+                      <SelectItem key={subject.id} value={subject.id}>
+                        {subject.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSlotDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={saveSlot}>
+              <Save className="h-4 w-4 mr-2" />
+              {editingSlot ? "Update" : "Add"} Slot
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
