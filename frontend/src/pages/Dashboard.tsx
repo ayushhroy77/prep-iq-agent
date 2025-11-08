@@ -135,6 +135,7 @@ const Dashboard = () => {
             { id: "profile", label: "My Profile", icon: User },
             { id: "schedule", label: "Study Schedule", icon: Calendar },
             { id: "progress", label: "Progress", icon: BarChart3, route: "/performance" },
+            { id: "concepts", label: "Concept Library", icon: BookOpen, route: "/concept-library" },
             { id: "chat", label: "AI Tutor", icon: MessageSquare },
             { id: "quiz", label: "Quiz Generator", icon: Sparkles, route: "/quiz-generator" },
           ].map((item) => (
