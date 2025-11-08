@@ -62,6 +62,20 @@ import {
   ResponsiveContainer,
   Cell
 } from "recharts";
+import { 
+  ClipboardList,
+  Play,
+  Check,
+  AlertCircle
+} from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface CalendarEvent {
   id: string;
@@ -89,6 +103,48 @@ const Dashboard = () => {
   const [theme, setTheme] = useState<"light" | "dark">(
     () => (localStorage.getItem("theme") as "light" | "dark") || "light"
   );
+
+  // Quiz Generator State
+  const [quizSubject, setQuizSubject] = useState<string>("");
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
+  const [markedForReview, setMarkedForReview] = useState<Set<number>>(new Set());
+
+  const subjects = ["Physics", "Chemistry", "Biology", "Mathematics"];
+  
+  const sampleQuestions = [
+    {
+      id: 1,
+      question: "What is the SI unit of force?",
+      options: ["Newton (N)", "Joule (J)", "Watt (W)", "Pascal (Pa)"],
+      subject: "Physics"
+    },
+    {
+      id: 2,
+      question: "Which element has the atomic number 6?",
+      options: ["Oxygen", "Carbon", "Nitrogen", "Hydrogen"],
+      subject: "Chemistry"
+    },
+    {
+      id: 3,
+      question: "What is the powerhouse of the cell?",
+      options: ["Nucleus", "Ribosome", "Mitochondria", "Chloroplast"],
+      subject: "Biology"
+    },
+    {
+      id: 4,
+      question: "What is the value of π (pi) approximately?",
+      options: ["3.14159", "2.71828", "1.41421", "1.61803"],
+      subject: "Mathematics"
+    },
+    {
+      id: 5,
+      question: "What is Newton's second law of motion?",
+      options: ["F = ma", "E = mc²", "V = IR", "PV = nRT"],
+      subject: "Physics"
+    },
+  ];
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -406,6 +462,17 @@ const Dashboard = () => {
           >
             <BarChart3 className={`w-5 h-5 transition-transform duration-300 ${activeTab === "progress" ? "" : "group-hover:scale-110"}`} />
             <span className="font-medium">Progress</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("quizGenerator")}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group ${
+              activeTab === "quizGenerator"
+                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                : "text-slate-300 hover:bg-slate-800 hover:text-white hover:translate-x-1"
+            }`}
+          >
+            <ClipboardList className={`w-5 h-5 transition-transform duration-300 ${activeTab === "quizGenerator" ? "" : "group-hover:scale-110"}`} />
+            <span className="font-medium">Quiz Generator</span>
           </button>
         </nav>
 
@@ -1157,6 +1224,300 @@ const Dashboard = () => {
                 </ResponsiveContainer>
               </Card>
             </div>
+          </div>
+        )}
+
+        {activeTab === "quizGenerator" && (
+          <div className="space-y-6">
+            {!quizStarted ? (
+              /* Subject Selection Screen */
+              <Card className="p-8 max-w-2xl mx-auto animate-fade-in">
+                <div className="text-center space-y-6">
+                  <div className="flex justify-center">
+                    <div className="p-4 rounded-2xl bg-primary/10">
+                      <ClipboardList className="w-16 h-16 text-primary" />
+                    </div>
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-bold mb-2">Quiz Generator</h2>
+                    <p className="text-muted-foreground">
+                      Select a subject to generate practice questions
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label htmlFor="subject" className="text-left block text-lg font-semibold">
+                      Choose Subject
+                    </Label>
+                    <Select value={quizSubject} onValueChange={setQuizSubject}>
+                      <SelectTrigger className="w-full h-12 text-lg">
+                        <SelectValue placeholder="Select a subject" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {subjects.map((subject) => (
+                          <SelectItem key={subject} value={subject} className="text-lg">
+                            {subject}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <Button
+                    size="lg"
+                    className="w-full h-12 text-lg"
+                    disabled={!quizSubject}
+                    onClick={() => {
+                      setQuizStarted(true);
+                      setCurrentQuestionIndex(0);
+                      setSelectedAnswers({});
+                      setMarkedForReview(new Set());
+                    }}
+                  >
+                    <Play className="w-5 h-5 mr-2" />
+                    Start Quiz
+                  </Button>
+                </div>
+              </Card>
+            ) : (
+              /* Quiz Interface */
+              <div className="space-y-6">
+                {/* Quiz Header */}
+                <Card className="p-6">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 rounded-xl bg-primary/10">
+                        <ClipboardList className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold">{quizSubject} Quiz</h2>
+                        <p className="text-sm text-muted-foreground">
+                          Question {currentQuestionIndex + 1} of {sampleQuestions.length}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setQuizStarted(false);
+                          setQuizSubject("");
+                        }}
+                      >
+                        End Quiz
+                      </Button>
+                      <Button>
+                        Submit
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+
+                <div className="grid lg:grid-cols-3 gap-6">
+                  {/* Question Area */}
+                  <div className="lg:col-span-2 space-y-6">
+                    {/* Question Card */}
+                    <Card className="p-6 min-h-[400px]">
+                      <div className="space-y-6">
+                        <div className="flex items-start justify-between">
+                          <h3 className="text-lg font-bold text-primary">
+                            Question {currentQuestionIndex + 1}
+                          </h3>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const newMarked = new Set(markedForReview);
+                              if (newMarked.has(currentQuestionIndex)) {
+                                newMarked.delete(currentQuestionIndex);
+                              } else {
+                                newMarked.add(currentQuestionIndex);
+                              }
+                              setMarkedForReview(newMarked);
+                            }}
+                          >
+                            {markedForReview.has(currentQuestionIndex) ? (
+                              <Check className="w-4 h-4 mr-2" />
+                            ) : (
+                              <AlertCircle className="w-4 h-4 mr-2" />
+                            )}
+                            Mark for Review
+                          </Button>
+                        </div>
+
+                        <p className="text-lg leading-relaxed">
+                          {sampleQuestions[currentQuestionIndex].question}
+                        </p>
+
+                        <RadioGroup
+                          value={selectedAnswers[currentQuestionIndex] || ""}
+                          onValueChange={(value) => {
+                            setSelectedAnswers({
+                              ...selectedAnswers,
+                              [currentQuestionIndex]: value,
+                            });
+                          }}
+                          className="space-y-3"
+                        >
+                          {sampleQuestions[currentQuestionIndex].options.map((option, idx) => (
+                            <div
+                              key={idx}
+                              className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-all duration-300 cursor-pointer hover:border-primary/50 hover:bg-primary/5 ${
+                                selectedAnswers[currentQuestionIndex] === option
+                                  ? "border-primary bg-primary/10"
+                                  : "border-border"
+                              }`}
+                            >
+                              <RadioGroupItem value={option} id={`option-${idx}`} />
+                              <Label
+                                htmlFor={`option-${idx}`}
+                                className="flex-1 cursor-pointer text-base"
+                              >
+                                {option}
+                              </Label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </div>
+                    </Card>
+
+                    {/* Navigation Buttons */}
+                    <Card className="p-4">
+                      <div className="flex justify-between gap-4">
+                        <Button
+                          variant="outline"
+                          disabled={currentQuestionIndex === 0}
+                          onClick={() =>
+                            setCurrentQuestionIndex(currentQuestionIndex - 1)
+                          }
+                        >
+                          <ChevronLeft className="w-4 h-4 mr-2" />
+                          Previous
+                        </Button>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedAnswers({
+                                ...selectedAnswers,
+                                [currentQuestionIndex]: "",
+                              });
+                            }}
+                          >
+                            Clear Response
+                          </Button>
+                          {currentQuestionIndex < sampleQuestions.length - 1 ? (
+                            <Button
+                              onClick={() =>
+                                setCurrentQuestionIndex(currentQuestionIndex + 1)
+                              }
+                            >
+                              Save & Next
+                              <ChevronRight className="w-4 h-4 ml-2" />
+                            </Button>
+                          ) : (
+                            <Button variant="default">Submit Quiz</Button>
+                          )}
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+
+                  {/* Question Navigation Panel */}
+                  <div className="space-y-6">
+                    {/* Status Legend */}
+                    <Card className="p-4">
+                      <h3 className="font-bold mb-4">Status</h3>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-primary/20 border-2 border-primary flex items-center justify-center text-primary font-semibold">
+                            {currentQuestionIndex + 1}
+                          </div>
+                          <span>Current</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-green-500/20 border-2 border-green-500 flex items-center justify-center text-green-600 font-semibold">
+                            1
+                          </div>
+                          <span>Answered</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-yellow-500/20 border-2 border-yellow-500 flex items-center justify-center text-yellow-600 font-semibold">
+                            1
+                          </div>
+                          <span>Marked for Review</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-muted border-2 border-border flex items-center justify-center text-muted-foreground font-semibold">
+                            1
+                          </div>
+                          <span>Not Answered</span>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Question Navigation Grid */}
+                    <Card className="p-4">
+                      <h3 className="font-bold mb-4">Questions</h3>
+                      <div className="grid grid-cols-5 gap-2">
+                        {sampleQuestions.map((_, idx) => {
+                          const isAnswered = selectedAnswers[idx];
+                          const isMarked = markedForReview.has(idx);
+                          const isCurrent = idx === currentQuestionIndex;
+
+                          return (
+                            <button
+                              key={idx}
+                              onClick={() => setCurrentQuestionIndex(idx)}
+                              className={`
+                                w-10 h-10 rounded-lg border-2 font-semibold text-sm
+                                transition-all duration-300 hover:scale-110
+                                ${
+                                  isCurrent
+                                    ? "bg-primary/20 border-primary text-primary ring-2 ring-primary/30"
+                                    : isMarked
+                                    ? "bg-yellow-500/20 border-yellow-500 text-yellow-600"
+                                    : isAnswered
+                                    ? "bg-green-500/20 border-green-500 text-green-600"
+                                    : "bg-muted border-border text-muted-foreground hover:border-primary/50"
+                                }
+                              `}
+                            >
+                              {idx + 1}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </Card>
+
+                    {/* Summary */}
+                    <Card className="p-4">
+                      <h3 className="font-bold mb-4">Summary</h3>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Answered:</span>
+                          <span className="font-semibold text-green-600">
+                            {Object.keys(selectedAnswers).filter(k => selectedAnswers[parseInt(k)]).length}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Not Answered:</span>
+                          <span className="font-semibold">
+                            {sampleQuestions.length - Object.keys(selectedAnswers).filter(k => selectedAnswers[parseInt(k)]).length}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Marked:</span>
+                          <span className="font-semibold text-yellow-600">
+                            {markedForReview.size}
+                          </span>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </main>
