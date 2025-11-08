@@ -101,6 +101,13 @@ const Dashboard = () => {
             <span className="font-medium">AI Study Buddy</span>
           </button>
           <button
+            onClick={() => navigate("/concept-library")}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-muted-foreground hover:bg-muted"
+          >
+            <BookOpen className="w-5 h-5" />
+            <span className="font-medium">Concept Library</span>
+          </button>
+          <button
             onClick={() => setActiveTab("profile")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
               activeTab === "profile"
