@@ -118,6 +118,7 @@ const Dashboard = () => {
   // Alerts State
   const [alertFilter, setAlertFilter] = useState("all");
   const [alertSearchQuery, setAlertSearchQuery] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("all");
 
   const subjects = ["Physics", "Chemistry", "Biology", "Mathematics"];
   
@@ -426,12 +427,14 @@ const Dashboard = () => {
   ];
 
   const alertCategories = ["all", "Exam Updates", "Results", "Important Notice", "Important Dates", "Resources"];
+  const priorityLevels = ["all", "high", "medium", "low"];
 
   const filteredAlerts = ntaAlerts.filter(alert => {
     const matchesCategory = alertFilter === "all" || alert.category === alertFilter;
+    const matchesPriority = priorityFilter === "all" || alert.priority === priorityFilter;
     const matchesSearch = alert.title.toLowerCase().includes(alertSearchQuery.toLowerCase()) || 
                          alert.description.toLowerCase().includes(alertSearchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return matchesCategory && matchesPriority && matchesSearch;
   });
 
   const getPriorityColor = (priority: string) => {
@@ -1087,29 +1090,27 @@ const Dashboard = () => {
                     <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all duration-300">
                       <TrendingUp className="w-5 h-5 text-primary" />
                     </div>
-                    Topics Covered Over Time
+                    Topics Covered Distribution
                   </h3>
                 </div>
                 <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={topicsCoveredData}>
-                    <defs>
-                      <linearGradient id="colorTopics" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                    <XAxis 
-                      dataKey="month" 
-                      stroke="hsl(var(--muted-foreground))"
-                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                      tickLine={{ stroke: 'hsl(var(--border))' }}
-                    />
-                    <YAxis 
-                      stroke="hsl(var(--muted-foreground))"
-                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                      tickLine={{ stroke: 'hsl(var(--border))' }}
-                    />
+                  <PieChart>
+                    <Pie
+                      data={topicsCoveredData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="topics"
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
+                    >
+                      {topicsCoveredData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'hsl(var(--card))', 
@@ -1117,20 +1118,12 @@ const Dashboard = () => {
                         borderRadius: '12px',
                         boxShadow: '0 10px 30px -10px hsl(var(--primary) / 0.3)'
                       }}
-                      labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
                     />
-                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    <Line 
-                      type="monotone" 
-                      dataKey="topics" 
-                      stroke="hsl(var(--primary))" 
-                      strokeWidth={4}
-                      dot={{ fill: 'hsl(var(--primary))', r: 6, strokeWidth: 2, stroke: 'hsl(var(--background))' }}
-                      activeDot={{ r: 8, strokeWidth: 2 }}
-                      animationDuration={1500}
-                      animationEasing="ease-in-out"
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '20px' }}
+                      formatter={(value, entry: any) => `${value} (${entry.payload.topics} topics)`}
                     />
-                  </LineChart>
+                  </PieChart>
                 </ResponsiveContainer>
               </Card>
 
@@ -1141,29 +1134,27 @@ const Dashboard = () => {
                     <div className="p-2 rounded-lg bg-secondary/10 group-hover:bg-secondary/20 transition-all duration-300">
                       <BarChart3 className="w-5 h-5 text-secondary" />
                     </div>
-                    Weekly Study Hours
+                    Weekly Study Hours Distribution
                   </h3>
                 </div>
                 <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={weeklyStudyHours}>
-                    <defs>
-                      <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="hsl(var(--secondary))" stopOpacity={1}/>
-                        <stop offset="100%" stopColor="hsl(var(--secondary))" stopOpacity={0.6}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                    <XAxis 
-                      dataKey="day" 
-                      stroke="hsl(var(--muted-foreground))"
-                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                      tickLine={{ stroke: 'hsl(var(--border))' }}
-                    />
-                    <YAxis 
-                      stroke="hsl(var(--muted-foreground))"
-                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                      tickLine={{ stroke: 'hsl(var(--border))' }}
-                    />
+                  <PieChart>
+                    <Pie
+                      data={weeklyStudyHours}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="hours"
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
+                    >
+                      {weeklyStudyHours.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'hsl(var(--card))', 
@@ -1171,18 +1162,12 @@ const Dashboard = () => {
                         borderRadius: '12px',
                         boxShadow: '0 10px 30px -10px hsl(var(--secondary) / 0.3)'
                       }}
-                      labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
-                      cursor={{ fill: 'hsl(var(--secondary) / 0.1)' }}
                     />
-                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    <Bar 
-                      dataKey="hours" 
-                      fill="url(#colorHours)" 
-                      radius={[12, 12, 0, 0]}
-                      animationDuration={1500}
-                      animationEasing="ease-in-out"
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '20px' }}
+                      formatter={(value, entry: any) => `${value} (${entry.payload.hours}h)`}
                     />
-                  </BarChart>
+                  </PieChart>
                 </ResponsiveContainer>
               </Card>
 
@@ -1193,30 +1178,27 @@ const Dashboard = () => {
                     <div className="p-2 rounded-lg bg-orange-500/10 group-hover:bg-orange-500/20 transition-all duration-300 group-hover:rotate-12">
                       <Flame className="w-5 h-5 text-orange-500" />
                     </div>
-                    Study Consistency
+                    Study Consistency Distribution
                   </h3>
                 </div>
                 <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={consistencyData}>
-                    <defs>
-                      <linearGradient id="colorConsistency" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#f97316" stopOpacity={1}/>
-                        <stop offset="100%" stopColor="#fb923c" stopOpacity={0.7}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                    <XAxis 
-                      dataKey="week" 
-                      stroke="hsl(var(--muted-foreground))"
-                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                      tickLine={{ stroke: 'hsl(var(--border))' }}
-                    />
-                    <YAxis 
-                      stroke="hsl(var(--muted-foreground))" 
-                      domain={[0, 7]}
-                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                      tickLine={{ stroke: 'hsl(var(--border))' }}
-                    />
+                  <PieChart>
+                    <Pie
+                      data={consistencyData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="days"
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
+                    >
+                      {consistencyData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'hsl(var(--card))', 
@@ -1224,18 +1206,12 @@ const Dashboard = () => {
                         borderRadius: '12px',
                         boxShadow: '0 10px 30px -10px rgba(249, 115, 22, 0.3)'
                       }}
-                      labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
-                      cursor={{ fill: 'rgba(249, 115, 22, 0.1)' }}
                     />
-                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    <Bar 
-                      dataKey="days" 
-                      fill="url(#colorConsistency)" 
-                      radius={[12, 12, 0, 0]}
-                      animationDuration={1500}
-                      animationEasing="ease-in-out"
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '20px' }}
+                      formatter={(value, entry: any) => `${value} (${entry.payload.days} days)`}
                     />
-                  </BarChart>
+                  </PieChart>
                 </ResponsiveContainer>
               </Card>
 
@@ -1246,30 +1222,27 @@ const Dashboard = () => {
                     <div className="p-2 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-all duration-300">
                       <Target className="w-5 h-5 text-accent" />
                     </div>
-                    Quiz Performance Trend
+                    Quiz Performance Distribution
                   </h3>
                 </div>
                 <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={quizScoresTrend}>
-                    <defs>
-                      <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(var(--accent))" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="hsl(var(--accent))" stopOpacity={0.1}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                    <XAxis 
-                      dataKey="week" 
-                      stroke="hsl(var(--muted-foreground))"
-                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                      tickLine={{ stroke: 'hsl(var(--border))' }}
-                    />
-                    <YAxis 
-                      stroke="hsl(var(--muted-foreground))" 
-                      domain={[0, 100]}
-                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                      tickLine={{ stroke: 'hsl(var(--border))' }}
-                    />
+                  <PieChart>
+                    <Pie
+                      data={quizScoresTrend}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="score"
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
+                    >
+                      {quizScoresTrend.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'hsl(var(--card))', 
@@ -1277,20 +1250,12 @@ const Dashboard = () => {
                         borderRadius: '12px',
                         boxShadow: '0 10px 30px -10px hsl(var(--accent) / 0.3)'
                       }}
-                      labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
-                      cursor={{ stroke: 'hsl(var(--accent))', strokeWidth: 2 }}
                     />
-                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    <Area 
-                      type="monotone" 
-                      dataKey="score" 
-                      stroke="hsl(var(--accent))" 
-                      strokeWidth={3}
-                      fill="url(#colorScore)"
-                      animationDuration={1500}
-                      animationEasing="ease-in-out"
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '20px' }}
+                      formatter={(value, entry: any) => `${value} (Score: ${entry.payload.score})`}
                     />
-                  </AreaChart>
+                  </PieChart>
                 </ResponsiveContainer>
               </Card>
 
@@ -1301,38 +1266,30 @@ const Dashboard = () => {
                     <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all duration-300 group-hover:rotate-12">
                       <Award className="w-5 h-5 text-primary" />
                     </div>
-                    Performance by Subject
+                    Performance by Subject Distribution
                   </h3>
                   <div className="text-sm text-muted-foreground bg-muted px-4 py-2 rounded-lg">
                     Overall Average: <span className="font-bold text-primary">84.8%</span>
                   </div>
                 </div>
                 <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={performanceBySubject} layout="vertical">
-                    <defs>
-                      {COLORS.map((color, index) => (
-                        <linearGradient key={`gradient-${index}`} id={`colorGradient${index}`} x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0%" stopColor={color} stopOpacity={0.8}/>
-                          <stop offset="100%" stopColor={color} stopOpacity={1}/>
-                        </linearGradient>
+                  <PieChart>
+                    <Pie
+                      data={performanceBySubject}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                      outerRadius={110}
+                      fill="#8884d8"
+                      dataKey="score"
+                      animationDuration={1500}
+                      animationEasing="ease-in-out"
+                    >
+                      {performanceBySubject.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} horizontal={true} vertical={false} />
-                    <XAxis 
-                      type="number" 
-                      domain={[0, 100]} 
-                      stroke="hsl(var(--muted-foreground))"
-                      tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                      tickLine={{ stroke: 'hsl(var(--border))' }}
-                    />
-                    <YAxis 
-                      dataKey="subject" 
-                      type="category" 
-                      stroke="hsl(var(--muted-foreground))" 
-                      width={100}
-                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 13 }}
-                      tickLine={{ stroke: 'hsl(var(--border))' }}
-                    />
+                    </Pie>
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'hsl(var(--card))', 
@@ -1340,21 +1297,12 @@ const Dashboard = () => {
                         borderRadius: '12px',
                         boxShadow: '0 10px 30px -10px hsl(var(--primary) / 0.3)'
                       }}
-                      labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold' }}
-                      cursor={{ fill: 'hsl(var(--primary) / 0.1)' }}
                     />
-                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    <Bar 
-                      dataKey="score" 
-                      radius={[0, 12, 12, 0]}
-                      animationDuration={1500}
-                      animationEasing="ease-in-out"
-                    >
-                      {performanceBySubject.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={`url(#colorGradient${index % COLORS.length})`} />
-                      ))}
-                    </Bar>
-                  </BarChart>
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '20px' }}
+                      formatter={(value, entry: any) => `${value} (${entry.payload.score}%)`}
+                    />
+                  </PieChart>
                 </ResponsiveContainer>
               </Card>
             </div>
@@ -1676,7 +1624,7 @@ const Dashboard = () => {
 
               {/* Search and Filter */}
               <Card className="p-4 bg-gradient-to-br from-background via-background to-primary/5 border-primary/10">
-                <div className="grid md:grid-cols-3 gap-3">
+                <div className="grid md:grid-cols-4 gap-3">
                   <Input
                     placeholder="Search alerts..."
                     value={alertSearchQuery}
@@ -1691,6 +1639,18 @@ const Dashboard = () => {
                       {alertCategories.map((category) => (
                         <SelectItem key={category} value={category}>
                           {category === "all" ? "All Categories" : category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                    <SelectTrigger className="w-full bg-background">
+                      <SelectValue placeholder="All Priorities" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-popover border-border z-50">
+                      {priorityLevels.map((priority) => (
+                        <SelectItem key={priority} value={priority}>
+                          {priority === "all" ? "All Priorities" : priority.charAt(0).toUpperCase() + priority.slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>
