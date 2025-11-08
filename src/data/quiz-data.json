@@ -1,0 +1,132 @@
+{
+  "subjects": [
+    {
+      "id": "mathematics",
+      "name": "Mathematics",
+      "description": "Algebra, Geometry, Calculus, and more",
+      "icon": "➕",
+      "topics": [
+        {
+          "id": "algebra",
+          "name": "Algebra Fundamentals",
+          "description": "Linear equations, polynomials, and factoring",
+          "difficulty": "easy"
+        },
+        {
+          "id": "geometry",
+          "name": "Geometry Basics",
+          "description": "Angles, triangles, circles, and spatial reasoning",
+          "difficulty": "medium"
+        },
+        {
+          "id": "calculus",
+          "name": "Calculus Introduction",
+          "description": "Limits, derivatives, and basic integration",
+          "difficulty": "hard"
+        },
+        {
+          "id": "trigonometry",
+          "name": "Trigonometry",
+          "description": "Sine, cosine, tangent, and trigonometric identities",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "chemistry",
+      "name": "Chemistry",
+      "description": "Chemical reactions, elements, compounds, and molecular structure",
+      "icon": "🧪",
+      "topics": [
+        {
+          "id": "chemistry-basics",
+          "name": "Chemistry Basics",
+          "description": "Elements, compounds, chemical reactions",
+          "difficulty": "easy"
+        },
+        {
+          "id": "organic-chemistry",
+          "name": "Organic Chemistry",
+          "description": "Carbon compounds, functional groups, reactions",
+          "difficulty": "hard"
+        },
+        {
+          "id": "periodic-table",
+          "name": "Periodic Table",
+          "description": "Element properties, groups, and trends",
+          "difficulty": "medium"
+        },
+        {
+          "id": "chemical-bonding",
+          "name": "Chemical Bonding",
+          "description": "Ionic, covalent, and metallic bonds",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "biology",
+      "name": "Biology",
+      "description": "Life sciences, cells, organisms, and ecosystems",
+      "icon": "🔬",
+      "topics": [
+        {
+          "id": "cell-biology",
+          "name": "Cell Biology",
+          "description": "Cell structure, organelles, and cellular processes",
+          "difficulty": "medium"
+        },
+        {
+          "id": "genetics",
+          "name": "Genetics",
+          "description": "DNA, heredity, and genetic variation",
+          "difficulty": "hard"
+        },
+        {
+          "id": "ecology",
+          "name": "Ecology",
+          "description": "Ecosystems, food chains, and environmental interactions",
+          "difficulty": "easy"
+        },
+        {
+          "id": "human-anatomy",
+          "name": "Human Anatomy",
+          "description": "Body systems, organs, and physiological processes",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "physics",
+      "name": "Physics",
+      "description": "Matter, energy, motion, and fundamental forces",
+      "icon": "⚛️",
+      "topics": [
+        {
+          "id": "mechanics",
+          "name": "Mechanics",
+          "description": "Newton's laws, velocity, acceleration, and forces",
+          "difficulty": "medium"
+        },
+        {
+          "id": "electricity",
+          "name": "Electricity & Magnetism",
+          "description": "Electric fields, circuits, and magnetic forces",
+          "difficulty": "hard"
+        },
+        {
+          "id": "thermodynamics",
+          "name": "Thermodynamics",
+          "description": "Heat, temperature, and energy transfer",
+          "difficulty": "medium"
+        },
+        {
+          "id": "waves",
+          "name": "Waves & Optics",
+          "description": "Wave properties, sound, and light",
+          "difficulty": "easy"
+        }
+      ]
+    }
+  ]
+}
