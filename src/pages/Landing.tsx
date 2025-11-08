@@ -21,13 +21,20 @@ import featureExams from "@/assets/feature-exams.jpg";
 import featureBuddy from "@/assets/feature-buddy.jpg";
 
 const Landing = () => {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const features = [
     {
       icon: Brain,
       image: featureExplanations,
       title: "Intelligent Explanations",
       description: "Complex concepts explained in simple terms, adapted to your learning level",
-      details: "Get instant, context-aware explanations for any topic. Our AI adapts to your understanding level and learning style.",
+      details: "PrepIQ breaks down the most challenging topics into digestible explanations tailored to your comprehension level. Whether you're struggling with organic chemistry reactions or thermodynamics problems, our AI analyzes your current understanding and explains concepts using analogies, examples, and step-by-step reasoning that makes sense to you. No more confusion—just clarity that builds your confidence and deepens your mastery.",
       cta: "Try Explanations"
     },
     {
@@ -35,7 +42,7 @@ const Landing = () => {
       image: featureQuizzes,
       title: "Adaptive Quizzes",
       description: "AI-generated quizzes that adjust difficulty based on your performance",
-      details: "Practice with unlimited AI-generated questions that adapt to your skill level in real-time.",
+      details: "PrepIQ's adaptive quiz engine intelligently identifies your weak areas and generates unlimited practice questions that evolve with your progress. As you improve in one topic, the AI seamlessly increases difficulty while providing extra support in areas where you need it most. This targeted approach maximizes your study efficiency, ensuring you spend time where it matters most—turning your weaknesses into strengths and accelerating your exam readiness.",
       cta: "Start Quiz"
     },
     {
@@ -43,7 +50,7 @@ const Landing = () => {
       image: featureScheduling,
       title: "Smart Scheduling",
       description: "Personalized study schedules that optimize your learning efficiency",
-      details: "Let AI create your optimal study plan based on your goals, availability, and learning patterns.",
+      details: "PrepIQ analyzes your exam date, current knowledge level, and available study time to create a personalized schedule that maximizes retention and minimizes burnout. Our AI factors in spaced repetition principles, your peak performance hours, and upcoming exams to dynamically adjust your plan. No more overwhelming study routines—just an intelligent roadmap that guides you toward success while maintaining balance in your life.",
       cta: "Create Schedule"
     },
     {
@@ -51,7 +58,7 @@ const Landing = () => {
       image: featureTracking,
       title: "Progress Tracking",
       description: "Real-time analytics to monitor improvement and identify weak areas",
-      details: "Visualize your learning journey with detailed analytics and personalized insights.",
+      details: "PrepIQ provides comprehensive insights into your learning journey with detailed analytics that track your improvement across topics, question types, and difficulty levels. Visualize your strengths and weaknesses through intuitive dashboards, identify patterns in your mistakes, and receive AI-powered recommendations on what to study next. With real-time feedback and predictive scoring, you'll always know exactly where you stand and what steps to take to reach your target score.",
       cta: "View Analytics"
     },
     {
@@ -59,7 +66,7 @@ const Landing = () => {
       image: featureExams,
       title: "Multi-Exam Support",
       description: "Comprehensive preparation for JEE, NEET, UPSC, CAT, GATE, and more",
-      details: "Access exam-specific content, practice tests, and strategies for all major competitive exams.",
+      details: "PrepIQ offers specialized preparation modules for all major competitive exams in India. From JEE and NEET's rigorous problem-solving to UPSC's vast syllabus coverage, our AI understands the unique requirements and question patterns of each exam. Access exam-specific practice papers, previous year questions, expert strategies, and time management techniques—all in one platform. PrepIQ adapts to the exact format and difficulty level of your target exam, giving you the edge you need.",
       cta: "Explore Exams"
     },
     {
@@ -67,7 +74,7 @@ const Landing = () => {
       image: featureBuddy,
       title: "AI Study Buddy",
       description: "24/7 intelligent companion that remembers your journey and guides you",
-      details: "Chat with an AI that understands your progress, answers doubts, and motivates you every step.",
+      details: "Your personal AI companion that's always available to help—day or night. PrepIQ's Study Buddy remembers your entire learning history, understands your doubts contextually, and provides personalized motivation when you need it most. Ask questions in natural language, get instant clarifications, discuss problem-solving strategies, or simply chat about your study concerns. It's like having an expert tutor and supportive friend combined, one who never gets tired and is always invested in your success.",
       cta: "Meet Your Buddy"
     }
   ];
@@ -105,6 +112,26 @@ const Landing = () => {
             <div className="flex items-center gap-2">
               <img src={prepiqLogo} alt="PrepIQ Logo" className="w-10 h-10 rounded-lg" />
               <span className="text-xl font-bold">PrepIQ</span>
+            </div>
+            <div className="hidden md:flex items-center gap-6">
+              <button 
+                onClick={() => scrollToSection('features')}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Features
+              </button>
+              <button 
+                onClick={() => scrollToSection('how-it-works')}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                How It Works
+              </button>
+              <button 
+                onClick={() => scrollToSection('testimonials')}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Testimonials
+              </button>
             </div>
             <div className="flex items-center gap-4">
               <Link to="/login">
@@ -201,7 +228,7 @@ const Landing = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
+      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-background scroll-mt-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">
@@ -259,7 +286,7 @@ const Landing = () => {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-hero">
+      <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-hero scroll-mt-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">
@@ -296,7 +323,7 @@ const Landing = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
+      <section id="testimonials" className="py-20 px-4 sm:px-6 lg:px-8 bg-background scroll-mt-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">
