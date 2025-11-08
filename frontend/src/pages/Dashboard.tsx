@@ -89,10 +89,17 @@ const Dashboard = () => {
             { id: "schedule", label: "Study Schedule", icon: Calendar },
             { id: "progress", label: "Progress", icon: BarChart3 },
             { id: "chat", label: "AI Tutor", icon: MessageSquare },
+            { id: "quiz", label: "Quiz Generator", icon: Sparkles, route: "/quiz-generator" },
           ].map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => {
+                if (item.route) {
+                  navigate(item.route);
+                } else {
+                  setActiveTab(item.id);
+                }
+              }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                 activeTab === item.id
                   ? "bg-accent text-accent-foreground"
