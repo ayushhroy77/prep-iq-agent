@@ -103,13 +103,15 @@ const AITutor = () => {
     setIsLoading(true);
 
     try {
+      const SUPA_URL = import.meta.env.VITE_SUPABASE_URL || "https://riqctcgenimpjrhxzoyj.supabase.co";
+      const SUPA_PK = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpcWN0Y2dlbmltcGpyaHh6b3lqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1NDY0ODUsImV4cCI6MjA3ODEyMjQ4NX0.YueF46P9ATur3vTqK7Kk8kqS-gkZJhZK1VH-KQC9hlw";
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-tutor`,
+        `${SUPA_URL}/functions/v1/ai-tutor`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${SUPA_PK}`,
           },
           body: JSON.stringify({ messages: [...messages, userMessage] }),
         }
