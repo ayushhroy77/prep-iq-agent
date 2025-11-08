@@ -11,7 +11,6 @@ import Dashboard from "./pages/Dashboard";
 import AIStudyBuddy from "./pages/AIStudyBuddy";
 import ConceptLibrary from "./pages/ConceptLibrary";
 import StudySchedule from "./pages/StudySchedule";
-import QuizGenerator from "./pages/QuizGenerator";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Settings from "./pages/Settings";
@@ -36,7 +35,6 @@ const AnimatedRoutes = () => {
         <Route path="/ai-study-buddy" element={<AIStudyBuddy />} />
         <Route path="/concept-library" element={<ConceptLibrary />} />
         <Route path="/study-schedule" element={<StudySchedule />} />
-        <Route path="/quiz-generator" element={<QuizGenerator />} />
         <Route path="/terms" element={<TermsAndConditions />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/settings" element={<Settings />} />
