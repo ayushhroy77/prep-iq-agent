@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -95,57 +96,101 @@ export default function StudySchedule() {
 
   const sensors = useSensors(useSensor(PointerSensor));
 
-  // Load from localStorage
+  // Load from database
   useEffect(() => {
-    const savedSubjects = localStorage.getItem("studySchedule_subjects");
-    const savedSchedule = localStorage.getItem("studySchedule_schedule");
-    const savedGoals = localStorage.getItem("studySchedule_goals");
-    const savedStep = localStorage.getItem("studySchedule_step");
-
-    if (savedSubjects) setSubjects(JSON.parse(savedSubjects));
-    if (savedSchedule) setSchedule(JSON.parse(savedSchedule));
-    if (savedGoals) setGoals(JSON.parse(savedGoals));
-    if (savedStep) setStep(savedStep as "setup" | "schedule");
+    loadFromDatabase();
   }, []);
 
-  // Save to localStorage
-  useEffect(() => {
-    localStorage.setItem("studySchedule_subjects", JSON.stringify(subjects));
-    localStorage.setItem("studySchedule_schedule", JSON.stringify(schedule));
-    localStorage.setItem("studySchedule_goals", JSON.stringify(goals));
-    localStorage.setItem("studySchedule_step", step);
-  }, [subjects, schedule, goals, step]);
+  const loadFromDatabase = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
-  const addSubject = () => {
+    const [subjectsRes, schedulesRes, goalsRes] = await Promise.all([
+      supabase.from("subjects" as any).select("*").eq("user_id", user.id).order("priority", { ascending: true }),
+      supabase.from("study_schedules" as any).select("*").eq("user_id", user.id),
+      supabase.from("study_goals" as any).select("*").eq("user_id", user.id).limit(1)
+    ]);
+
+    if (subjectsRes.data) {
+      const mappedSubjects = subjectsRes.data.map((s: any) => ({
+        id: s.id,
+        name: s.name,
+        priority: (s.difficulty?.toLowerCase() || "medium") as "high" | "medium" | "low",
+        hoursPerWeek: 5,
+        color: s.color || COLORS[0]
+      }));
+      setSubjects(mappedSubjects);
+    }
+
+    if (schedulesRes.data) {
+      const mappedSchedules = schedulesRes.data.map((s: any) => ({
+        id: s.id,
+        day: DAYS[s.day_of_week] || "Monday",
+        startTime: s.start_time,
+        endTime: s.end_time,
+        subjectId: s.subject_id,
+        type: (s.session_type as any) || "study"
+      }));
+      setSchedule(mappedSchedules);
+      if (mappedSchedules.length > 0) setStep("schedule");
+    }
+
+    if (goalsRes.data && goalsRes.data[0]) {
+      setGoals({
+        targetHoursPerDay: (goalsRes.data[0] as any).target_hours || 4,
+        examDates: [],
+        preferredStudyTime: "morning",
+        breakDuration: 15
+      });
+    }
+  };
+
+  const addSubject = async () => {
     if (!subjectForm.name.trim()) {
       toast.error("Please enter a subject name");
       return;
     }
 
-    const newSubject: Subject = {
-      id: editingSubject?.id || Date.now().toString(),
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const newSubject = {
+      user_id: user.id,
       name: subjectForm.name,
-      priority: subjectForm.priority,
-      hoursPerWeek: subjectForm.hoursPerWeek,
+      difficulty: subjectForm.priority,
       color: COLORS[subjects.length % COLORS.length],
+      priority: subjectForm.priority === "high" ? 3 : subjectForm.priority === "medium" ? 2 : 1
     };
 
     if (editingSubject) {
-      setSubjects(subjects.map(s => s.id === editingSubject.id ? newSubject : s));
+      const { error } = await (supabase.from("subjects" as any).update(newSubject).eq("id", editingSubject.id));
+      if (error) {
+        toast.error("Failed to update subject");
+        return;
+      }
       toast.success("Subject updated");
     } else {
-      setSubjects([...subjects, newSubject]);
+      const { data, error } = await (supabase.from("subjects" as any).insert(newSubject).select().single());
+      if (error) {
+        toast.error("Failed to add subject");
+        return;
+      }
       toast.success("Subject added");
     }
 
+    await loadFromDatabase();
     setSubjectForm({ name: "", priority: "medium", hoursPerWeek: 5 });
     setShowSubjectForm(false);
     setEditingSubject(null);
   };
 
-  const deleteSubject = (id: string) => {
-    setSubjects(subjects.filter(s => s.id !== id));
-    setSchedule(schedule.filter(slot => slot.subjectId !== id));
+  const deleteSubject = async (id: string) => {
+    const { error } = await (supabase.from("subjects" as any).delete().eq("id", id));
+    if (error) {
+      toast.error("Failed to delete subject");
+      return;
+    }
+    await loadFromDatabase();
     toast.success("Subject deleted");
   };
 
@@ -160,22 +205,23 @@ export default function StudySchedule() {
     }
   };
 
-  const generateSchedule = () => {
+  const generateSchedule = async () => {
     if (subjects.length === 0) {
       toast.error("Please add at least one subject");
       return;
     }
 
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
     const newSchedule: TimeSlot[] = [];
     const timeSlots = generateTimeSlots();
     
-    // Sort subjects by priority
     const sortedSubjects = [...subjects].sort((a, b) => {
       const priorityOrder = { high: 0, medium: 1, low: 2 };
       return priorityOrder[a.priority] - priorityOrder[b.priority];
     });
 
-    // Distribute subjects across days
     let slotIndex = 0;
     sortedSubjects.forEach(subject => {
       const slotsNeeded = Math.ceil((subject.hoursPerWeek / 7) * (7 / goals.targetHoursPerDay));
@@ -187,7 +233,6 @@ export default function StudySchedule() {
         });
         slotIndex++;
         
-        // Add break after study session
         if (slotIndex < timeSlots.length) {
           const breakSlot = timeSlots[slotIndex];
           const [hours, minutes] = breakSlot.startTime.split(":").map(Number);
@@ -203,7 +248,32 @@ export default function StudySchedule() {
       }
     });
 
-    setSchedule(newSchedule);
+    await (supabase.from("study_schedules" as any).delete().eq("user_id", user.id));
+
+    const scheduleData = newSchedule.map(slot => ({
+      user_id: user.id,
+      subject_id: slot.subjectId || subjects[0].id,
+      day_of_week: DAYS.indexOf(slot.day),
+      start_time: slot.startTime,
+      end_time: slot.endTime,
+      session_type: slot.type,
+      notes: ""
+    }));
+
+    const { error } = await (supabase.from("study_schedules" as any).insert(scheduleData));
+    if (error) {
+      toast.error("Failed to save schedule");
+      return;
+    }
+
+    await (supabase.from("study_goals" as any).upsert({
+      user_id: user.id,
+      goal_type: "daily_hours",
+      description: "Daily study target",
+      target_hours: goals.targetHoursPerDay
+    }));
+
+    await loadFromDatabase();
     setStep("schedule");
     toast.success("Schedule generated! You can now customize it.");
   };
@@ -229,24 +299,52 @@ export default function StudySchedule() {
     return slots;
   };
 
-  const addCustomSlot = (day: string) => {
-    const newSlot: TimeSlot = {
-      id: Date.now().toString(),
-      day,
-      startTime: "09:00",
-      endTime: "10:00",
-      subjectId: subjects[0]?.id || "",
-      type: "study",
-    };
-    setSchedule([...schedule, newSlot]);
+  const addCustomSlot = async (day: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user || !subjects[0]) return;
+
+    const { error } = await (supabase.from("study_schedules" as any).insert({
+      user_id: user.id,
+      subject_id: subjects[0].id,
+      day_of_week: DAYS.indexOf(day),
+      start_time: "09:00",
+      end_time: "10:00",
+      session_type: "study",
+      notes: ""
+    }));
+
+    if (error) {
+      toast.error("Failed to add slot");
+      return;
+    }
+
+    await loadFromDatabase();
   };
 
-  const updateSlot = (id: string, updates: Partial<TimeSlot>) => {
-    setSchedule(schedule.map(slot => slot.id === id ? { ...slot, ...updates } : slot));
+  const updateSlot = async (id: string, updates: Partial<TimeSlot>) => {
+    const dbUpdates: any = {};
+    if (updates.startTime) dbUpdates.start_time = updates.startTime;
+    if (updates.endTime) dbUpdates.end_time = updates.endTime;
+    if (updates.subjectId) dbUpdates.subject_id = updates.subjectId;
+    if (updates.type) dbUpdates.session_type = updates.type;
+
+    const { error } = await (supabase.from("study_schedules" as any).update(dbUpdates).eq("id", id));
+    if (error) {
+      toast.error("Failed to update slot");
+      return;
+    }
+
+    await loadFromDatabase();
   };
 
-  const deleteSlot = (id: string) => {
-    setSchedule(schedule.filter(slot => slot.id !== id));
+  const deleteSlot = async (id: string) => {
+    const { error } = await (supabase.from("study_schedules" as any).delete().eq("id", id));
+    if (error) {
+      toast.error("Failed to delete slot");
+      return;
+    }
+
+    await loadFromDatabase();
   };
 
   const getSubjectById = (id: string) => subjects.find(s => s.id === id);
