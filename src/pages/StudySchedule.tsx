@@ -10,10 +10,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { DndContext, DragEndEvent, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverEvent, closestCenter, PointerSensor, useSensor, useSensors, DragOverlay, useDndMonitor } from "@dnd-kit/core";
 import { SortableContext, arrayMove, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Calendar, Clock, GripVertical, Plus, Trash2, Edit2, Save, X, BookOpen, Target, Brain, Sparkles } from "lucide-react";
+import WeeklyOverviewChart from "@/components/WeeklyOverviewChart";
 
 interface Subject {
   id: string;
@@ -105,7 +106,13 @@ export default function StudySchedule() {
     type: "study" as "study" | "break" | "extracurricular" | "exam-prep",
   });
 
-  const sensors = useSensors(useSensor(PointerSensor));
+  const [activeSlot, setActiveSlot] = useState<TimeSlot | null>(null);
+
+  const sensors = useSensors(useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 8,
+    },
+  }));
 
   // Load from database
   useEffect(() => {
@@ -207,13 +214,51 @@ export default function StudySchedule() {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (over && active.id !== over.id) {
+    
+    // Handle subject reordering in setup phase
+    if (step === "setup" && over && active.id !== over.id) {
       setSubjects((items) => {
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over.id);
         return arrayMove(items, oldIndex, newIndex);
       });
     }
+    
+    // Handle time slot drag to different day
+    if (step === "schedule" && over) {
+      const activeId = active.id as string;
+      const overId = over.id as string;
+      
+      // Check if dragging to a different day
+      const activeSlot = schedule.find(s => s.id === activeId);
+      if (activeSlot && overId.startsWith("day-")) {
+        const newDay = overId.replace("day-", "");
+        if (activeSlot.day !== newDay) {
+          handleSlotDayChange(activeId, newDay);
+        }
+      }
+    }
+    
+    setActiveSlot(null);
+  };
+
+  const handleDragStart = (event: any) => {
+    const activeSlot = schedule.find(s => s.id === event.active.id);
+    setActiveSlot(activeSlot || null);
+  };
+
+  const handleSlotDayChange = async (slotId: string, newDay: string) => {
+    const { error } = await (supabase.from("study_schedules" as any).update({
+      day_of_week: DAYS.indexOf(newDay)
+    }).eq("id", slotId));
+
+    if (error) {
+      toast.error("Failed to move slot");
+      return;
+    }
+
+    await loadFromDatabase();
+    toast.success(`Slot moved to ${newDay}`);
   };
 
   const generateSchedule = async () => {
@@ -416,6 +461,87 @@ export default function StudySchedule() {
 
   const getScheduleForDay = (day: string) => schedule.filter(slot => slot.day === day).sort((a, b) => a.startTime.localeCompare(b.startTime));
 
+  const SortableSlot = ({ slot }: { slot: TimeSlot }) => {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ 
+      id: slot.id,
+      data: { type: "slot", slot }
+    });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.5 : 1,
+    };
+
+    const subject = getSubjectById(slot.subjectId);
+
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className={`p-3 rounded-lg border relative group cursor-move ${
+          slot.type === "break" ? "bg-muted/50" : subject ? subject.color + " text-white" : "bg-card"
+        } hover-scale`}
+        {...attributes}
+        {...listeners}
+      >
+        <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <GripVertical className="h-4 w-4" />
+        </div>
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 bg-background/20 hover:bg-background/40"
+            onClick={(e) => {
+              e.stopPropagation();
+              editSlot(slot);
+            }}
+          >
+            <Edit2 className="h-3 w-3" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 bg-background/20 hover:bg-background/40"
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteSlot(slot.id);
+            }}
+          >
+            <Trash2 className="h-3 w-3" />
+          </Button>
+        </div>
+        <p className="text-xs font-medium mb-1">
+          {slot.startTime} - {slot.endTime}
+        </p>
+        {slot.type === "break" ? (
+          <p className="text-sm font-semibold">Break</p>
+        ) : (
+          <p className="text-sm font-semibold">{subject?.name || "Study"}</p>
+        )}
+        {slot.type !== "study" && slot.type !== "break" && (
+          <Badge variant="secondary" className="mt-1 text-xs">
+            {slot.type === "extracurricular" ? "Extracurricular" : "Exam Prep"}
+          </Badge>
+        )}
+      </div>
+    );
+  };
+
+  const DroppableDay = ({ day, children }: { day: string; children: React.ReactNode }) => {
+    const { setNodeRef } = useSortable({ 
+      id: `day-${day}`,
+      data: { type: "day", day }
+    });
+
+    return (
+      <div ref={setNodeRef} className="space-y-2">
+        {children}
+      </div>
+    );
+  };
+
   if (step === "setup") {
     return (
       <div className="min-h-screen bg-background">
@@ -608,6 +734,10 @@ export default function StudySchedule() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <WeeklyOverviewChart subjects={subjects} schedule={schedule} />
+        </div>
+
         <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
             <CardContent className="pt-6">
@@ -648,69 +778,57 @@ export default function StudySchedule() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-7 gap-4">
-          {DAYS.map((day) => (
-            <Card key={day} className="flex flex-col">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg">{day}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1 space-y-2">
-                {getScheduleForDay(day).map((slot) => {
-                  const subject = getSubjectById(slot.subjectId);
-                  return (
-                    <div
-                      key={slot.id}
-                      className={`p-3 rounded-lg border relative group ${
-                        slot.type === "break" ? "bg-muted/50" : subject ? subject.color + " text-white" : "bg-card"
-                      }`}
+        <DndContext 
+          sensors={sensors} 
+          collisionDetection={closestCenter} 
+          onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
+        >
+          <SortableContext items={[...schedule.map(s => s.id), ...DAYS.map(d => `day-${d}`)]}>
+            <div className="grid grid-cols-1 lg:grid-cols-7 gap-4">
+              {DAYS.map((day) => (
+                <Card key={day} className="flex flex-col animate-fade-in">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      {day}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-1 space-y-2">
+                    <DroppableDay day={day}>
+                      {getScheduleForDay(day).map((slot) => (
+                        <SortableSlot key={slot.id} slot={slot} />
+                      ))}
+                    </DroppableDay>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full hover-scale"
+                      onClick={() => addCustomSlot(day)}
                     >
-                       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6 bg-background/20 hover:bg-background/40"
-                          onClick={() => editSlot(slot)}
-                        >
-                          <Edit2 className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6 bg-background/20 hover:bg-background/40"
-                          onClick={() => deleteSlot(slot.id)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                      <p className="text-xs font-medium mb-1">
-                        {slot.startTime} - {slot.endTime}
-                      </p>
-                      {slot.type === "break" ? (
-                        <p className="text-sm font-semibold">Break</p>
-                      ) : (
-                        <p className="text-sm font-semibold">{subject?.name || "Study"}</p>
-                      )}
-                      {slot.type !== "study" && slot.type !== "break" && (
-                        <Badge variant="secondary" className="mt-1 text-xs">
-                          {slot.type === "extracurricular" ? "Extracurricular" : "Exam Prep"}
-                        </Badge>
-                      )}
-                    </div>
-                  );
-                })}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => addCustomSlot(day)}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Slot
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Slot
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </SortableContext>
+          <DragOverlay>
+            {activeSlot ? (
+              <div className={`p-3 rounded-lg border shadow-lg ${
+                activeSlot.type === "break" ? "bg-muted/50" : getSubjectById(activeSlot.subjectId)?.color + " text-white" || "bg-card"
+              }`}>
+                <p className="text-xs font-medium mb-1">
+                  {activeSlot.startTime} - {activeSlot.endTime}
+                </p>
+                <p className="text-sm font-semibold">
+                  {activeSlot.type === "break" ? "Break" : getSubjectById(activeSlot.subjectId)?.name || "Study"}
+                </p>
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
       </main>
 
       <Dialog open={showSlotDialog} onOpenChange={setShowSlotDialog}>
