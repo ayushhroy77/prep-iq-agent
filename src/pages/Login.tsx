@@ -10,6 +10,13 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import prepiqLogo from "@/assets/prepiq-logo.jpg";
 import studyBackground from "@/assets/study-background.jpg";
+import { z } from "zod";
+
+// Validation schema
+const loginSchema = z.object({
+  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+  password: z.string().min(1, "Password is required")
+});
 
 const Login = () => {
   const navigate = useNavigate();
@@ -40,11 +47,27 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form data with zod
+    try {
+      loginSchema.parse(formData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const firstError = error.errors[0];
+        toast({
+          title: "Validation Error",
+          description: firstError.message,
+          variant: "destructive"
+        });
+        return;
+      }
+    }
+    
     setLoading(true);
     
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email: formData.email,
+        email: formData.email.trim(),
         password: formData.password,
       });
 
