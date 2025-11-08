@@ -28,6 +28,8 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/quiz-generator" element={<QuizGenerator />} />
+          <Route path="/quiz-history" element={<QuizHistory />} />
+          <Route path="/performance" element={<Performance />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
