@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Brain, Calendar, Target, TrendingUp, Sparkles, MessageSquare, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import prepiqLogo from "@/assets/prepiq-logo.jpg";
 import studyBackground from "@/assets/study-background.jpg";
 import studyElementsOverlay from "@/assets/study-elements-overlay.png";
@@ -19,6 +20,27 @@ import featureScheduling from "@/assets/feature-scheduling.jpg";
 import featureTracking from "@/assets/feature-tracking.jpg";
 import featureExams from "@/assets/feature-exams.jpg";
 import featureBuddy from "@/assets/feature-buddy.jpg";
+
+const ScrollAnimatedSection = ({ 
+  children, 
+  className = "", 
+  animationType = "scroll-fade-up" 
+}: { 
+  children: React.ReactNode; 
+  className?: string;
+  animationType?: "scroll-fade-up" | "scroll-fade-left" | "scroll-fade-right" | "scroll-scale-in" | "scroll-rotate-in";
+}) => {
+  const { elementRef, isVisible } = useScrollAnimation({ threshold: 0.1 });
+  
+  return (
+    <div 
+      ref={elementRef} 
+      className={`${animationType} ${isVisible ? 'visible' : ''} ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
 
 const Landing = () => {
   const scrollToSection = (sectionId: string) => {
@@ -230,25 +252,26 @@ const Landing = () => {
       {/* Features Section */}
       <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-background scroll-mt-16">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-              Autonomous AI That <span className="text-gradient">Actually Works</span>
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              PrepIQ doesn't just answer questions—it reasons, plans, and executes real tasks to accelerate your learning
-            </p>
-          </div>
+          <ScrollAnimatedSection animationType="scroll-fade-up">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+                Autonomous AI That <span className="text-gradient">Actually Works</span>
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                PrepIQ doesn't just answer questions—it reasons, plans, and executes real tasks to accelerate your learning
+              </p>
+            </div>
+          </ScrollAnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card 
-                key={index} 
-                className="group p-0 overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-card border-border animate-fade-in opacity-0 relative"
-                style={{ 
-                  animationDelay: `${index * 0.15}s`,
-                  animationFillMode: 'forwards'
-                }}
+              <ScrollAnimatedSection 
+                key={index}
+                animationType={index % 2 === 0 ? "scroll-fade-left" : "scroll-fade-right"}
               >
+                <Card 
+                  className="group p-0 overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-card border-border relative h-full"
+                >
                 <div className="aspect-square overflow-hidden relative">
                   <img 
                     src={feature.image} 
@@ -272,7 +295,8 @@ const Landing = () => {
                   </div>
                   <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
                 </div>
-              </Card>
+                </Card>
+              </ScrollAnimatedSection>
             ))}
           </div>
         </div>
@@ -281,14 +305,16 @@ const Landing = () => {
       {/* How It Works */}
       <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-hero scroll-mt-16">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-              How PrepIQ <span className="text-gradient">Works</span>
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Get started in minutes and experience the power of AI-driven learning
-            </p>
-          </div>
+          <ScrollAnimatedSection animationType="scroll-fade-up">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+                How PrepIQ <span className="text-gradient">Works</span>
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Get started in minutes and experience the power of AI-driven learning
+              </p>
+            </div>
+          </ScrollAnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -296,20 +322,18 @@ const Landing = () => {
               { image: stepAnalyze, title: "AI Analyzes & Plans", desc: "Our autonomous agent creates your personalized study roadmap" },
               { image: stepSucceed, title: "Learn & Succeed", desc: "Chat with AI, take adaptive quizzes, and track your progress" }
             ].map((item, index) => (
-              <div 
-                key={index} 
-                className="text-center animate-fade-in opacity-0" 
-                style={{ 
-                  animationDelay: `${index * 0.2}s`,
-                  animationFillMode: 'forwards'
-                }}
+              <ScrollAnimatedSection 
+                key={index}
+                animationType="scroll-scale-in"
               >
+                <div className="text-center">
                 <div className="w-32 h-32 rounded-2xl overflow-hidden mx-auto mb-6 shadow-glow hover:scale-110 transition-transform duration-300">
                   <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
+                  <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
+              </ScrollAnimatedSection>
             ))}
           </div>
         </div>
@@ -318,25 +342,26 @@ const Landing = () => {
       {/* Testimonials Section */}
       <section id="testimonials" className="py-20 px-4 sm:px-6 lg:px-8 bg-background scroll-mt-16">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-              Loved by <span className="text-gradient">Thousands of Students</span>
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              See what students are saying about their PrepIQ experience
-            </p>
-          </div>
+          <ScrollAnimatedSection animationType="scroll-fade-up">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+                Loved by <span className="text-gradient">Thousands of Students</span>
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                See what students are saying about their PrepIQ experience
+              </p>
+            </div>
+          </ScrollAnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card 
-                key={index} 
-                className="p-8 bg-card border-border animate-fade-in opacity-0 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-                style={{ 
-                  animationDelay: `${index * 0.15}s`,
-                  animationFillMode: 'forwards'
-                }}
+              <ScrollAnimatedSection 
+                key={index}
+                animationType="scroll-rotate-in"
               >
+                <Card 
+                  className="p-8 bg-card border-border hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full"
+                >
                 <div className="flex items-center gap-4 mb-4">
                   <img 
                     src={testimonial.image} 
@@ -353,8 +378,9 @@ const Landing = () => {
                     <Star key={i} className="w-5 h-5 fill-primary text-primary" />
                   ))}
                 </div>
-                <p className="text-muted-foreground leading-relaxed italic">"{testimonial.text}"</p>
-              </Card>
+                  <p className="text-muted-foreground leading-relaxed italic">"{testimonial.text}"</p>
+                </Card>
+              </ScrollAnimatedSection>
             ))}
           </div>
         </div>
@@ -363,7 +389,8 @@ const Landing = () => {
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-hero">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="glass-card rounded-3xl p-12 shadow-xl">
+          <ScrollAnimatedSection animationType="scroll-scale-in">
+            <div className="glass-card rounded-3xl p-12 shadow-xl">
             <h2 className="text-4xl sm:text-5xl font-bold mb-6">
               Ready to Transform Your <span className="text-gradient">Study Journey?</span>
             </h2>
@@ -377,6 +404,7 @@ const Landing = () => {
             </Link>
             <p className="text-sm text-muted-foreground mt-4">No credit card required • Free forever</p>
           </div>
+          </ScrollAnimatedSection>
         </div>
       </section>
 
