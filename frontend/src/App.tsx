@@ -11,7 +11,6 @@ import QuizGenerator from "./pages/QuizGenerator";
 import QuizHistory from "./pages/QuizHistory";
 import Performance from "./pages/Performance";
 import ConceptLibrary from "./pages/ConceptLibrary";
-import AITutor from "./pages/AITutor";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
@@ -33,7 +32,6 @@ const App = () => (
           <Route path="/quiz-history" element={<QuizHistory />} />
           <Route path="/performance" element={<Performance />} />
           <Route path="/concept-library" element={<ConceptLibrary />} />
-          <Route path="/ai-tutor" element={<AITutor />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
