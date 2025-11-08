@@ -1,0 +1,684 @@
+{
+  "Physics": {
+    "Motion": {
+      "title": "Motion",
+      "summary": "Motion describes the change in position of an object with respect to time and reference point.",
+      "keyPoints": [
+        "Motion is relative and depends on the observer's frame of reference",
+        "Distance is the total path covered, while displacement is the shortest distance between initial and final positions",
+        "Speed is distance/time, velocity is displacement/time (vector quantity)",
+        "Acceleration is the rate of change of velocity",
+        "Equations of motion: v = u + at, s = ut + ½at², v² = u² + 2as"
+      ],
+      "formulas": [
+        "Average Speed = Total Distance / Total Time",
+        "Velocity = Displacement / Time",
+        "Acceleration = (Final Velocity - Initial Velocity) / Time"
+      ]
+    },
+    "Force and Laws of Motion": {
+      "title": "Force and Laws of Motion",
+      "summary": "Newton's laws of motion describe the relationship between forces acting on a body and its motion.",
+      "keyPoints": [
+        "First Law (Inertia): An object remains at rest or in uniform motion unless acted upon by external force",
+        "Second Law: F = ma (Force equals mass times acceleration)",
+        "Third Law: For every action, there is an equal and opposite reaction",
+        "Momentum (p) = mass × velocity",
+        "Conservation of momentum in isolated systems"
+      ],
+      "formulas": [
+        "Force (F) = Mass (m) × Acceleration (a)",
+        "Momentum (p) = Mass (m) × Velocity (v)",
+        "Impulse = Change in Momentum = F × t"
+      ]
+    },
+    "Gravitation": {
+      "title": "Gravitation",
+      "summary": "Universal law of gravitation explains the force of attraction between any two masses in the universe.",
+      "keyPoints": [
+        "Every object attracts every other object with a force proportional to product of their masses",
+        "Force is inversely proportional to square of distance between centers",
+        "Gravitational constant G = 6.67 × 10⁻¹¹ Nm²/kg²",
+        "Acceleration due to gravity on Earth's surface g = 9.8 m/s²",
+        "Weight = mass × acceleration due to gravity"
+      ],
+      "formulas": [
+        "F = G(m₁m₂)/r²",
+        "g = GM/R²",
+        "Weight (W) = mg"
+      ]
+    },
+    "Work and Energy": {
+      "title": "Work and Energy",
+      "summary": "Work is done when force causes displacement. Energy is the capacity to do work.",
+      "keyPoints": [
+        "Work = Force × Displacement × cos(θ)",
+        "Kinetic Energy: Energy possessed by moving objects (KE = ½mv²)",
+        "Potential Energy: Energy possessed due to position (PE = mgh)",
+        "Law of conservation of energy: Energy can neither be created nor destroyed",
+        "Power is the rate of doing work (P = W/t)"
+      ],
+      "formulas": [
+        "Work (W) = F × s × cos(θ)",
+        "Kinetic Energy = ½mv²",
+        "Potential Energy = mgh",
+        "Power = Work / Time"
+      ]
+    },
+    "Sound": {
+      "title": "Sound",
+      "summary": "Sound is a mechanical wave that propagates through a medium by vibrations.",
+      "keyPoints": [
+        "Sound requires a medium (solid, liquid, or gas) to travel",
+        "Longitudinal wave with compressions and rarefactions",
+        "Speed of sound in air at 25°C ≈ 346 m/s",
+        "Frequency determines pitch, amplitude determines loudness",
+        "Reflection of sound causes echo (minimum distance 17.2m for distinct echo)"
+      ],
+      "formulas": [
+        "Speed = Frequency × Wavelength (v = fλ)",
+        "Time for echo = 2d/v",
+        "Range of human hearing: 20 Hz to 20,000 Hz"
+      ]
+    },
+    "Light - Reflection and Refraction": {
+      "title": "Light - Reflection and Refraction",
+      "summary": "Light travels in straight lines and exhibits reflection and refraction when interacting with surfaces.",
+      "keyPoints": [
+        "Law of reflection: Angle of incidence = Angle of reflection",
+        "Refraction is bending of light when passing from one medium to another",
+        "Refractive index: ratio of speed of light in vacuum to speed in medium",
+        "Snell's law: n₁sin(i) = n₂sin(r)",
+        "Lens formula: 1/f = 1/v - 1/u; Magnification: m = v/u"
+      ],
+      "formulas": [
+        "Refractive Index (n) = Speed of light in vacuum / Speed in medium",
+        "Lens Formula: 1/f = 1/v - 1/u",
+        "Magnification: m = h'/h = v/u"
+      ]
+    },
+    "The Human Eye and the Colourful World": {
+      "title": "The Human Eye and the Colourful World",
+      "summary": "The human eye is a natural optical instrument that enables us to see the colorful world around us.",
+      "keyPoints": [
+        "Cornea, pupil, lens, and retina are key parts of the eye",
+        "Power of accommodation: ability to focus on near and far objects",
+        "Near point (25 cm) and far point (infinity) define vision range",
+        "Myopia (short-sightedness) corrected with concave lens",
+        "Hypermetropia (long-sightedness) corrected with convex lens",
+        "Dispersion of white light through prism produces spectrum (VIBGYOR)"
+      ],
+      "formulas": [
+        "Power of lens (P) = 1/f (in meters), measured in Dioptre (D)",
+        "Angular magnification of simple microscope = D/f"
+      ]
+    },
+    "Electricity": {
+      "title": "Electricity",
+      "summary": "Electric current is the flow of electric charge through a conductor.",
+      "keyPoints": [
+        "Electric current: flow of electrons, measured in Amperes (A)",
+        "Potential difference: work done to move unit charge, measured in Volts (V)",
+        "Ohm's Law: V = IR (at constant temperature)",
+        "Resistance depends on length, area, and resistivity of material",
+        "Series: R_total = R₁ + R₂ + R₃; Parallel: 1/R_total = 1/R₁ + 1/R₂ + 1/R₃",
+        "Electric power: P = VI = I²R = V²/R",
+        "Electric energy: E = P × t"
+      ],
+      "formulas": [
+        "V = IR (Ohm's Law)",
+        "R = ρL/A (Resistance)",
+        "P = VI = I²R = V²/R (Power)",
+        "H = I²Rt (Heat produced)"
+      ]
+    },
+    "Magnetic Effects of Electric Current": {
+      "title": "Magnetic Effects of Electric Current",
+      "summary": "A current-carrying conductor produces a magnetic field around it.",
+      "keyPoints": [
+        "Right-hand thumb rule determines direction of magnetic field",
+        "Magnetic field due to straight conductor is circular",
+        "Solenoid: coil with magnetic field similar to bar magnet",
+        "Electromagnet: temporary magnet created by electric current",
+        "Fleming's left-hand rule: Force on current-carrying conductor in magnetic field",
+        "Electromagnetic induction: changing magnetic field induces current"
+      ],
+      "formulas": [
+        "Force on conductor: F = BIL sin(θ)",
+        "Magnetic field at center of circular coil: B = μ₀NI/2r"
+      ]
+    },
+    "Sources of Energy": {
+      "title": "Sources of Energy",
+      "summary": "Energy sources are classified as renewable and non-renewable based on their availability.",
+      "keyPoints": [
+        "Renewable: Solar, wind, hydro, biomass, geothermal, tidal",
+        "Non-renewable: Fossil fuels (coal, petroleum, natural gas), nuclear",
+        "Good energy source: high energy output, easy availability, economical",
+        "Fossil fuels cause pollution and are being depleted",
+        "Solar energy is clean and abundant but requires large area",
+        "Nuclear energy is highly efficient but produces radioactive waste"
+      ],
+      "formulas": []
+    }
+  },
+  "Chemistry": {
+    "Matter in Our Surroundings": {
+      "title": "Matter in Our Surroundings",
+      "summary": "Matter is anything that has mass and occupies space. It exists in three states: solid, liquid, and gas.",
+      "keyPoints": [
+        "Solids have definite shape and volume, strong intermolecular forces",
+        "Liquids have definite volume but no definite shape",
+        "Gases have neither definite shape nor volume",
+        "Change of state involves absorption or release of energy",
+        "Evaporation causes cooling effect",
+        "Sublimation: direct conversion from solid to gas (e.g., dry ice, camphor)"
+      ],
+      "formulas": []
+    },
+    "Is Matter Around Us Pure?": {
+      "title": "Is Matter Around Us Pure?",
+      "summary": "Pure substances have fixed composition, while mixtures contain two or more substances.",
+      "keyPoints": [
+        "Pure substances: elements (single type of atom) and compounds (fixed ratio of atoms)",
+        "Mixtures: homogeneous (uniform composition) and heterogeneous (non-uniform)",
+        "Solutions: homogeneous mixtures (solute + solvent)",
+        "Separation techniques: filtration, evaporation, distillation, chromatography",
+        "Concentration: mass/volume percentage, mass/mass percentage",
+        "Tyndall effect: scattering of light by colloidal particles"
+      ],
+      "formulas": [
+        "Mass percentage = (Mass of solute / Mass of solution) × 100"
+      ]
+    },
+    "Atoms and Molecules": {
+      "title": "Atoms and Molecules",
+      "summary": "Atoms are the smallest particles of elements, and molecules are combinations of atoms.",
+      "keyPoints": [
+        "Law of conservation of mass: mass is neither created nor destroyed",
+        "Law of constant proportions: compound always has same elements in fixed ratio",
+        "Atomic mass unit (amu): 1/12th the mass of carbon-12 atom",
+        "Molecular mass: sum of atomic masses of all atoms in molecule",
+        "Mole: 6.022 × 10²³ particles (Avogadro's number)",
+        "Molar mass: mass of one mole of substance"
+      ],
+      "formulas": [
+        "Number of moles = Given mass / Molar mass",
+        "Number of particles = Number of moles × Avogadro's number"
+      ]
+    },
+    "Structure of the Atom": {
+      "title": "Structure of the Atom",
+      "summary": "Atoms consist of a nucleus containing protons and neutrons, surrounded by electrons.",
+      "keyPoints": [
+        "Protons: positive charge, mass ≈ 1 amu, in nucleus",
+        "Neutrons: no charge, mass ≈ 1 amu, in nucleus",
+        "Electrons: negative charge, negligible mass, in shells around nucleus",
+        "Atomic number (Z): number of protons in nucleus",
+        "Mass number (A): sum of protons and neutrons",
+        "Isotopes: same atomic number, different mass numbers",
+        "Electronic configuration: K(2), L(8), M(18), N(32) shells",
+        "Valency: combining capacity of atom"
+      ],
+      "formulas": [
+        "Mass number (A) = Protons + Neutrons",
+        "Number of neutrons = A - Z"
+      ]
+    },
+    "Chemical Reactions and Equations": {
+      "title": "Chemical Reactions and Equations",
+      "summary": "Chemical reactions involve breaking and forming of bonds, represented by balanced equations.",
+      "keyPoints": [
+        "Combination: A + B → AB",
+        "Decomposition: AB → A + B",
+        "Displacement: A + BC → AC + B",
+        "Double displacement: AB + CD → AD + CB",
+        "Oxidation: gain of oxygen or loss of hydrogen/electrons",
+        "Reduction: loss of oxygen or gain of hydrogen/electrons",
+        "Exothermic: releases heat (combustion); Endothermic: absorbs heat (photosynthesis)"
+      ],
+      "formulas": []
+    },
+    "Acids, Bases and Salts": {
+      "title": "Acids, Bases and Salts",
+      "summary": "Acids are sour and turn blue litmus red, bases are bitter and turn red litmus blue.",
+      "keyPoints": [
+        "Acids: release H⁺ ions in water (HCl, H₂SO₄, HNO₃)",
+        "Bases: release OH⁻ ions in water (NaOH, KOH, Ca(OH)₂)",
+        "pH scale: 0-14, <7 acidic, 7 neutral, >7 basic",
+        "Indicators: litmus, phenolphthalein, methyl orange",
+        "Neutralization: Acid + Base → Salt + Water",
+        "Common salt (NaCl), washing soda (Na₂CO₃), baking soda (NaHCO₃)",
+        "Water of crystallization: fixed number of water molecules in crystal"
+      ],
+      "formulas": [
+        "pH = -log[H⁺]",
+        "Acid + Base → Salt + Water"
+      ]
+    },
+    "Metals and Non-Metals": {
+      "title": "Metals and Non-Metals",
+      "summary": "Elements are classified as metals and non-metals based on their physical and chemical properties.",
+      "keyPoints": [
+        "Metals: lustrous, malleable, ductile, good conductors, form positive ions",
+        "Non-metals: brittle, poor conductors, form negative ions",
+        "Reactivity series: K > Na > Ca > Mg > Al > Zn > Fe > Pb > H > Cu > Ag > Au",
+        "More reactive metal displaces less reactive metal from its compound",
+        "Metals react with oxygen to form oxides (mostly basic)",
+        "Metals react with water to form hydroxides and hydrogen",
+        "Metals react with acids to form salts and hydrogen",
+        "Extraction: roasting, calcination, reduction, refining"
+      ],
+      "formulas": [
+        "Metal + Oxygen → Metal oxide",
+        "Metal + Acid → Salt + Hydrogen"
+      ]
+    },
+    "Carbon and its Compounds": {
+      "title": "Carbon and its Compounds",
+      "summary": "Carbon forms millions of compounds due to its unique property of catenation.",
+      "keyPoints": [
+        "Catenation: self-linking property of carbon atoms",
+        "Tetravalency: carbon has valency of 4",
+        "Hydrocarbons: compounds of carbon and hydrogen (alkanes, alkenes, alkynes)",
+        "Functional groups: -OH (alcohol), -COOH (carboxylic acid), -CHO (aldehyde), -CO- (ketone)",
+        "Isomerism: same molecular formula, different structures",
+        "Homologous series: same functional group, differ by -CH₂-",
+        "Combustion: complete (CO₂ + H₂O), incomplete (CO + H₂O)",
+        "Ethanol and ethanoic acid are important carbon compounds"
+      ],
+      "formulas": [
+        "Alkanes: CₙH₂ₙ₊₂",
+        "Alkenes: CₙH₂ₙ",
+        "Alkynes: CₙH₂ₙ₋₂"
+      ]
+    },
+    "Periodic Classification of Elements": {
+      "title": "Periodic Classification of Elements",
+      "summary": "Modern periodic table arranges elements in increasing order of atomic numbers.",
+      "keyPoints": [
+        "Periods: horizontal rows (1 to 7)",
+        "Groups: vertical columns (1 to 18)",
+        "Atomic size decreases across period, increases down group",
+        "Metallic character decreases across period, increases down group",
+        "Valency first increases then decreases across period",
+        "Elements in same group have similar properties",
+        "Noble gases (Group 18) are inert with complete outer shells"
+      ],
+      "formulas": []
+    }
+  },
+  "Biology": {
+    "The Fundamental Unit of Life": {
+      "title": "The Fundamental Unit of Life",
+      "summary": "The cell is the basic structural and functional unit of all living organisms.",
+      "keyPoints": [
+        "Cell theory: All living organisms are made of cells",
+        "Prokaryotic: no membrane-bound nucleus (bacteria)",
+        "Eukaryotic: membrane-bound nucleus (plants, animals, fungi)",
+        "Plasma membrane: selectively permeable, controls entry/exit",
+        "Cell wall: rigid outer layer in plants, provides shape",
+        "Nucleus: contains DNA, controls cell activities",
+        "Mitochondria: powerhouse of cell, produces ATP",
+        "Chloroplasts: site of photosynthesis in plant cells",
+        "Endoplasmic reticulum: protein and lipid synthesis",
+        "Golgi apparatus: packaging and dispatching of materials"
+      ],
+      "formulas": []
+    },
+    "Tissues": {
+      "title": "Tissues",
+      "summary": "A tissue is a group of cells similar in structure and function working together.",
+      "keyPoints": [
+        "Plant tissues: Meristematic (dividing) and Permanent (non-dividing)",
+        "Simple permanent: Parenchyma, Collenchyma, Sclerenchyma",
+        "Complex permanent: Xylem (water transport), Phloem (food transport)",
+        "Animal tissues: Epithelial, Connective, Muscular, Nervous",
+        "Epithelial: protective covering, simple and compound types",
+        "Connective: connects tissues, includes blood, bone, cartilage",
+        "Muscular: movement, types - skeletal, smooth, cardiac",
+        "Nervous: transmits electrical impulses, consists of neurons"
+      ],
+      "formulas": []
+    },
+    "Diversity in Living Organisms": {
+      "title": "Diversity in Living Organisms",
+      "summary": "Classification groups organisms based on similarities and differences in their characteristics.",
+      "keyPoints": [
+        "Hierarchy: Kingdom > Phylum > Class > Order > Family > Genus > Species",
+        "Five kingdoms: Monera, Protista, Fungi, Plantae, Animalia",
+        "Monera: prokaryotic, unicellular (bacteria)",
+        "Protista: eukaryotic, unicellular (amoeba, paramecium)",
+        "Fungi: heterotrophic, decomposers (mushroom, yeast)",
+        "Plantae: autotrophic, have chlorophyll",
+        "Animalia: heterotrophic, multicellular",
+        "Vertebrates: have backbone (fish, amphibians, reptiles, birds, mammals)",
+        "Invertebrates: no backbone (arthropods, molluscs, worms)"
+      ],
+      "formulas": []
+    },
+    "Life Processes": {
+      "title": "Life Processes",
+      "summary": "Life processes are the basic functions performed by living organisms to maintain life.",
+      "keyPoints": [
+        "Nutrition: autotrophic (photosynthesis) and heterotrophic",
+        "Photosynthesis: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ (in presence of sunlight and chlorophyll)",
+        "Respiration: aerobic (with O₂) and anaerobic (without O₂)",
+        "Transportation: in plants (xylem, phloem), in animals (blood vessels)",
+        "Excretion: removal of waste products",
+        "Human excretory system: kidneys, ureters, urinary bladder, urethra",
+        "Nephron: functional unit of kidney"
+      ],
+      "formulas": [
+        "Photosynthesis: 6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂",
+        "Aerobic respiration: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + Energy"
+      ]
+    },
+    "Control and Coordination": {
+      "title": "Control and Coordination",
+      "summary": "Control and coordination in organisms occur through nervous system and hormonal system.",
+      "keyPoints": [
+        "Nervous system: rapid control through electrical impulses",
+        "Neuron: structural and functional unit of nervous system",
+        "Reflex action: quick automatic response to stimulus",
+        "Central nervous system: brain and spinal cord",
+        "Peripheral nervous system: nerves connecting CNS to body parts",
+        "Endocrine system: slow control through chemical messengers (hormones)",
+        "Major glands: pituitary, thyroid, adrenal, pancreas, gonads",
+        "Plant hormones: auxin (growth), gibberellin (stem elongation), cytokinin (cell division)",
+        "Tropic movements: phototropism, geotropism, hydrotropism"
+      ],
+      "formulas": []
+    },
+    "How do Organisms Reproduce?": {
+      "title": "How do Organisms Reproduce?",
+      "summary": "Reproduction is the biological process by which organisms produce offspring.",
+      "keyPoints": [
+        "Asexual reproduction: single parent, no gamete fusion (fission, budding, fragmentation, spore formation, vegetative propagation)",
+        "Sexual reproduction: two parents, fusion of gametes",
+        "Flower parts: sepals, petals, stamens (male), carpel (female)",
+        "Pollination: transfer of pollen from anther to stigma (self/cross)",
+        "Fertilization: fusion of male and female gametes",
+        "Human reproductive system: male (testes, vas deferens) and female (ovaries, fallopian tubes, uterus)",
+        "Menstruation: monthly cycle in females (28 days)",
+        "Contraception methods: barrier, chemical, surgical"
+      ],
+      "formulas": []
+    },
+    "Heredity and Evolution": {
+      "title": "Heredity and Evolution",
+      "summary": "Heredity is the transmission of characteristics from parents to offspring through genes.",
+      "keyPoints": [
+        "Gene: unit of heredity, segment of DNA",
+        "Chromosome: thread-like structure carrying genes",
+        "Mendel's laws: Law of dominance, Law of segregation, Law of independent assortment",
+        "Monohybrid cross: single trait inheritance (3:1 ratio in F₂)",
+        "Dihybrid cross: two traits inheritance (9:3:3:1 ratio in F₂)",
+        "Sex determination: XX (female), XY (male) in humans",
+        "Evolution: gradual change in species over time",
+        "Natural selection: survival of the fittest",
+        "Evidence: fossils, homologous organs, analogous organs, vestigial organs"
+      ],
+      "formulas": []
+    },
+    "Our Environment": {
+      "title": "Our Environment",
+      "summary": "The environment includes all living and non-living components that surround us.",
+      "keyPoints": [
+        "Ecosystem: interaction between living organisms and physical environment",
+        "Food chain: linear sequence of organisms feeding on each other",
+        "Food web: interconnected food chains",
+        "Trophic levels: producers (plants) → primary consumers → secondary consumers → tertiary consumers",
+        "10% law: only 10% energy transfers to next trophic level",
+        "Biodegradable: can be broken down by microorganisms (paper, food waste)",
+        "Non-biodegradable: cannot be broken down (plastics, metals)",
+        "Ozone layer: protects from harmful UV rays, depleted by CFCs"
+      ],
+      "formulas": []
+    },
+    "Management of Natural Resources": {
+      "title": "Management of Natural Resources",
+      "summary": "Sustainable management ensures resources are available for future generations.",
+      "keyPoints": [
+        "Three R's: Reduce, Reuse, Recycle",
+        "Forest conservation: prevents soil erosion, maintains water cycle, biodiversity",
+        "Wildlife conservation: protecting endangered species and habitats",
+        "Water harvesting: rainwater collection for future use",
+        "Coal and petroleum: fossil fuels, non-renewable resources",
+        "Reduce dependency on fossil fuels through renewable energy",
+        "Sustainable development: meeting present needs without compromising future"
+      ],
+      "formulas": []
+    }
+  },
+  "Mathematics": {
+    "Number Systems": {
+      "title": "Number Systems",
+      "summary": "Number systems include natural, whole, integers, rational, and irrational numbers.",
+      "keyPoints": [
+        "Natural numbers (N): 1, 2, 3, 4, ...",
+        "Whole numbers (W): 0, 1, 2, 3, ...",
+        "Integers (Z): ..., -2, -1, 0, 1, 2, ...",
+        "Rational numbers (Q): p/q form where q ≠ 0",
+        "Irrational numbers: cannot be expressed as p/q (√2, π, e)",
+        "Real numbers (R): all rational and irrational numbers",
+        "Properties: closure, commutative, associative, distributive",
+        "Decimal expansion: terminating or non-terminating repeating (rational), non-terminating non-repeating (irrational)"
+      ],
+      "formulas": []
+    },
+    "Polynomials": {
+      "title": "Polynomials",
+      "summary": "A polynomial is an algebraic expression with variables and coefficients involving only addition, subtraction, and multiplication.",
+      "keyPoints": [
+        "Degree: highest power of variable",
+        "Linear polynomial: ax + b (degree 1)",
+        "Quadratic polynomial: ax² + bx + c (degree 2)",
+        "Cubic polynomial: ax³ + bx² + cx + d (degree 3)",
+        "Zeroes: values of x for which p(x) = 0",
+        "Factor theorem: if p(a) = 0, then (x - a) is a factor",
+        "Remainder theorem: when p(x) is divided by (x - a), remainder is p(a)"
+      ],
+      "formulas": [
+        "Sum of zeroes (α + β) = -b/a",
+        "Product of zeroes (αβ) = c/a",
+        "(a + b)² = a² + 2ab + b²",
+        "(a - b)² = a² - 2ab + b²",
+        "a² - b² = (a + b)(a - b)"
+      ]
+    },
+    "Coordinate Geometry": {
+      "title": "Coordinate Geometry",
+      "summary": "Coordinate geometry uses algebraic methods to study geometric properties using coordinates.",
+      "keyPoints": [
+        "Cartesian plane: X-axis (horizontal) and Y-axis (vertical)",
+        "Point: (x, y) where x is abscissa, y is ordinate",
+        "Origin: (0, 0)",
+        "Quadrants: I (+, +), II (-, +), III (-, -), IV (+, -)",
+        "Distance formula: finds distance between two points",
+        "Section formula: finds coordinates of point dividing line segment",
+        "Midpoint formula: finds midpoint of line segment"
+      ],
+      "formulas": [
+        "Distance = √[(x₂ - x₁)² + (y₂ - y₁)²]",
+        "Midpoint = ((x₁ + x₂)/2, (y₁ + y₂)/2)",
+        "Section formula: ((mx₂ + nx₁)/(m + n), (my₂ + ny₁)/(m + n))"
+      ]
+    },
+    "Linear Equations in Two Variables": {
+      "title": "Linear Equations in Two Variables",
+      "summary": "A linear equation in two variables represents a straight line on the coordinate plane.",
+      "keyPoints": [
+        "Standard form: ax + by + c = 0",
+        "Every solution (x, y) is a point on the line",
+        "Graph is always a straight line",
+        "Two lines can be parallel, intersecting, or coincident",
+        "Parallel lines: a₁/a₂ = b₁/b₂ ≠ c₁/c₂ (no solution)",
+        "Intersecting lines: a₁/a₂ ≠ b₁/b₂ (unique solution)",
+        "Coincident lines: a₁/a₂ = b₁/b₂ = c₁/c₂ (infinite solutions)"
+      ],
+      "formulas": [
+        "Slope-intercept form: y = mx + c",
+        "Slope (m) = (y₂ - y₁)/(x₂ - x₁)"
+      ]
+    },
+    "Triangles": {
+      "title": "Triangles",
+      "summary": "Similar triangles have the same shape but different sizes with proportional sides.",
+      "keyPoints": [
+        "Congruent triangles: same size and shape (SSS, SAS, ASA, RHS)",
+        "Similar triangles: same shape, proportional sides (AAA, SSS, SAS)",
+        "Pythagoras theorem: In right triangle, h² = b² + p²",
+        "Basic proportionality theorem (Thales): If line parallel to one side divides other two sides proportionally",
+        "Areas of similar triangles are proportional to squares of corresponding sides",
+        "Angle bisector theorem divides opposite side in ratio of adjacent sides"
+      ],
+      "formulas": [
+        "Pythagoras: a² + b² = c²",
+        "Area = (1/2) × base × height",
+        "Heron's formula: A = √[s(s-a)(s-b)(s-c)] where s = (a+b+c)/2"
+      ]
+    },
+    "Quadrilaterals": {
+      "title": "Quadrilaterals",
+      "summary": "A quadrilateral is a polygon with four sides, four vertices, and four angles.",
+      "keyPoints": [
+        "Sum of all angles = 360°",
+        "Parallelogram: opposite sides parallel and equal, opposite angles equal, diagonals bisect each other",
+        "Rectangle: parallelogram with all angles 90°, diagonals equal",
+        "Rhombus: parallelogram with all sides equal, diagonals perpendicular",
+        "Square: rectangle with all sides equal, all properties of rectangle and rhombus",
+        "Trapezium: one pair of opposite sides parallel",
+        "Kite: two pairs of adjacent sides equal, diagonals perpendicular"
+      ],
+      "formulas": [
+        "Area of parallelogram = base × height",
+        "Area of rectangle = length × breadth",
+        "Area of square = side²",
+        "Area of rhombus = (1/2) × d₁ × d₂",
+        "Area of trapezium = (1/2) × (sum of parallel sides) × height"
+      ]
+    },
+    "Areas of Parallelograms and Triangles": {
+      "title": "Areas of Parallelograms and Triangles",
+      "summary": "Figures on the same base and between same parallels have specific area relationships.",
+      "keyPoints": [
+        "Parallelograms on same base and between same parallels have equal areas",
+        "Triangles on same base and between same parallels have equal areas",
+        "Triangle is half the area of parallelogram on same base and between same parallels",
+        "Median divides triangle into two triangles of equal area",
+        "Area of trapezium = (1/2) × (sum of parallel sides) × distance between them"
+      ],
+      "formulas": [
+        "Area of triangle = (1/2) × base × height",
+        "Area of parallelogram = base × height"
+      ]
+    },
+    "Circles": {
+      "title": "Circles",
+      "summary": "A circle is the locus of all points equidistant from a fixed point called the center.",
+      "keyPoints": [
+        "Chord: line segment joining two points on circle",
+        "Diameter: longest chord passing through center",
+        "Tangent: line touching circle at exactly one point",
+        "Secant: line intersecting circle at two points",
+        "Perpendicular from center bisects the chord",
+        "Equal chords are equidistant from center",
+        "Angle subtended by arc at center is double the angle at circumference",
+        "Angles in same segment are equal",
+        "Angle in semicircle is 90°"
+      ],
+      "formulas": [
+        "Circumference = 2πr",
+        "Area = πr²",
+        "Length of arc = (θ/360°) × 2πr",
+        "Area of sector = (θ/360°) × πr²"
+      ]
+    },
+    "Constructions": {
+      "title": "Constructions",
+      "summary": "Geometric constructions using compass and ruler to create precise figures.",
+      "keyPoints": [
+        "Division of line segment in given ratio",
+        "Construction of tangents to circle from external point",
+        "Construction of triangle similar to given triangle with given scale factor",
+        "Bisecting an angle using compass",
+        "Perpendicular bisector of line segment",
+        "Constructing angles: 60°, 90°, 120°, 30°, 45°"
+      ],
+      "formulas": []
+    },
+    "Heron's Formula": {
+      "title": "Heron's Formula",
+      "summary": "Heron's formula calculates the area of a triangle when all three sides are known.",
+      "keyPoints": [
+        "Used when three sides are known but height is not given",
+        "First calculate semi-perimeter (s)",
+        "Then apply Heron's formula",
+        "Can be extended to quadrilaterals by dividing into triangles",
+        "Particularly useful for scalene triangles"
+      ],
+      "formulas": [
+        "Semi-perimeter: s = (a + b + c)/2",
+        "Area = √[s(s - a)(s - b)(s - c)]"
+      ]
+    },
+    "Surface Areas and Volumes": {
+      "title": "Surface Areas and Volumes",
+      "summary": "Study of 3D shapes including their surface areas and volumes.",
+      "keyPoints": [
+        "Cuboid: 6 rectangular faces",
+        "Cube: all faces are squares",
+        "Cylinder: circular base and top",
+        "Cone: circular base with apex",
+        "Sphere: all points equidistant from center",
+        "Hemisphere: half of sphere",
+        "Combination of solids: add or subtract volumes"
+      ],
+      "formulas": [
+        "Cube: TSA = 6a², Volume = a³",
+        "Cuboid: TSA = 2(lb + bh + hl), Volume = l × b × h",
+        "Cylinder: CSA = 2πrh, TSA = 2πr(r + h), Volume = πr²h",
+        "Cone: CSA = πrl, TSA = πr(l + r), Volume = (1/3)πr²h",
+        "Sphere: SA = 4πr², Volume = (4/3)πr³",
+        "Hemisphere: CSA = 2πr², TSA = 3πr², Volume = (2/3)πr³"
+      ]
+    },
+    "Statistics": {
+      "title": "Statistics",
+      "summary": "Statistics deals with collection, organization, analysis, and interpretation of data.",
+      "keyPoints": [
+        "Mean: average of all observations",
+        "Median: middle value when arranged in order",
+        "Mode: most frequently occurring value",
+        "Range: difference between highest and lowest values",
+        "Frequency distribution: tabular representation of data",
+        "Class interval: grouped data ranges",
+        "Cumulative frequency: sum of frequencies up to that class",
+        "Graphical representation: histogram, frequency polygon, ogive"
+      ],
+      "formulas": [
+        "Mean = Sum of observations / Number of observations",
+        "Mean (grouped) = Σ(f × x) / Σf",
+        "Median = l + [(n/2 - cf)/f] × h"
+      ]
+    },
+    "Probability": {
+      "title": "Probability",
+      "summary": "Probability measures the likelihood of occurrence of an event.",
+      "keyPoints": [
+        "Probability ranges from 0 to 1",
+        "Impossible event: P(E) = 0",
+        "Certain event: P(E) = 1",
+        "Sum of probabilities of all outcomes = 1",
+        "Complementary events: P(E) + P(not E) = 1",
+        "Experimental probability based on actual experiments",
+        "Theoretical probability based on logical reasoning"
+      ],
+      "formulas": [
+        "P(E) = Number of favorable outcomes / Total number of outcomes",
+        "P(not E) = 1 - P(E)"
+      ]
+    }
+  }
+}
