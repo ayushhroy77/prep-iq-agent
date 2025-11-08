@@ -183,59 +183,30 @@ const Dashboard = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Recent Activity */}
-          <Card className="p-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-success" />
-              Recent Activity
-            </h3>
-            <div className="space-y-4">
-              {recentActivity.map((activity, index) => (
-                <div 
-                  key={index}
-                  className="flex items-center justify-between p-4 rounded-lg bg-muted hover:bg-accent transition-colors"
-                >
-                  <div className="flex-1">
-                    <p className="font-medium mb-1">{activity.topic}</p>
-                    <p className="text-sm text-muted-foreground">{activity.time}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-success">{activity.score}</div>
-                    <p className="text-xs text-muted-foreground">Score</p>
-                  </div>
+        {/* Recent Activity */}
+        <Card className="p-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-success" />
+            Recent Activity
+          </h3>
+          <div className="space-y-4">
+            {recentActivity.map((activity, index) => (
+              <div 
+                key={index}
+                className="flex items-center justify-between p-4 rounded-lg bg-muted hover:bg-accent transition-colors"
+              >
+                <div className="flex-1">
+                  <p className="font-medium mb-1">{activity.topic}</p>
+                  <p className="text-sm text-muted-foreground">{activity.time}</p>
                 </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Study Schedule */}
-          <Card className="p-6 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-primary" />
-              This Week's Schedule
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                { day: "Monday", subject: "Mathematics", time: "10:00 AM - 12:00 PM" },
-                { day: "Tuesday", subject: "Physics", time: "2:00 PM - 4:00 PM" },
-                { day: "Wednesday", subject: "Chemistry", time: "10:00 AM - 12:00 PM" },
-                { day: "Thursday", subject: "Biology", time: "3:00 PM - 5:00 PM" },
-                { day: "Friday", subject: "Mathematics", time: "10:00 AM - 12:00 PM" },
-                { day: "Saturday", subject: "Mock Test", time: "9:00 AM - 12:00 PM" },
-              ].map((session, index) => (
-                <div
-                  key={index}
-                  className="p-4 rounded-lg border-2 border-border hover:border-primary transition-colors"
-                >
-                  <div className="font-bold text-primary mb-1">{session.day}</div>
-                  <div className="font-semibold mb-1">{session.subject}</div>
-                  <div className="text-sm text-muted-foreground">{session.time}</div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-success">{activity.score}</div>
+                  <p className="text-xs text-muted-foreground">Score</p>
                 </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+              </div>
+            ))}
+          </div>
+        </Card>
       </main>
     </div>
   );
