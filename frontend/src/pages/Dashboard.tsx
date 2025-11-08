@@ -25,6 +25,8 @@ const Dashboard = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("home");
   const [user, setUser] = useState<any>(null);
+  const [quizStats, setQuizStats] = useState({ totalQuizzes: 0, avgScore: 0 });
+  const [recentQuizzes, setRecentQuizzes] = useState<any[]>([]);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -32,6 +34,7 @@ const Dashboard = () => {
         navigate("/login");
       } else {
         setUser(session.user);
+        loadQuizData(session.user.email || session.user.id);
       }
     });
 
@@ -40,11 +43,37 @@ const Dashboard = () => {
         navigate("/login");
       } else {
         setUser(session.user);
+        loadQuizData(session.user.email || session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  const loadQuizData = async (userId: string) => {
+    try {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || process.env.REACT_APP_BACKEND_URL || '';
+      
+      // Load analytics
+      const analyticsRes = await fetch(`${backendUrl}/api/quiz/analytics/${userId}`);
+      if (analyticsRes.ok) {
+        const analyticsData = await analyticsRes.json();
+        setQuizStats({
+          totalQuizzes: analyticsData.total_quizzes || 0,
+          avgScore: analyticsData.average_score || 0,
+        });
+      }
+
+      // Load recent history
+      const historyRes = await fetch(`${backendUrl}/api/quiz/history/${userId}`);
+      if (historyRes.ok) {
+        const historyData = await historyRes.json();
+        setRecentQuizzes(historyData.slice(0, 3));
+      }
+    } catch (error) {
+      console.error("Error loading quiz data:", error);
+    }
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -57,15 +86,33 @@ const Dashboard = () => {
 
   const stats = [
     { label: "Study Hours", value: "24.5", icon: BookOpen, color: "text-primary" },
-    { label: "Quizzes Done", value: "12", icon: Target, color: "text-secondary" },
-    { label: "Current Streak", value: "7 Days", icon: TrendingUp, color: "text-success" },
+    { label: "Quizzes Done", value: quizStats.totalQuizzes.toString(), icon: Target, color: "text-secondary" },
+    { label: "Average Score", value: quizStats.avgScore > 0 ? `${quizStats.avgScore.toFixed(0)}%` : "N/A", icon: TrendingUp, color: "text-success" },
   ];
 
-  const recentActivity = [
-    { topic: "Organic Chemistry - Reactions", time: "2 hours ago", score: "85%" },
-    { topic: "Calculus - Derivatives", time: "1 day ago", score: "92%" },
-    { topic: "Physics - Mechanics", time: "2 days ago", score: "78%" },
-  ];
+  const formatTimeAgo = (timestamp: string) => {
+    const now = new Date();
+    const then = new Date(timestamp);
+    const diffMs = now.getTime() - then.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    if (diffHours > 0) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffMins > 0) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+    return 'Just now';
+  };
+
+  const recentActivity = recentQuizzes.length > 0 
+    ? recentQuizzes.map(quiz => ({
+        topic: `${quiz.subject} - ${quiz.module}`,
+        time: formatTimeAgo(quiz.timestamp),
+        score: `${quiz.score_percentage.toFixed(0)}%`,
+      }))
+    : [
+        { topic: "No quizzes yet", time: "Start learning", score: "-" },
+      ];
 
   const getUserInitials = () => {
     if (!user) return "ST";
