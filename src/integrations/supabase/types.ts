@@ -50,6 +50,190 @@ export type Database = {
         }
         Relationships: []
       }
+      study_goals: {
+        Row: {
+          created_at: string
+          deadline: string | null
+          description: string | null
+          goal_type: string
+          id: string
+          subject_id: string | null
+          target_hours: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          goal_type: string
+          id?: string
+          subject_id?: string | null
+          target_hours: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          goal_type?: string
+          id?: string
+          subject_id?: string | null
+          target_hours?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_goals_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      study_schedules: {
+        Row: {
+          created_at: string
+          day_of_week: number
+          end_time: string
+          id: string
+          is_completed: boolean
+          notes: string | null
+          session_type: string
+          start_time: string
+          subject_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day_of_week: number
+          end_time: string
+          id?: string
+          is_completed?: boolean
+          notes?: string | null
+          session_type?: string
+          start_time: string
+          subject_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          is_completed?: boolean
+          notes?: string | null
+          session_type?: string
+          start_time?: string
+          subject_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_schedules_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      study_sessions: {
+        Row: {
+          completed: boolean
+          created_at: string
+          duration_minutes: number | null
+          end_time: string | null
+          id: string
+          notes: string | null
+          schedule_id: string | null
+          session_date: string
+          start_time: string
+          subject_id: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          duration_minutes?: number | null
+          end_time?: string | null
+          id?: string
+          notes?: string | null
+          schedule_id?: string | null
+          session_date: string
+          start_time: string
+          subject_id: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          duration_minutes?: number | null
+          end_time?: string | null
+          id?: string
+          notes?: string | null
+          schedule_id?: string | null
+          session_date?: string
+          start_time?: string
+          subject_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_sessions_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "study_schedules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "study_sessions_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subjects: {
+        Row: {
+          color: string
+          created_at: string
+          difficulty: string
+          id: string
+          name: string
+          priority: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          difficulty: string
+          id?: string
+          name: string
+          priority?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          difficulty?: string
+          id?: string
+          name?: string
+          priority?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
