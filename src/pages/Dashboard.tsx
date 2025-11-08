@@ -75,10 +75,10 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-hero flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-card border-r border-border p-6 hidden lg:block">
+      <aside className="w-64 bg-slate-900 border-r border-slate-800 p-6 hidden lg:block relative">
         <div className="flex items-center gap-2 mb-8">
           <img src={prepiqLogo} alt="PrepIQ Logo" className="w-10 h-10 rounded-lg" />
-          <span className="text-xl font-bold">PrepIQ</span>
+          <span className="text-xl font-bold text-white">PrepIQ</span>
         </div>
 
         <nav className="space-y-2">
@@ -86,8 +86,8 @@ const Dashboard = () => {
             onClick={() => setActiveTab("home")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
               activeTab === "home"
-                ? "bg-accent text-accent-foreground"
-                : "text-muted-foreground hover:bg-muted"
+                ? "bg-primary text-primary-foreground"
+                : "text-slate-300 hover:bg-slate-800"
             }`}
           >
             <Home className="w-5 h-5" />
@@ -95,14 +95,14 @@ const Dashboard = () => {
           </button>
           <button
             onClick={() => navigate("/ai-study-buddy")}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-muted-foreground hover:bg-muted"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-800"
           >
             <MessageSquare className="w-5 h-5" />
             <span className="font-medium">AI Study Buddy</span>
           </button>
           <button
             onClick={() => navigate("/concept-library")}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-muted-foreground hover:bg-muted"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-800"
           >
             <BookOpen className="w-5 h-5" />
             <span className="font-medium">Concept Library</span>
@@ -111,8 +111,8 @@ const Dashboard = () => {
             onClick={() => setActiveTab("profile")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
               activeTab === "profile"
-                ? "bg-accent text-accent-foreground"
-                : "text-muted-foreground hover:bg-muted"
+                ? "bg-primary text-primary-foreground"
+                : "text-slate-300 hover:bg-slate-800"
             }`}
           >
             <User className="w-5 h-5" />
@@ -120,7 +120,7 @@ const Dashboard = () => {
           </button>
           <button
             onClick={() => navigate("/study-schedule")}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-muted-foreground hover:bg-muted"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-800"
           >
             <Calendar className="w-5 h-5" />
             <span className="font-medium">Study Schedule</span>
@@ -129,8 +129,8 @@ const Dashboard = () => {
             onClick={() => setActiveTab("progress")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
               activeTab === "progress"
-                ? "bg-accent text-accent-foreground"
-                : "text-muted-foreground hover:bg-muted"
+                ? "bg-primary text-primary-foreground"
+                : "text-slate-300 hover:bg-slate-800"
             }`}
           >
             <BarChart3 className="w-5 h-5" />
@@ -139,11 +139,11 @@ const Dashboard = () => {
         </nav>
 
         <div className="absolute bottom-6 left-6 right-6 space-y-2">
-          <Button variant="ghost" className="w-full justify-start" size="lg" onClick={() => setActiveTab("settings")}>
+          <Button variant="ghost" className="w-full justify-start text-slate-300 hover:bg-slate-800 hover:text-white" size="lg" onClick={() => setActiveTab("settings")}>
             <Settings className="w-5 h-5 mr-3" />
             Settings
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-destructive" size="lg" onClick={handleLogout}>
+          <Button variant="ghost" className="w-full justify-start text-red-400 hover:bg-slate-800 hover:text-red-300" size="lg" onClick={handleLogout}>
             <LogOut className="w-5 h-5 mr-3" />
             Logout
           </Button>
