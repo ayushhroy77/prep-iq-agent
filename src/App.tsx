@@ -27,7 +27,7 @@ const AnimatedRoutes = () => {
   }, [location.pathname]);
 
   return (
-    <div className="animate-slide-fade-up">
+    <div className="animate-fade-in">
       <Routes location={location}>
         <Route path="/" element={<Landing />} />
         <Route path="/register" element={<Register />} />

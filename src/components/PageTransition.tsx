@@ -18,10 +18,10 @@ export const PageTransition = ({ children }: PageTransitionProps) => {
 
   return (
     <div
-      className={`transition-smooth ${
+      className={`${
         transitionStage === 'fadeOut' 
           ? 'animate-fade-out' 
-          : 'animate-blur-in'
+          : 'animate-fade-in'
       }`}
       onAnimationEnd={() => {
         if (transitionStage === 'fadeOut') {
@@ -30,7 +30,7 @@ export const PageTransition = ({ children }: PageTransitionProps) => {
         }
       }}
     >
-      {displayLocation.pathname === location.pathname ? children : null}
+      {children}
     </div>
   );
 };
